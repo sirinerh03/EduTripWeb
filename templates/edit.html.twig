@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un Post{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Modifier un Post</h1>
+        
+        {{ form_start(form) }}
+            {{ form_row(form.contenu) }}
+            {{ form_row(form.categorie) }}
+            {{ form_row(form.imageFile) }}
+            <button class="btn btn-primary">Modifier</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

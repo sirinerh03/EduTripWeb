@@ -69,19 +69,34 @@ class PostController extends AbstractController
     #[Route('/{id_post}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+       
         
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) { 
+              /** @var UploadedFile $imageFile */
+              $imageFile = $form->get('imageFile')->getData();
+            
+              if ($imageFile) {
+                  $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                  
+                  // Déplacer le fichier
+                  $imageFile->move(
+                      $this->getParameter('upload_directory'),
+                      $newFilename
+                  );
+                  
+                  // Mettre à jour l'entité
+                  $post->setImage($newFilename);
+              }
             $entityManager->flush();
 
             $this->addFlash('success', 'Post modifié avec succès!');
-            return $this->redirectToRoute('app_post_index');
+            return $this->redirectToRoute('app_posts');
         }
 
-        return $this->render('post/edit.html.twig', [
+        return $this->render('/edit.html.twig', [
             'post' => $post,
             'form' => $form->createView(),
         ]);
@@ -90,7 +105,7 @@ class PostController extends AbstractController
     #[Route('/{id_post}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+      
         
         if ($this->isCsrfTokenValid('delete'.$post->getIdPost(), $request->request->get('_token'))) {
             $entityManager->remove($post);

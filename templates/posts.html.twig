@@ -3,35 +3,62 @@
 {% block title %}Liste des Posts{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Liste des Posts</h1>
-        <a href="{{ path('app_new_post') }}" class="btn btn-primary">
-    <i class="fas fa-plus"></i> Nouveau Post
-</a>
+<div class="container-xl py-5"> {# Utilisation de container-xl pour un conteneur plus large #}
+    <div class="container py-5"> {# Garde un conteneur classique à l'intérieur pour plus de contrôle #}
+        <h1 class="mb-4 text-center">Liste des Posts</h1>
+
+        <div class="d-flex justify-content-between mb-4">
+            <a href="{{ path('app_new_post') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Post
+            </a>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+
         {% if posts is defined and posts|length > 0 %}
             <div class="d-flex flex-column gap-4">
                 {% for post in posts %}
-                    <div class="card w-100">
-                        <div class="card-body">
-                            {% if post.image %}
-                                <img src="{{ asset('images/' ~ post.image) }}" 
-                                     class="img-fluid mb-3"
-                                     style="max-height: 200px; object-fit: cover;">
-                            {% endif %}
-                            <p class="card-text">{{ post.contenu|slice(0, 100) ~ '...' }}</p>
-                            <small class="text-muted">
-                                Catégorie: {{ post.categorie }}<br>
-                                Posté le: {{ post.dateCreation|date('d/m/Y H:i') }}<br>
-                                Likes: {{ post.likes }} | Dislikes: {{ post.dislikes }}
-                            </small>
+                    <div class="col-lg-12 col-sm-6 wow fadeInUp" data-wow-delay="0.{{ loop.index * 2 }}s">
+                        <div class="service-item text-center pt-3 post-card">
+                            <div class="p-4">
+                                {% if post.image %}
+                                    <img src="{{ asset('images/' ~ post.image) }}" 
+                                         class="rounded post-image mb-3" style="width: 300px; height: 300px; object-fit: cover;">
+                                {% endif %}
+                                <p class="card-text">{{ post.contenu|slice(0, 100) ~ '...' }}</p>
+                                <small class="text-muted">
+                                    <strong>Catégorie :</strong> {{ post.categorie }}<br>
+                                    <strong>Posté le :</strong> {{ post.dateCreation|date('d/m/Y H:i') }}<br>
+                                     {{ post.likes }}  <strong>👍 </strong> 
+                                       {{ post.dislikes }}<strong>👎</strong> 
+                                </small>
+                            </div>
+                            <div class="card-footer bg-white d-flex justify-content-between">
+                                <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Supprimer
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="alert alert-info">
+            <div class="alert alert-info text-center">
                 Aucun post trouvé dans la base de données.
             </div>
         {% endif %}
     </div>
+</div>
 {% endblock %}
