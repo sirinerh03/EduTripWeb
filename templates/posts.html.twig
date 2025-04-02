@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Posts{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Liste des Posts</h1>
+        <a href="{{ path('app_new_post') }}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Nouveau Post
+</a>
+        {% if posts is defined and posts|length > 0 %}
+            <div class="d-flex flex-column gap-4">
+                {% for post in posts %}
+                    <div class="card w-100">
+                        <div class="card-body">
+                            {% if post.image %}
+                                <img src="{{ asset('images/' ~ post.image) }}" 
+                                     class="img-fluid mb-3"
+                                     style="max-height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <p class="card-text">{{ post.contenu|slice(0, 100) ~ '...' }}</p>
+                            <small class="text-muted">
+                                Catégorie: {{ post.categorie }}<br>
+                                Posté le: {{ post.dateCreation|date('d/m/Y H:i') }}<br>
+                                Likes: {{ post.likes }} | Dislikes: {{ post.dislikes }}
+                            </small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucun post trouvé dans la base de données.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
