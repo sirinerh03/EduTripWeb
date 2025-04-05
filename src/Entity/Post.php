@@ -41,6 +41,11 @@ class Post
     #[ORM\Column(nullable: true)]
     private ?int $dislikes = null;
 
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'posts')]
+    #[ORM\JoinColumn(name: "id_etudiant", referencedColumnName: "id_etudiant", nullable: true)]
+    private ?Utilisateur $utilisateur = null;
+
+
     public function getIdPost(): ?int
     {
         return $this->id_post;
@@ -140,6 +145,18 @@ class Post
     public function setDislikes(?int $dislikes): static
     {
         $this->dislikes = $dislikes;
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
         return $this;
     }
 }
