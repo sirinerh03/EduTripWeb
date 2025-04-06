@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Utilisateur;  
 
 use App\Entity\Post;
 use App\Form\PostType;
@@ -32,7 +33,10 @@ class PostController extends AbstractController
         $post->setDateCreation(new \DateTime());
         $post->setLikes(0);
         $post->setDislikes(0);
-        $post->setIdEtudiant(1);
+// Récupérer l'utilisateur ayant id 1 depuis la base de données
+$utilisateur = $entityManager->getRepository(Utilisateur::class)->find(1);
+$post->setUtilisateur($utilisateur);
+
         
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);

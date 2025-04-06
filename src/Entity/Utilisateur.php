@@ -15,7 +15,7 @@ class Utilisateur
  
 
     #[ORM\Column]
-    private ?int $id_etudiant = null;
+    private ?int $id_etudiant=null ;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;

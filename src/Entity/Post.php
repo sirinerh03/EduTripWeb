@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\PostContentOrImage;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[Vich\Uploadable]
+#[PostContentOrImage]
 class Post
 {
     #[ORM\Id]
@@ -17,14 +19,22 @@ class Post
     #[ORM\Column]
     private ?int $id_post = null;
 
+
     #[ORM\Column(length: 255)]
+
+    #[Assert\Length(
+      
+        max: 255,
+    
+        maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères.'
+    )]
     private ?string $contenu = null;
+
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_creation = null;
 
-    #[ORM\Column]
-    private ?int $id_etudiant ;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $image = null;
@@ -73,16 +83,7 @@ class Post
         return $this;
     }
 
-    public function getIdEtudiant(): ?int
-    {
-        return $this->id_etudiant;
-    }
-
-    public function setIdEtudiant(int $id_etudiant): static
-    {
-        $this->id_etudiant = $id_etudiant;
-        return $this;
-    }
+ 
 
     public function getImage(): ?string
     {
