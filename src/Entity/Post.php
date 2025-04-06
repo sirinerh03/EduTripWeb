@@ -4,6 +4,9 @@ namespace App\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\PostContentOrImage;
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -16,7 +19,7 @@ class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id_post = null;
 
 
@@ -55,6 +58,18 @@ class Post
     #[ORM\JoinColumn(name: "id_etudiant", referencedColumnName: "id_etudiant", nullable: true)]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'post')]
+private Collection $commentaires;
+
+public function __construct()
+{
+    $this->commentaires = new ArrayCollection();
+}
+
+public function getCommentaires(): Collection
+{
+    return $this->commentaires;
+}
 
     public function getIdPost(): ?int
     {

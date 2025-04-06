@@ -27,12 +27,12 @@
                         <div class="service-item text-center pt-3 post-card">
                             <div class="p-4">
                             {% if post.utilisateur %}
-    <h5 class="mb-2 text-primary">
-        Publié par : {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
-    </h5>
-{% else %}
-    <h5 class="mb-2 text-danger">Utilisateur inconnu</h5>
-{% endif %}
+                             <h5 class="mb-2 text-primary">
+                              Publié par : {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                               </h5>
+         {% else %}
+             <h5 class="mb-2 text-danger">Utilisateur inconnu</h5>
+        {% endif %}
                                 {% if post.image %}
                                     <img src="{{ asset('images/' ~ post.image) }}" 
                                          class="rounded post-image mb-3" style="width: 300px; height: 300px; object-fit: cover;">
@@ -44,6 +44,25 @@
                                      {{ post.likes }}  <strong>👍 </strong> 
                                        {{ post.dislikes }}<strong>👎</strong> 
                                 </small>
+
+                               <div>
+                    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleCommentaires({{ post.idPost }})">
+                        💬 Commentaires
+                    </button>
+                </div>
+
+                <div id="commentaires-{{ post.idPost }}" style="display: none;" class="mt-3 text-start">
+                    {% if post.commentaires|length > 0 %}
+                        {% for commentaire in post.commentaires %}
+                            <div class="border rounded p-2 mb-2 " style="background-color: #4cc4d6;">
+                                {{ commentaire.contenu }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted">Aucun commentaire.</div>
+                    {% endif %}
+                </div>
+            </div>
                             </div>
                             <div class="card-footer bg-white d-flex justify-content-between">
                                 <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" class="btn btn-warning btn-sm">
@@ -68,4 +87,16 @@
         {% endif %}
     </div>
 </div>
+<script>
+    function toggleCommentaires(postId) {
+        var commentairesDiv = document.getElementById('commentaires-' + postId);
+        if (commentairesDiv.style.display === 'none' || commentairesDiv.style.display === '') {
+            commentairesDiv.style.display = 'block';
+        } else {
+            commentairesDiv.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}
+
+
