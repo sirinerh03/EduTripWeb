@@ -170,5 +170,28 @@ $post->setUtilisateur($utilisateur);
         return new JsonResponse(['contenu' => $commentaire->getContenu()]);
     }
     
+    #[Route('/commentaire/{id}/edit', name: 'edit_commentaire', methods: ['POST'])]
+    public function editCommentaire(Request $request, Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
+    {
+        $contenu = $request->request->get('contenu');
+        if (!$contenu) {
+            return new JsonResponse(['success' => false], 400);
+        }
+    
+        $commentaire->setContenu($contenu);
+        $em->flush();
+    
+        return new JsonResponse(['success' => true]);
+    }
+    
+    #[Route('/commentaire/{id}/delete', name: 'delete_commentaire', methods: ['POST'])]
+    public function deleteCommentaire(Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
+    {
+        $em->remove($commentaire);
+        $em->flush();
+    
+        return new JsonResponse(['success' => true]);
+    }
 
+    
 }
