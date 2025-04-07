@@ -52,15 +52,24 @@
                 </div>
 
                 <div id="commentaires-{{ post.idPost }}" style="display: none;" class="mt-3 text-start">
-                    {% if post.commentaires|length > 0 %}
+                  
+                    <!-- Zone d’ajout de commentaire -->
+<form onsubmit="ajouterCommentaire(event, {{ post.idPost }})" class="mt-3">
+    <div class="mb-2">
+        <textarea class="form-control" id="contenu-commentaire-{{ post.idPost }}" rows="2" placeholder="Écrire un commentaire..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-sm btn-success">Ajouter</button> {# ✅ Type correct #}
+</form>
+  {% if post.commentaires|length > 0 %}
                         {% for commentaire in post.commentaires %}
                             <div class="border rounded p-2 mb-2 " style="background-color: #4cc4d6;">
                                 {{ commentaire.contenu }}
                             </div>
                         {% endfor %}
-                    {% else %}
-                        <div class="text-muted">Aucun commentaire.</div>
+                    
                     {% endif %}
+
+
                 </div>
             </div>
                             </div>
@@ -97,6 +106,47 @@
         }
     }
 </script>
+<script>
+    function ajouterCommentaire(event, postId) {
+        event.preventDefault();
+
+        const textarea = document.getElementById('contenu-commentaire-' + postId);
+        const contenu = textarea.value.trim();
+
+        if (contenu === '') return;
+
+        fetch('{{ path('ajouter_commentaire') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                'postId': postId,
+                'contenu': contenu
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.contenu) {
+                const container = document.getElementById('commentaires-' + postId);
+                const div = document.createElement('div');
+                div.classList.add('border', 'rounded', 'p-2', 'mb-2');
+                div.style.backgroundColor = '#4cc4d6';
+                div.textContent = data.contenu;
+                container.appendChild(div);
+                textarea.value = ''; // Clear textarea
+            } else {
+                alert('Erreur lors de l’ajout du commentaire');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur AJAX :', error);
+            alert('Erreur serveur');
+        });
+    }
+</script>
+
 {% endblock %}
 
 

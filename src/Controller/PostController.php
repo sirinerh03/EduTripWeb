@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 use App\Entity\Utilisateur;  
-
+use App\Entity\Commentaire; 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
@@ -106,6 +107,8 @@ $post->setUtilisateur($utilisateur);
         ]);
     }
 
+
+    
     #[Route('/{id_post}', name: 'app_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
@@ -135,5 +138,37 @@ $post->setUtilisateur($utilisateur);
     
         ]);
     }
+
+
+    #[Route('/commentaire/add', name: 'ajouter_commentaire', methods: ['GET','POST'])]
+    public function ajouterCommentaire(Request $request, EntityManagerInterface $em, PostRepository $postRepository): JsonResponse
+    {
+        $postId = $request->request->get('postId');
+        $contenu = $request->request->get('contenu');
+    
+        if (!$postId || !$contenu) {
+            return new JsonResponse(['error' => 'Données manquantes'], 400);
+        }
+    
+        $post = $postRepository->find($postId);
+        if (!$post) {
+            return new JsonResponse(['error' => 'Post introuvable'], 404);
+        }
+    
+        $commentaire = new Commentaire();
+        $commentaire->setContenu($contenu);
+        $commentaire->setPost($post);
+        $commentaire->setDateCommentaire(new \DateTime());
+        
+        // Optionnel : récupérer l’utilisateur connecté
+        // $commentaire->setUtilisateur($this->getUser());
+        $utilisateur = $em->getRepository(Utilisateur::class)->find(1);
+        $commentaire->setUtilisateur($utilisateur);
+        $em->persist($commentaire);
+        $em->flush();
+    
+        return new JsonResponse(['contenu' => $commentaire->getContenu()]);
+    }
+    
 
 }
