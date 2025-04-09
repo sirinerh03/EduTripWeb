@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Pack d'Agence{% endblock %}
+
+{% block body %}
+    <h1>Modifier le Pack d'Agence</h1>
+
+    {# Le formulaire doit être à l'intérieur de la balise <form> #}
+    {{ form_start(form) }}
+
+        {{ form_row(form.nom_pk) }}
+      {{ form_row(form.id_agence) }}{# Affichage de la relation avec l'agence #}
+        {{ form_row(form.prix) }}
+        {{ form_row(form.duree) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.services_inclus) }}
+        {{ form_row(form.date_ajout) }}
+        {{ form_row(form.description_pk) }}
+
+        <button class="btn btn-primary" type="submit">Sauvegarder</button>
+
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_pack_agence') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

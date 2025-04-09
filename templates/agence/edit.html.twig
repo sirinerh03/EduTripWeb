@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'agence{% endblock %}
+
+{% block body %}
+    <h1>Modifier l'agence "{{ agence.nomAg }}"</h1>
+
+    <a href="{{ path('app_agence_index') }}" class="btn btn-secondary mb-3">Retour à la liste des agences</a>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom_ag) }}
+        {{ form_row(form.adresse_ag) }}
+        {{ form_row(form.telephoneAg) }}
+        {{ form_row(form.email_ag) }}
+        {{ form_row(form.description_ag) }}
+        {{ form_row(form.date_creation) }}
+
+        <button class="btn btn-warning mt-3" type="submit">Mettre à jour l'agence</button>
+    {{ form_end(form) }}
+{% endblock %}

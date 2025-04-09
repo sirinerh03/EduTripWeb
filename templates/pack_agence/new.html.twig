@@ -1,0 +1,38 @@
+{% block body %}
+<div class="container" style="margin: 2em auto; max-width: 800px;">
+    <h1>Créer un nouveau Pack d'Agence</h1>
+    
+    {{ form_start(form) }}
+    
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.nom_pk, {'label': 'Nom du Pack'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.id_agence) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.prix, {'label': 'Prix'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.duree, {'label': 'Durée (jours)'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.services_inclus, {'label': 'Services inclus'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.date_ajout, {'label': 'Date d\'ajout'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.status, {'label': 'Statut'}) }}
+    </div>
+    <div style="margin-bottom: 1em;">
+        {{ form_row(form.description_pk, {'label': 'Description'}) }}
+    </div>
+    
+    <button type="submit" class="btn" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none;">Créer</button>
+    
+    {{ form_end(form) }}
+    
+    <a href="{{ path('app_pack_agence') }}" class="btn" style="display: inline-block; margin-top: 1em; background-color: #555; color: white; padding: 8px 16px; text-decoration: none;">Retour à la liste</a>
+</div>
+{% endblock %}
