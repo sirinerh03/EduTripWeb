@@ -1,0 +1,28 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+<table>
+    <tr>
+        <td>{{ form_label(form.date_d, "Date de début") }}</td>
+        <td>{{ form_widget(form.date_d) }}</td>
+        <td>{{ form_errors(form.date_d) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.date_f, "Date de fin") }}</td>
+        <td>{{ form_widget(form.date_f) }}</td>
+        <td>{{ form_errors(form.date_f) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.status, "Commentaire") }}</td>
+        <td>{{ form_widget(form.status) }}</td>
+        <td>{{ form_errors(form.status) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.hebergement, "Hébergement") }}</td>
+        <td>{{ form_widget(form.hebergement) }}</td>
+        <td>{{ form_errors(form.hebergement) }}</td>
+    </tr>
+</table>
+
+<button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+
+{{ form_end(form) }}

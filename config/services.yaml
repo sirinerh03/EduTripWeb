@@ -20,5 +20,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    # Add this new service definition for Finder
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: true
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
