@@ -162,12 +162,7 @@ class Hebergement
     {
         $this->imageh = $imageh;
         return $this;
- 
- 
- 
- 
- 
- 
+
     }
 }
 
