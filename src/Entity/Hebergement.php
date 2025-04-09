@@ -161,15 +161,7 @@ class Hebergement
     public function setImageh(string $imageh): static
     {
         $this->imageh = $imageh;
-        return $this;
-
-
-
-
-
-
-
-        
+        return $this;  
     }
 }
 
