@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un vol{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">✏️ Modifier un vol</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        
+        <button type="submit" class="btn btn-primary mt-3">💾 Enregistrer les modifications</button>
+        <a href="{{ path('app_vols') }}" class="btn btn-secondary mt-3">↩️ Retour à la liste</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

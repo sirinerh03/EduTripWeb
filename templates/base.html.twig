@@ -68,7 +68,7 @@
                         <a href="404.html" class="dropdown-item">404 Page</a>
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Vols</a>
+               <a href="{{ path('app_vols') }}" class="nav-item nav-link">Vols</a>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
             </div>
             <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
@@ -162,6 +162,22 @@
         </div>
     </div>
     <!-- Service End -->
+
+
+
+<!--  Bloc d'affichage des messages flash-->
+    {% block flashs %}
+        <div class="container mt-3">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endblock %}
 
     <!-- About Start -->
     <div class="container-xxl py-5">

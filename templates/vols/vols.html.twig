@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des vols{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des vols</h1>
+
+    <a href="{{ path('vol_new') }}" class="btn btn-success mb-4">➕ Ajouter un vol</a>
+
+    {% if vols is not empty %}
+        {% for vol in vols %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        ✈️ {{ vol.aeroportDepart }} → {{ vol.aeroportArrivee }}
+                    </h5>
+                    <p class="card-text">
+                        <strong>Numéro de vol :</strong> {{ vol.numVol }}<br>
+                        <strong>Date départ :</strong> {{ vol.dateDepart ? vol.dateDepart|date('d/m/Y H:i') : 'Non défini' }}<br>
+                        <strong>Date arrivée :</strong> {{ vol.dateArrivee ? vol.dateArrivee|date('d/m/Y H:i') : 'Non défini' }}<br>
+                        <strong>Places disponibles :</strong> {{ vol.placesDispo }}<br>
+                        <strong>Prix :</strong> {{ vol.prixVol }} TND
+                    </p>
+
+                    <a href="{{ path('vol_edit', {'id': vol.id_vol}) }}" class="btn btn-primary btn-sm">✏️ Modifier</a>
+
+                    <form method="post" action="{{ path('vol_delete', {'id': vol.id_vol}) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce vol ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vol.id_vol) }}">
+                        <button class="btn btn-danger btn-sm">🗑️ Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">Aucun vol trouvé dans la base de données.</div>
+    {% endif %}
+</div>
+{% endblock %}

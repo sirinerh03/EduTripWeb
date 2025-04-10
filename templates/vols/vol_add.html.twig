@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouveau vol{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Ajouter un nouveau vol</h1>
+
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.num_vol, 'Numéro de vol') }}
+            {{ form_widget(form.num_vol, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.num_vol) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.aeroport_depart, 'Aéroport de départ') }}
+            {{ form_widget(form.aeroport_depart, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.aeroport_depart) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.aeroport_arrivee, 'Aéroport d’arrivée') }}
+            {{ form_widget(form.aeroport_arrivee, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.aeroport_arrivee) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.date_depart, 'Date de départ') }}
+            {{ form_widget(form.date_depart, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.date_depart) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.date_arrivee, 'Date d’arrivée') }}
+            {{ form_widget(form.date_arrivee, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.date_arrivee) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.places_dispo, 'Places disponibles') }}
+            {{ form_widget(form.places_dispo, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.places_dispo) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.prix_vol, 'Prix du vol (€)') }}
+            {{ form_widget(form.prix_vol, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.prix_vol) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">✅ Enregistrer</button>
+        <a href="{{ path('app_vols') }}" class="btn btn-secondary">⬅️ Retour</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
