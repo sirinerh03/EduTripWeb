@@ -1,23 +1,16 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}User Details{% endblock %}
-
+{% block title %}Détail utilisateur{% endblock %}
 {% block body %}
-    <h1>User Details</h1>
-    <ul>
-        <li>ID: {{ user.id }}</li>
-        <li>Prenom: {{ user.prenom }}</li>
-        <li>Nom: {{ user.nom }}</li>
-        <li>Email: {{ user.mail }}</li>
-        <li>Tel: {{ user.tel }}</li>
-        <li>Status: {{ user.status }}</li>
-        <li>Role: {{ user.role }}</li>
-    </ul>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Edit</a>
-    <form method="POST" action="{{ path('app_user_delete', {'id': user.id}) }}" style="display:inline;">
-        <button class="btn">Delete</button>
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-    </form>
-    <a href="{{ path('app_user_index') }}">Back to list</a>
+    <h1>Utilisateur #{{ user.idUser }}</h1>
+    <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+    <p><strong>Nom :</strong> {{ user.nom }}</p>
+    <p><strong>Mail :</strong> {{ user.mail }}</p>
+    <p><strong>Téléphone :</strong> {{ user.tel }}</p>
+    <p><strong>Status :</strong> {{ user.status }}</p>
+    <p><strong>Rôle :</strong> {{ user.role }}</p>
+    <p>
+        <a href="{{ path('app_user_edit', {'id_user': user.idUser}) }}">Éditer</a>
+        {{ include('user/_delete_form.html.twig') }}
+        <a href="{{ path('app_user_index') }}">← Retour</a>
+    </p>
 {% endblock %}

@@ -60,6 +60,7 @@
                 <a href="about.html" class="nav-item nav-link">Universités</a>
                 <a href="courses.html" class="nav-item nav-link">Hébergement</a>
                 <a href="{{ path('app_posts') }}" class="nav-item nav-link">Posts</a>
+                <a href="{{ path('app_avis_index') }}" class="nav-item nav-link">Avis</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
                     <div class="dropdown-menu fade-down m-0">
@@ -71,7 +72,21 @@
                 <a href="contact.html" class="nav-item nav-link">Vols</a>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
             </div>
-            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
+            {% if app.user %}
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fa fa-user me-2"></i>{{ app.user.prenom }} {{ app.user.nom }}
+                    </a>
+                    <div class="dropdown-menu fade-down m-0">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_user_index') }}" class="dropdown-item">Gestion des utilisateurs</a>
+                        {% endif %}
+                        <a href="{{ path('app_logout') }}" class="dropdown-item">Déconnexion</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Connexion<i class="fa fa-arrow-right ms-3"></i></a>
+            {% endif %}
         </div>
         {% endblock %}
     </nav>
@@ -89,7 +104,7 @@
                             <div class="col-sm-10 col-lg-8">
                                 <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Meilleures Expériences d'Études à l'Étranger</h5>
                                 <h1 class="display-3 text-white animated slideInDown"> EduTrip - Votre passerelle vers des études et voyages enrichissants.</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Nous avons créé EduTrip pour aider les étudiants à concrétiser leurs projets d’études à l’étranger. Sur notre plateforme, nous facilitons la recherche d’universités, la réservation d’hébergements, la comparaison des offres d’agences de voyage et la réservation de vols en toute simplicité.</p>
+                                <p class="fs-5 text-white mb-4 pb-2">Nous avons créé EduTrip pour aider les étudiants à concrétiser leurs projets d'études à l'étranger. Sur notre plateforme, nous facilitons la recherche d'universités, la réservation d'hébergements, la comparaison des offres d'agences de voyage et la réservation de vols en toute simplicité.</p>
                                 <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
                                 <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Rejoindre maintenant</a>
                             </div>
@@ -105,7 +120,7 @@
                             <div class="col-sm-10 col-lg-8">
                                 <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Meilleures Expériences d'Études à l'Étranger</h5>
                                 <h1 class="display-3 text-white animated slideInDown"> Apprenez et explorez le monde.</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Avec EduTrip, nous centralisons toutes les informations essentielles pour rendre l’organisation des voyages académiques plus simple et accessible. 🌍✈️🎓</p>
+                                <p class="fs-5 text-white mb-4 pb-2">Avec EduTrip, nous centralisons toutes les informations essentielles pour rendre l'organisation des voyages académiques plus simple et accessible. 🌍✈️🎓</p>
                                 <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
                                 <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Rejoindre maintenant </a>
                             </div>
@@ -176,7 +191,7 @@
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
                     <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
                     <h1 class="mb-4">Bienvenue à EduTrip</h1>
-                    <p class="mb-4">nous accompagnons les étudiants dans la réalisation de leur rêve d'étudier à l'étranger. Nous offrons une plateforme complète qui facilite la recherche d’universités, la réservation d’hébergements, la comparaison d’offres de voyage et la planification des vols.</p>
+                    <p class="mb-4">nous accompagnons les étudiants dans la réalisation de leur rêve d'étudier à l'étranger. Nous offrons une plateforme complète qui facilite la recherche d'universités, la réservation d'hébergements, la comparaison d'offres de voyage et la planification des vols.</p>
                     <p class="mb-4">Notre mission est de rendre chaque expérience académique internationale plus accessible et enrichissante. </p>
                     <div class="row gy-2 gx-4 mb-4">
                         <div class="col-sm-6">

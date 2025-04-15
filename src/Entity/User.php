@@ -1,52 +1,60 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'user')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_user', type: 'integer')]
-    private ?int $id_user = null;
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'prenom', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'Le prénom doit faire au moins {{ limit }} caractères', maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères')]
     private ?string $prenom = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'nom', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'Le nom doit faire au moins {{ limit }} caractères', maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères')]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'mail', type: 'string', length: 100, unique: true)]
+    #[Assert\NotBlank(message: 'L\'email est obligatoire')]
+    #[Assert\Email(message: 'L\'email {{ value }} n\'est pas un email valide')]
     private ?string $mail = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'tel', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le téléphone est obligatoire')]
+    #[Assert\Regex(pattern: '/^[0-9+\s-]{8,}$/', message: 'Le numéro de téléphone n\'est pas valide')]
     private ?string $tel = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'status', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le statut est obligatoire')]
     private ?string $status = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'role', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'Le rôle est obligatoire')]
     private ?string $role = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'password', type: 'string', length: 100)]
     private ?string $password = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(name: 'confirm_password', type: 'string', length: 100)]
     private ?string $confirm_password = null;
 
-    public function getIdUser(): ?int
+    public function getId(): ?int
     {
-        return $this->id_user;
-    }
-
-    public function setIdUser(int $id_user): self
-    {
-        $this->id_user = $id_user;
-        return $this;
+        return $this->id;
     }
 
     public function getPrenom(): ?string
@@ -135,5 +143,33 @@ class User
     {
         $this->confirm_password = $confirm_password;
         return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = ['ROLE_USER'];
+        if ($this->role === 'admin') {
+            $roles[] = 'ROLE_ADMIN';
+        }
+        return array_unique($roles);
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->mail;
     }
 }

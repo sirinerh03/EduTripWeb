@@ -1,34 +1,42 @@
-{# templates/avis/index.html.twig #}
-
 {% extends 'base.html.twig' %}
-
-{% block title %}Liste des Avis{% endblock %}
-
+{% block title %}Liste des avis{% endblock %}
 {% block body %}
-    <h1>Liste des Avis</h1>
-
-    <table class="table table-striped">
+    <h1>Avis</h1>
+    <a href="{{ path('app_avis_new') }}">+ Nouvel avis</a>
+    <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Auteur</th>
                 <th>Commentaire</th>
                 <th>Note</th>
-                <th>Date de création</th>
+                <th>Date</th>
                 <th>Photo</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for avi in avis %}
                 <tr>
                     <td>{{ avi.id }}</td>
+                    <td>{{ avi.user.prenom }} {{ avi.user.nom }}</td>
                     <td>{{ avi.commentaire }}</td>
                     <td>{{ avi.note }}</td>
-                    <td>{{ avi.dateCreation ? avi.dateCreation|date('Y-m-d H:i:s') : 'Non définie' }}</td>
-                    <td>{{ avi.photo ?? 'Aucune' }}</td>
+                    <td>{{ avi.dateCreation|date('Y-m-d H:i') }}</td>
+                    <td>
+                        {% if avi.photo %}
+                            <img src="{{ asset('uploads/avis/'~avi.photo) }}" style="max-height:50px">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_avis_show', {'id': avi.id}) }}">Voir</a>
+                        <a href="{{ path('app_avis_edit', {'id': avi.id}) }}">Éditer</a>
+                        {{ include('avis/_delete_form.html.twig') }}
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">Aucun avis trouvé.</td>
+                    <td colspan="7">Aucun avis trouvé.</td>
                 </tr>
             {% endfor %}
         </tbody>

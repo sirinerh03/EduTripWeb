@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - EduTrip{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Mon Profil</h5>
+                <h1>Informations personnelles</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0 rounded-lg">
+                        <div class="card-body p-5">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary">Prénom</h6>
+                                    <p class="mb-0">{{ user.prenom }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-primary">Nom</h6>
+                                    <p class="mb-0">{{ user.nom }}</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-primary">Email</h6>
+                                <p class="mb-0">{{ user.mail }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-primary">Téléphone</h6>
+                                <p class="mb-0">{{ user.tel }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-primary">Statut</h6>
+                                <p class="mb-0">{{ user.status }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <h6 class="text-primary">Rôle</h6>
+                                <p class="mb-0">{{ user.role }}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
+                                <a href="{{ path('app_home') }}" class="btn btn-primary btn-lg px-5">Retour à l'accueil</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

@@ -1,38 +1,17 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Avis{% endblock %}
-
+{% block title %}Détail avis{% endblock %}
 {% block body %}
-    <h1>Avis</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id_avis</th>
-                <td>{{ avi.idAvis }}</td>
-            </tr>
-            <tr>
-                <th>Commentaire</th>
-                <td>{{ avi.commentaire }}</td>
-            </tr>
-            <tr>
-                <th>Note</th>
-                <td>{{ avi.note }}</td>
-            </tr>
-            <tr>
-                <th>Date_creation</th>
-                <td>{{ avi.dateCreation ? avi.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ avi.photo }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_avis_index') }}">back to list</a>
-
-    <a href="{{ path('app_avis_edit', {'id_avis': avi.id_avis}) }}">edit</a>
-
-    {{ include('avis/_delete_form.html.twig') }}
+    <h1>Avis #{{ avi.id }}</h1>
+    <p><strong>Auteur :</strong> {{ avi.user.prenom }} {{ avi.user.nom }}</p>
+    <p><strong>Commentaire :</strong> {{ avi.commentaire }}</p>
+    <p><strong>Note :</strong> {{ avi.note }}</p>
+    <p><strong>Date :</strong> {{ avi.dateCreation|date('Y-m-d H:i') }}</p>
+    {% if avi.photo %}
+        <img src="{{ asset('uploads/avis/'~avi.photo) }}" style="max-height:150px">
+    {% endif %}
+    <p>
+        <a href="{{ path('app_avis_edit', {'id': avi.id}) }}">Éditer</a>
+        {{ include('avis/_delete_form.html.twig') }}
+        <a href="{{ path('app_avis_index') }}">← Retour</a>
+    </p>
 {% endblock %}

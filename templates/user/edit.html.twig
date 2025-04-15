@@ -1,18 +1,8 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Edit User{% endblock %}
-
+{% block title %}Modifier utilisateur{% endblock %}
 {% block body %}
-    <h1>Edit User</h1>
-    {{ form_start(form) }}
-        {{ form_row(form.prenom) }}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.mail) }}
-        {{ form_row(form.tel) }}
-        {{ form_row(form.status) }}
-        {{ form_row(form.role) }}
-        {{ form_row(form.password) }}
-        {{ form_row(form.confirm_password) }}
-        <button class="btn">Update</button>
-    {{ form_end(form) }}
+    <h1>Modifier utilisateur #{{ user.idUser }}</h1>
+    {{ include('user/_form.html.twig', {'button_label':'Mettre à jour'}) }}
+    <a href="{{ path('app_user_index') }}">← Retour</a>
+    {{ include('user/_delete_form.html.twig') }}
 {% endblock %}
