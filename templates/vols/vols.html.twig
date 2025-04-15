@@ -2,38 +2,207 @@
 
 {% block title %}Gestion des vols{% endblock %}
 
-{% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4">Liste des vols</h1>
+{% block content %}
+<style>
+    body {
+        background-color: #f5f5f5;
+        color: #333;
+        position: relative;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
 
-    <a href="{{ path('vol_new') }}" class="btn btn-success mb-4">➕ Ajouter un vol</a>
+    /* Avions animés */
+    .animated-plane {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        background-image: url('https://cdn-icons-png.flaticon.com/512/7888/7888729.png'); /* Icône d'avion */
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fly 20s linear infinite;
+        opacity: 0.3;
+        z-index: 0;
+    }
+
+    @keyframes fly {
+        0% {
+            top: 100%;
+            left: -10%;
+            transform: rotate(45deg);
+        }
+        50% {
+            top: 50%;
+            left: 50%;
+            transform: rotate(10deg);
+        }
+        100% {
+            top: -10%;
+            left: 110%;
+            transform: rotate(-10deg);
+        }
+    }
+
+    /* Personnalisation du ticket */
+    .ticket {
+        border: 2px dashed #00bfff;
+        border-radius: 20px;
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s;
+        z-index: 1;
+        margin-bottom: 20px;
+    }
+
+    .ticket:hover {
+        transform: scale(1.01);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .ticket:before, .ticket:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 20px;
+        height: 20px;
+        background: #f1f1f1;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    .ticket:before { left: -10px; }
+    .ticket:after { right: -10px; }
+
+    /* Effet de sélection du vol */
+    .vol-selected {
+        background-color: #b3e5fc !important;
+        border-color: #00bfff !important;
+    }
+
+    /* Dotted divider */
+    .divider {
+        border-top: 1px dashed #ccc;
+        margin: 12px 0;
+    }
+
+    /* Style pour le bouton "Voir plus" */
+    .btn-outline-secondary {
+        background-color: #f8f9fa;
+        border-color: #00bfff;
+        color: #00bfff;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #00bfff;
+        color: white;
+    }
+
+    /* Style du titre */
+    h1.display-5 {
+        color:rgb(87, 154, 231); /* Bleu clair */
+    }
+
+    /* Style du bouton "Ajouter un vol" */
+    .btn-outline-success {
+        background-color:rgb(142, 219, 245);
+        border-color: rgb(142, 219, 245);
+        color: white;
+        font-weight: bold;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #009cdb;
+        border-color: #009cdb;
+    }
+</style>
+
+<!-- 👇 Avions animés -->
+<div class="animated-plane" style="animation-delay: 0s;"></div>
+<div class="animated-plane" style="animation-delay: 5s; animation-duration: 25s;"></div>
+<div class="animated-plane" style="animation-delay: 10s; animation-duration: 22s;"></div>
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-5">🛫 Liste des vols</h1>
+    </div>
+
+    <div class="text-end mb-4">
+        <a href="{{ path('vol_new') }}" class="btn btn-outline-success rounded-pill px-4 py-2 fw-semibold shadow-sm">
+            <i class="bi bi-plus-circle-fill me-2"></i> Nouveau vol
+        </a>
+    </div>
 
     {% if vols is not empty %}
-        {% for vol in vols %}
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        ✈️ {{ vol.aeroportDepart }} → {{ vol.aeroportArrivee }}
-                    </h5>
-                    <p class="card-text">
-                        <strong>Numéro de vol :</strong> {{ vol.numVol }}<br>
-                        <strong>Date départ :</strong> {{ vol.dateDepart ? vol.dateDepart|date('d/m/Y H:i') : 'Non défini' }}<br>
-                        <strong>Date arrivée :</strong> {{ vol.dateArrivee ? vol.dateArrivee|date('d/m/Y H:i') : 'Non défini' }}<br>
-                        <strong>Places disponibles :</strong> {{ vol.placesDispo }}<br>
-                        <strong>Prix :</strong> {{ vol.prixVol }} TND
-                    </p>
+        <div class="row" id="vols-container">
+            {% for vol in vols %}
+                <div class="col-md-6 mb-4 vol-item {% if loop.index > 4 %}d-none{% endif %}">
+                    <div class="ticket p-4 vol-card" data-vol-id="{{ vol.id_vol }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="text-primary mb-0">✈️ {{ vol.aeroportDepart }} → {{ vol.aeroportArrivee }}</h5>
+                            <small class="text-muted">#{{ vol.numVol }}</small>
+                        </div>
 
-                    <a href="{{ path('vol_edit', {'id': vol.id_vol}) }}" class="btn btn-primary btn-sm">✏️ Modifier</a>
+                        <div class="divider"></div>
 
-                    <form method="post" action="{{ path('vol_delete', {'id': vol.id_vol}) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce vol ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vol.id_vol) }}">
-                        <button class="btn btn-danger btn-sm">🗑️ Supprimer</button>
-                    </form>
+                        <p class="mb-1"><strong>Départ :</strong> {{ vol.dateDepart ? vol.dateDepart|date('d/m/Y H:i') : 'Non défini' }}</p>
+                        <p class="mb-1"><strong>Arrivée :</strong> {{ vol.dateArrivee ? vol.dateArrivee|date('d/m/Y H:i') : 'Non défini' }}</p>
+                        <p class="mb-1"><strong>Places :</strong> {{ vol.placesDispo }}</p>
+                        <p class="mb-2"><strong>Prix :</strong> {{ vol.prixVol }} TND</p>
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ path('vol_edit', {'id': vol.id_vol}) }}" class="btn btn-outline-primary me-2" title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" action="{{ path('vol_delete', {'id': vol.id_vol}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce vol ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vol.id_vol) }}">
+                                <button class="btn btn-outline-danger" title="Supprimer">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            {% endfor %}
+        </div>
+
+        {% if vols|length > 4 %}
+            <div class="text-center mt-3">
+                <button id="toggleVolsBtn" class="btn btn-outline-secondary">Voir plus</button>
             </div>
-        {% endfor %}
+        {% endif %}
     {% else %}
-        <div class="alert alert-info">Aucun vol trouvé dans la base de données.</div>
+        <div class="alert alert-info text-center">Aucun vol trouvé dans la base de données.</div>
     {% endif %}
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleVolsBtn");
+        const volItems = document.querySelectorAll(".vol-item");
+        const volCards = document.querySelectorAll(".vol-card");
+
+        if (toggleBtn) {
+            let expanded = false;
+            toggleBtn.addEventListener("click", function () {
+                expanded = !expanded;
+                volItems.forEach((item, index) => {
+                    if (index >= 4) {
+                        item.classList.toggle("d-none", !expanded);
+                    }
+                });
+                toggleBtn.textContent = expanded ? "Voir moins" : "Voir plus";
+            });
+        }
+
+        volCards.forEach(card => {
+            card.addEventListener("click", function () {
+                volCards.forEach(c => c.classList.remove("vol-selected"));
+                this.classList.add("vol-selected");
+            });
+        });
+    });
+</script>
+
 {% endblock %}

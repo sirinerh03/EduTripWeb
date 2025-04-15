@@ -16,37 +16,56 @@ class Vol
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id_vol = null;
+    
+    #[ORM\Column(length: 7)]
+    #[Assert\NotBlank(message: 'Le numéro de vol est obligatoire.')]
+    #[Assert\Length(
+        max: 7,
+        maxMessage: 'Le numéro de vol ne doit pas dépasser {{ limit }} caractères.'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z0-9\W]{1,7}$/',
+        message: 'Le numéro de vol peut contenir lettres, chiffres et caractères spéciaux.'
+    )]    private ?string $num_vol = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    
     #[Assert\Length(max: 255)]
-    private ?string $num_vol = null;
-
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank(message: 'L’aéroport de départ est obligatoire.')]
     private ?string $aeroport_depart = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+  
     #[Assert\Length(max: 255)]
+    #[Assert\NotBlank(message: 'L’aéroport  d’arrivée est obligatoire.')]
     private ?string $aeroport_arrivee = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'La date de départ est obligatoire.')]
+    #[Assert\GreaterThan("today", message: "La date de départ doit être dans le futur.")]
     private ?\DateTimeInterface $date_depart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotNull]
+
+    #[Assert\NotNull(message: 'La date d’arrivée est obligatoire.')]
+    #[Assert\GreaterThan(propertyPath: 'date_depart', message: 'La date d’arrivée doit être après la date de départ.')]
+    
     private ?\DateTimeInterface $date_arrivee = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'Le nombre de places est requis.')]
+    #[Assert\Type(type: 'integer', message: 'Le nombre de places doit être un entier.')]
+    #[Assert\PositiveOrZero(message: 'Le nombre de places doit être positif ou nul.')]
+    
     #[Assert\Range(min: 0)]
     private ?int $places_dispo = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'Le prix est requis.')]
+    #[Assert\Regex(
+        pattern: '/^\d+([.,]\d{1,3})?$/',
+        message: 'Le prix doit être un nombre avec au maximum 3 chiffres après la virgule.'
+    )]
     #[Assert\Range(min: 0)]
     private ?float $prix_vol = null;
 

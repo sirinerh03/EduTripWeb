@@ -7,7 +7,7 @@ use App\Form\VolType;
 use App\Repository\VolRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request; // ✅ Import manquant ici !
+use Symfony\Component\HttpFoundation\Request; 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -35,8 +35,10 @@ final class VolsController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_vols');
+        } else {
+            dump($form);
         }
-
+            
         return $this->render('vols/vol_add.html.twig', [
             'form' => $form->createView(),
         ]);
