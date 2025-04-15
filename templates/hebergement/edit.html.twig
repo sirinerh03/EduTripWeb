@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Hebergement{% endblock %}
+{% block title %}Modifier Hébergement{% endblock %}
 
 {% block body %}
-    <h1>Modifier Hebergement</h1>
+    <h1>Modifier Hébergement</h1>
 
-    {{ include('hebergement/_form.html.twig', {'button_label': 'Update'}) }}
+    {% if hebergement.imageh %}
+        <div>
+            <p>Image actuelle :</p>
+            <img src="{{ asset('img/' ~ hebergement.imageh) }}" alt="{{ hebergement.nomh }}" width="200">
+        </div>
+    {% endif %}
 
-    <a href="{{ path('app_hebergement_index') }}">back to list</a>
+    {{ include('hebergement/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+    <a href="{{ path('app_hebergement_index') }}">Retour à la liste</a>
 
     {{ include('hebergement/_delete_form.html.twig') }}
 {% endblock %}

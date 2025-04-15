@@ -29,11 +29,20 @@ final class HebergementController extends AbstractController
         $form = $this->createForm(HebergementType::class, $hebergement);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($hebergement);
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                // Clean the image filename
+                $imageFilename = basename($hebergement->getImageh());
+                $hebergement->setImageh($imageFilename);
 
-            return $this->redirectToRoute('app_hebergement_index', [], Response::HTTP_SEE_OTHER);
+                $entityManager->persist($hebergement);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Hébergement créé avec succès!');
+                return $this->redirectToRoute('app_hebergement_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $this->addFlash('error', 'Veuillez corriger les erreurs dans le formulaire.');
+            }
         }
 
         return $this->render('hebergement/new.html.twig', [
@@ -51,22 +60,34 @@ final class HebergementController extends AbstractController
     }
 
     #[Route('/{id_hebergement}/edit', name: 'app_hebergement_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Hebergement $hebergement, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(HebergementType::class, $hebergement);
-        $form->handleRequest($request);
+public function edit(Request $request, Hebergement $hebergement, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(HebergementType::class, $hebergement);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            // Clean the image filename
+            $imageFilename = basename($hebergement->getImageh());
+            $hebergement->setImageh($imageFilename);
 
-            return $this->redirectToRoute('app_hebergement_index', [], Response::HTTP_SEE_OTHER);
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Hébergement modifié avec succès!');
+                return $this->redirectToRoute('app_hebergement_index');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la modification.');
+            }
+        } else {
+            $this->addFlash('error', 'Veuillez corriger les erreurs dans le formulaire.');
         }
-
-        return $this->render('hebergement/edit.html.twig', [
-            'hebergement' => $hebergement,
-            'form' => $form,
-        ]);
     }
+
+    return $this->render('hebergement/edit.html.twig', [
+        'hebergement' => $hebergement,
+        'form' => $form,
+    ]);
+}
 
     #[Route('/{id_hebergement}', name: 'app_hebergement_delete', methods: ['POST'])]
     public function delete(Request $request, Hebergement $hebergement, EntityManagerInterface $entityManager): Response

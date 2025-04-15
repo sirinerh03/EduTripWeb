@@ -1,54 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hebergement{% endblock %}
+{% block title %}Détails Hébergement{% endblock %}
 
 {% block body %}
-    <h1>Hebergement</h1>
+    <h1>{{ hebergement.nomh }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id_hebergement</th>
-                <td>{{ hebergement.id }}</td>
-            </tr>
-            <tr>
-                <th>Nomh</th>
-                <td>{{ hebergement.nomh }}</td>
-            </tr>
-            <tr>
-                <th>Typeh</th>
-                <td>{{ hebergement.typeh }}</td>
-            </tr>
-            <tr>
-                <th>Adressh</th>
-                <td>{{ hebergement.adressh }}</td>
-            </tr>
-            <tr>
-                <th>Capaciteh</th>
-                <td>{{ hebergement.capaciteh }}</td>
-            </tr>
-            <tr>
-                <th>Prixh</th>
-                <td>{{ hebergement.prixh }}</td>
-            </tr>
-            <tr>
-                <th>Disponibleh</th>
-                <td>{{ hebergement.disponibleh }}</td>
-            </tr>
-            <tr>
-                <th>Descriptionh</th>
-                <td>{{ hebergement.descriptionh }}</td>
-            </tr>
-            <tr>
-                <th>Imageh</th>
-                <td>{{ hebergement.imageh }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% if hebergement.imageh %}
+        <img src="{{ asset('img/' ~ hebergement.imageh) }}" alt="{{ hebergement.nomh }}" width="300" style="margin-bottom: 20px;">
+    {% else %}
+        <p>Pas d'image</p>
+    {% endif %}
 
-    <a href="{{ path('app_hebergement_index') }}">back to list</a>
+    <p><strong>Type :</strong> {{ hebergement.typeh }}</p>
+    <p><strong>Adresse :</strong> {{ hebergement.adressh }}</p>
+    <p><strong>Capacité :</strong> {{ hebergement.capaciteh }}</p>
+    <p><strong>Prix :</strong> {{ hebergement.prixh }}</p>
+    <p><strong>Disponibilité :</strong> {{ hebergement.disponibleh }}</p>
+    <p><strong>Description :</strong> {{ hebergement.descriptionh }}</p>
 
-    <a href="{{ path('app_hebergement_edit', {'id_hebergement': hebergement.id}) }}">edit</a>
-
-    {{ include('hebergement/_delete_form.html.twig') }}
+    <a href="{{ path('app_hebergement_edit', {'id_hebergement': hebergement.id}) }}">Modifier</a>
+    <a href="{{ path('app_hebergement_index') }}">Retour à la liste</a>
 {% endblock %}

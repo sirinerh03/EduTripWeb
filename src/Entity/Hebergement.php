@@ -16,47 +16,48 @@ class Hebergement
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de l'hébergement est obligatoire.")]
-    private ?string $nomh = null;
+    private string $nomh;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le type d'hébergement est obligatoire.")]
-    private ?string $typeh = null;
+    private string $typeh;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "L'adresse de l'hébergement est obligatoire.")]
-    private ?string $adressh = null;
+    private string $adressh;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "La capacité est obligatoire.")]
     #[Assert\Positive(message: "La capacité doit être un nombre positif.")]
     #[Assert\Range(
         min: 1,
         max: 10000,
         notInRangeMessage: "La capacité doit être comprise entre 1 et 10000."
     )]
-    private ?int $capaciteh = null;
+    private int $capaciteh;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "Le prix est obligatoire.")]
     #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
     #[Assert\Range(
         min: 1,
         max: 10000,
         notInRangeMessage: "Le prix doit être compris entre 1 et 10000."
     )]
-    private ?float $prixh = null;
+    private float $prixh;
 
-    // Adding available options for "disponibleh" and "typeh"
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "La disponibilité doit être spécifiée.")]
-    private ?string $disponibleh = null;
+    private string $disponibleh;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "La description est obligatoire.")]
-    #[Assert\Length(min: 20, minMessage: "La description doit contenir au moins {{ limit }} caractères.")]
-    private ?string $descriptionh = null;
+    #[Assert\Length(min: 10, minMessage: "La description doit contenir au moins {{ limit }} caractères.")]
+    private string $descriptionh;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "L'image est obligatoire.")]
-    private ?string $imageh = null;
+    private string $imageh;
 
     public const AVAILABILITY_CHOICES = [
         'Disponible' => 'Disponible',
@@ -76,7 +77,7 @@ class Hebergement
         return $this->id_hebergement;
     }
 
-    public function getNomh(): ?string
+    public function getNomh(): string
     {
         return $this->nomh;
     }
@@ -87,7 +88,7 @@ class Hebergement
         return $this;
     }
 
-    public function getTypeh(): ?string
+    public function getTypeh(): string
     {
         return $this->typeh;
     }
@@ -98,7 +99,7 @@ class Hebergement
         return $this;
     }
 
-    public function getAdressh(): ?string
+    public function getAdressh(): string
     {
         return $this->adressh;
     }
@@ -109,7 +110,7 @@ class Hebergement
         return $this;
     }
 
-    public function getCapaciteh(): ?int
+    public function getCapaciteh(): int
     {
         return $this->capaciteh;
     }
@@ -120,7 +121,7 @@ class Hebergement
         return $this;
     }
 
-    public function getPrixh(): ?float
+    public function getPrixh(): float
     {
         return $this->prixh;
     }
@@ -131,7 +132,7 @@ class Hebergement
         return $this;
     }
 
-    public function getDisponibleh(): ?string
+    public function getDisponibleh(): string
     {
         return $this->disponibleh;
     }
@@ -142,7 +143,7 @@ class Hebergement
         return $this;
     }
 
-    public function getDescriptionh(): ?string
+    public function getDescriptionh(): string
     {
         return $this->descriptionh;
     }
@@ -153,7 +154,7 @@ class Hebergement
         return $this;
     }
 
-    public function getImageh(): ?string
+    public function getImageh(): string
     {
         return $this->imageh;
     }
@@ -162,8 +163,5 @@ class Hebergement
     {
         $this->imageh = $imageh;
         return $this;
-
-
     }
 }
-
