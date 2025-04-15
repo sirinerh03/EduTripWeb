@@ -1,0 +1,36 @@
+{# templates/avis/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Avis{% endblock %}
+
+{% block body %}
+    <h1>Liste des Avis</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Commentaire</th>
+                <th>Note</th>
+                <th>Date de création</th>
+                <th>Photo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for avi in avis %}
+                <tr>
+                    <td>{{ avi.id }}</td>
+                    <td>{{ avi.commentaire }}</td>
+                    <td>{{ avi.note }}</td>
+                    <td>{{ avi.dateCreation ? avi.dateCreation|date('Y-m-d H:i:s') : 'Non définie' }}</td>
+                    <td>{{ avi.photo ?? 'Aucune' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun avis trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

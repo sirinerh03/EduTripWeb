@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Index{% endblock %}
+
+{% block body %}
+    <h1>User Index</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Prenom</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_user_show', {'id': user.id}) }}">Show</a>
+                        <a href="{{ path('app_user_edit', {'id': user.id}) }}">Edit</a>
+                        <form method="POST" action="{{ path('app_user_delete', {'id': user.id}) }}" style="display:inline;">
+                            <button class="btn">Delete</button>
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_new') }}">Create new user</a>
+{% endblock %}

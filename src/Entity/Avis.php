@@ -1,15 +1,11 @@
-<?php
+// src/Entity/Avis.php
 
 namespace App\Entity;
 
+use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
-use App\Repository\AviRepository;
-
-#[ORM\Entity(repositoryClass: AviRepository::class)]
-#[ORM\Table(name: 'avis')]
+#[ORM\Entity(repositoryClass: AvisRepository::class)]
 class Avis
 {
     #[ORM\Id]
@@ -17,33 +13,24 @@ class Avis
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'text')]
+    private ?string $commentaire = null;
+
+    #[ORM\Column(type: 'integer')]
+    private ?int $note = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $photo = null;
+
+    // --- GETTERS & SETTERS ---
+
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $user_id = null;
-
-    public function getUser_id(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUser_id(int $user_id): self
-    {
-        $this->user_id = $user_id;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'text', nullable: false)]
-    private ?string $commentaire = null;
 
     public function getCommentaire(): ?string
     {
@@ -56,46 +43,36 @@ class Avis
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $note = null;
-
     public function getNote(): ?int
     {
         return $this->note;
     }
 
-    public function setNote(?int $note): self
+    public function setNote(int $note): self
     {
         $this->note = $note;
         return $this;
     }
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
-    private ?\DateTimeInterface $date_creation = null;
-
-    public function getDate_creation(): ?\DateTimeInterface
+    public function getDateCreation(): ?\DateTimeInterface
     {
-        return $this->date_creation;
+        return $this->dateCreation;
     }
 
-    public function setDate_creation(\DateTimeInterface $date_creation): self
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
     {
-        $this->date_creation = $date_creation;
+        $this->dateCreation = $dateCreation;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $photo = null;
 
     public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    public function setPhoto(string $photo): self
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
         return $this;
     }
-
 }
