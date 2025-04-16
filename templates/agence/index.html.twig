@@ -2,56 +2,66 @@
 
 {% block title %}Liste des Agences{% endblock %}
 
-{% block content %}
-    <h1 class="my-4">Liste des Agences</h1>
-
-    {% if app.session.flashbag.has('success') %}
-        <div class="alert alert-success">
-            {{ app.session.flashbag.get('success')[0] }}
+{% block body %}
+    <div class="container mt-5">
+        <div class="mb-4">
+            <a href="{{ path('base_admin') }}" class="btn btn-secondary btn-sm rounded-circle" style="width: 40px; height: 40px; padding: 0; text-align: center;">
+                <i class="fas fa-arrow-left" style="font-size: 20px; line-height: 40px;"></i>
+            </a>
         </div>
-    {% endif %}
 
-    <div class="mb-4">
-        <a href="{{ path('app_agence_new') }}" class="btn btn-primary">Créer une nouvelle Agence</a>
+        <h1 class="my-4 text-center">Liste des Agences</h1>
+
+        {% if app.session.flashbag.has('success') %}
+            <div class="alert alert-success">
+                {{ app.session.flashbag.get('success')[0] }}
+            </div>
+        {% endif %}
+
+        <div class="mb-4 text-right">
+            <a href="{{ path('app_agence_new') }}" class="btn btn-primary">Créer une nouvelle Agence</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Id Agence</th>
+                        <th>Date Création</th>
+                        <th>Téléphone</th>
+                        <th>Nom Agence</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agence in agences %}
+                        <tr>
+                            <td>{{ agence.idAgence }}</td>
+                            <td>{{ agence.dateCreation ? agence.dateCreation|date('Y-m-d') : '' }}</td>
+                            <td>{{ agence.telephoneAg }}</td>
+                            <td>{{ agence.nomAg }}</td>
+                            <td>{{ agence.adresseAg }}</td>
+                            <td>{{ agence.emailAg }}</td>
+                            <td>{{ agence.descriptionAg }}</td>
+                            <td>
+                                <a href="{{ path('app_agence_show', {'id_agence': agence.idAgence}) }}" class="btn btn-info btn-sm">Voir</a>
+                                <a href="{{ path('app_agence_edit', {'id_agence': agence.idAgence}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                <form action="{{ path('app_agence_delete', {'id_agence': agence.idAgence}) }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agence.idAgence) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucune agence trouvée</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Id Agence</th>
-                <th>Date Création</th>
-                <th>Téléphone</th>
-                <th>Nom Agence</th>
-                <th>Adresse</th>
-                <th>Email</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for agence in agences %}
-                <tr>
-                    <td>{{ agence.idAgence }}</td>
-                    <td>{{ agence.dateCreation ? agence.dateCreation|date('Y-m-d') : '' }}</td>
-                    <td>{{ agence.telephoneAg }}</td>
-                    <td>{{ agence.nomAg }}</td>
-                    <td>{{ agence.adresseAg }}</td>
-                    <td>{{ agence.emailAg }}</td>
-                    <td>{{ agence.descriptionAg }}</td>
-                    <td>
-                        <a href="{{ path('app_agence_show', {'id_agence': agence.idAgence}) }}" class="btn btn-info btn-sm">Voir</a>
-                        <a href="{{ path('app_agence_edit', {'id_agence': agence.idAgence}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                        <form action="{{ path('app_agence_delete', {'id_agence': agence.idAgence}) }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agence.idAgence) }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8" class="text-center">Aucune agence trouvée</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}

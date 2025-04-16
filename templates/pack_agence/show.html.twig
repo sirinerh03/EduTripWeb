@@ -1,20 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pack d'Agence - Détails{% endblock %}
+{% block title %}Détails du Pack d'Agence{% endblock %}
 
-{% block content %}
-    <h1>Détails du Pack d'Agence</h1>
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Détails du Pack : {{ packAgence.nomPk }}</h1>
 
-    <ul>
-        <li><strong>Nom du Pack :</strong> {{ packAgence.nomPk }}</li>
-        <li><strong>Agence :</strong> {{ packAgence.idAgence.nomAg }}</li>
-        <li><strong>Prix :</strong> {{ packAgence.prix }} €</li>
-        <li><strong>Durée :</strong> {{ packAgence.duree }} jours</li>
-        <li><strong>Status :</strong> {{ packAgence.status }}</li>
-        <li><strong>Services Inclus :</strong> {{ packAgence.servicesInclus }}</li>
-        <li><strong>Description :</strong> {{ packAgence.descriptionPk }}</li>
-        <li><strong>Date d'Ajout :</strong> {{ packAgence.dateAjout|date('d/m/Y') }}</li>
-    </ul>
+        <a href="{{ path('app_pack_agence') }}" class="btn btn-secondary mb-4">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des packs
+        </a>
 
-    <a href="{{ path('app_pack_agence') }}">Retour à la liste des packs</a>
-    {% endblock %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Informations sur le pack</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Nom du Pack :</strong> {{ packAgence.nomPk }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Agence :</strong> {{ packAgence.idAgence.nomAg }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Prix :</strong> {{ packAgence.prix }} €
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Durée :</strong> {{ packAgence.duree }} jours
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Status :</strong> {{ packAgence.status }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Services Inclus :</strong> {{ packAgence.servicesInclus }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Description :</strong> {{ packAgence.descriptionPk }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date d'Ajout :</strong> {{ packAgence.dateAjout|date('d/m/Y') }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-4">
+           <a href="{{ path('app_pack_agence_edit', {'id': packAgence.idPack}) }}" class="btn btn-warning">
+    <i class="fas fa-edit"></i> Modifier le pack
+</a>
+
+        </div>
+    </div>
+{% endblock %}
