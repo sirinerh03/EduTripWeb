@@ -1,24 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une nouvelle Agence{% endblock %}
+{% block title %}Créer agence{% endblock %}
 
 {% block content %}
-    <h1>Créer une nouvelle Agence</h1>
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Créer une agence</h1>
 
-    <a href="{{ path('app_agence_index') }}" class="btn btn-secondary mb-3">
+    <a href="{{ path('app_agence_index') }}" class="btn btn-secondary mb-4">
         <i class="fas fa-arrow-left"></i> Retour à la liste
     </a>
 
-    {{ form_start(form) }}
-        {{ form_row(form.nom_ag) }}
-        {{ form_row(form.adresse_ag) }}
-        {{ form_row(form.telephone_ag) }}
-        {{ form_row(form.email_ag) }}
-        {{ form_row(form.description_ag) }}
-        {{ form_row(form.date_creation) }}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_row(form.nom_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_row(form.adresse_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_row(form.telephone_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_row(form.email_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_row(form.description_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_row(form.date_creation, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                        </div>
 
-        <button class="btn btn-success mt-3" type="submit">
-            <i class="fas fa-save me-2"></i> Créer l'agence
-        </button>
-    {{ form_end(form) }}
+                        <button class="btn btn-success w-100 mt-3" type="submit" style="background-color:rgb(40, 133, 167); border-color: #28a745;">
+                            <i class="fas fa-save me-2"></i> Ajouter l'agence
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
