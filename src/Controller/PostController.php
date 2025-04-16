@@ -204,5 +204,28 @@ $post->setUtilisateur($utilisateur);
             'commentaire' => $commentaire,
         ]);
     }
+    // src/Controller/PostController.php
+    #[Route('/post/{id}/like', name: 'post_like', methods: ['POST'])]
+    public function like(Post $post, EntityManagerInterface $em): JsonResponse
+    {
+        $post->setLikes(($post->getLikes() ?? 0) + 1);
+        $em->flush();
     
+        return $this->json([
+            'success' => true,
+            'count' => $post->getLikes()
+        ]);
+    }
+    
+    #[Route('/post/{id}/dislike', name: 'post_dislike', methods: ['POST'])]
+    public function dislike(Post $post, EntityManagerInterface $em): JsonResponse
+    {
+        $post->setDislikes(($post->getDislikes() ?? 0) + 1);
+        $em->flush();
+    
+        return $this->json([
+            'success' => true,
+            'count' => $post->getDislikes()
+        ]);
+    }
 }

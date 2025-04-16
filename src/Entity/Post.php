@@ -59,6 +59,7 @@ class Post
     private ?Utilisateur $utilisateur = null;
 
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'post')]
+    
 private Collection $commentaires;
 
 public function __construct()
@@ -175,4 +176,30 @@ public function getCommentaires(): Collection
 
         return $this;
     }
+
+    // src/Entity/Post.php
+
+public function incrementLikes(): self
+{
+    $this->likes = ($this->likes ?? 0) + 1;
+    return $this;
+}
+
+public function decrementLikes(): self
+{
+    $this->likes = max(0, ($this->likes ?? 0) - 1);
+    return $this;
+}
+
+public function incrementDislikes(): self
+{
+    $this->dislikes = ($this->dislikes ?? 0) + 1;
+    return $this;
+}
+
+public function decrementDislikes(): self
+{
+    $this->dislikes = max(0, ($this->dislikes ?? 0) - 1);
+    return $this;
+}
 }
