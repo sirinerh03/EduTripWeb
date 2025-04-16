@@ -58,7 +58,9 @@
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="{{ path('show_base_template') }}" class="nav-item nav-link active">Accueil</a>
                 <a href="about.html" class="nav-item nav-link">Universités</a>
-                <a href="{{ path('app_hebergement_index') }}" class="nav-item nav-link">Hébergement</a>                <a href="{{ path('app_posts') }}" class="nav-item nav-link">Posts</a>
+               <a href="{{ path('app_hebergement_carousel') }}" class="nav-item nav-link {% if app.request.attributes.get('_route') == 'app_hebergement_carousel' %}active text-primary fw-bold{% endif %}">Hébergement</a>
+        <a href="{{ path('app_posts') }}" class="nav-item nav-link {% if app.request.attributes.get('_route') == 'app_posts' %}active text-primary fw-bold{% endif %}">Posts</a>
+
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
                     <div class="dropdown-menu fade-down m-0">

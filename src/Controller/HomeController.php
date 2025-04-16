@@ -12,7 +12,11 @@ final class HomeController extends AbstractController{
     {
         return $this->render('home/index.html.twig');
     }
-
+    #[Route('/adminhome', name: 'base_admin')]
+    public function homeadmin(): Response
+    {
+        return $this->render('admin/homeadmin.html.twig');
+    }
     
     #[Route('/base', name: 'show_base_template')]
     public function base(): Response

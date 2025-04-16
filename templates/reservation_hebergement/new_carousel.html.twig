@@ -1,0 +1,198 @@
+{# templates/reservation_hebergement/new_carousel.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation pour {{ hebergement.nomh }}{% endblock %}
+
+{% block body %}
+<section class="container py-5">
+    <h1 class="text-center mb-5 fw-bold display-4 text-primary">
+        Faire une Réservation pour {{ hebergement.nomh }}
+    </h1>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="row g-4">
+        <!-- Date de début -->
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.date_d, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    {{ form_widget(form.date_d, {
+                        'attr': {
+                            'class': 'form-control' ~ (form_errors(form.date_d) ? ' is-invalid' : '')
+                        }
+                    }) }}
+                </div>
+                {% if form_errors(form.date_d) %}
+                    <div class="invalid-feedback d-block">
+                        {{ form_errors(form.date_d) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Date de fin -->
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.date_f, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    {{ form_widget(form.date_f, {
+                        'attr': {
+                            'class': 'form-control' ~ (form_errors(form.date_f) ? ' is-invalid' : '')
+                        }
+                    }) }}
+                </div>
+                {% if form_errors(form.date_f) %}
+                    <div class="invalid-feedback d-block">
+                        {{ form_errors(form.date_f) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Commentaire -->
+        <div class="col-md-12">
+            <div class="form-group">
+                {{ form_label(form.status, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    {{ form_widget(form.status, {
+                        'attr': {
+                            'class': 'form-control' ~ (form_errors(form.status) ? ' is-invalid' : '')
+                        }
+                    }) }}
+                </div>
+                {% if form_errors(form.status) %}
+                    <div class="invalid-feedback d-block">
+                        {{ form_errors(form.status) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Hébergement (non modifiable) -->
+        <div class="col-md-12">
+            <div class="form-group">
+                {{ form_label(form.hebergement, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    {{ form_widget(form.hebergement, {
+                        'attr': {
+                            'class': 'form-control',
+                            'readonly': true
+                        }
+                    }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+        <button class="btn custom-btn">{{ button_label|default('Enregistrer') }}</button>
+        <a href="{{ path('app_hebergement_carousel') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+
+    {{ form_end(form) }}
+</section>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+        color: #333;
+    }
+
+    .form-label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        padding: 10px 15px;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #06BBCC;
+        box-shadow: 0 0 5px rgba(0, 183, 190, 0.5);
+    }
+
+    .custom-btn {
+        background-color: #06BBCC;
+        color: white;
+        border: 2px solid #06BBCC;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .custom-btn:hover {
+        background-color: #00B0B9;
+        border-color: #00B0B9;
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: #06BBCC;
+        border: 2px solid #06BBCC;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+        background-color: #06BBCC;
+        color: white;
+        border-color: #06BBCC;
+        transform: translateY(-4px);
+        box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary:active {
+        transform: translateY(2px);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .invalid-feedback {
+        display: block;
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .form-control.is-invalid {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    }
+</style>
+{% endblock %}

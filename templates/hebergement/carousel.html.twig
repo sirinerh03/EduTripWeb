@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Hébergements{% endblock %}
+
+{% block body %}
+<section class="container py-5">
+    <h1 class="text-center mb-5 fw-bold display-5">Découvrez Nos Hébergements</h1>
+
+    <div id="hebergementCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner rounded-4 shadow-lg overflow-hidden">
+            {% for hebergement in hebergements %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <div class="position-relative text-center">
+                        <img src="{{ asset('img/' ~ hebergement.imageh) }}"
+                             class="carousel-img mx-auto {% if loop.first %}active{% endif %}"
+                             alt="{{ hebergement.nomh }}">
+
+                        <div class="carousel-caption d-none d-md-block custom-caption p-4 mt-3">
+                            <h3 class="fw-semibold text-white">{{ hebergement.nomh }}</h3>
+                            <p class="text-light mb-2">{{ hebergement.typeh }} - {{ hebergement.capaciteh }} personnes</p>
+
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="{{ path('app_hebergement_show', {'id_hebergement': hebergement.id}) }}"
+                                   class="btn btn-outline-light">
+                                    Voir Détails
+                                </a>
+                                <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}"
+                                   class="btn btn-outline-light">
+                                    Faire une Réservation
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#hebergementCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#hebergementCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ path('app_hebergement_index') }}" class="btn btn-dark px-4 py-2 rounded-pill">
+            Retour à la liste
+        </a>
+    </div>
+</section>
+
+<style>
+    .carousel-img {
+        width: 70%;
+        max-height: 450px;
+        object-fit: cover;
+        border-radius: 20px;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .carousel-item.active .carousel-img {
+        transform: scale(1.04);
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+    }
+
+    .custom-caption {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-outline-light {
+        border: 1px solid #ffffff;  /* Thinner border */
+        font-weight: 600;
+        padding: 0.6rem 1.4rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-outline-light::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.1);
+        transition: width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .btn-outline-light:hover {
+        background-color: #ffffff;
+        color: #000000;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .btn-outline-light:active {
+        transform: translateY(0px);  /* Button reset after click */
+    }
+
+    .btn-outline-light:focus::after {
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+    }
+
+    .btn-outline-light:hover::after {
+        width: 300%;
+        height: 300%;
+        top: -100%;
+        left: -100%;
+    }
+
+    @media (max-width: 768px) {
+        .carousel-img {
+            width: 100%;
+            max-height: 300px;
+        }
+
+        .custom-caption {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}

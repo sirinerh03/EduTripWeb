@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controller;
-use App\Repository\HebergementRepository; 
 
+use App\Repository\HebergementRepository;
 use App\Entity\Hebergement;
 use App\Entity\ReservationHebergement;
 use App\Form\ReservationHebergementType;
@@ -23,13 +23,57 @@ final class ReservationHebergementController extends AbstractController
             'reservation_hebergements' => $reservationHebergementRepository->findAll(),
         ]);
     }
-// src/Controller/ReservationHebergementController.php
 
-#[Route('/new/{id_hebergement}', name: 'app_reservation_hebergement_new')]
-public function new(
-    Request $request, 
-    HebergementRepository $hebergementRepository, 
-    EntityManagerInterface $entityManager, 
+    // Existing method to create a reservation
+    #[Route('/new/{id_hebergement}', name: 'app_reservation_hebergement_new')]
+    public function new(
+        Request $request,
+        HebergementRepository $hebergementRepository,
+        EntityManagerInterface $entityManager,
+        int $id_hebergement
+    ): Response {
+        $hebergement = $hebergementRepository->find($id_hebergement);
+
+        if (!$hebergement) {
+            throw $this->createNotFoundException('Hébergement non trouvé.');
+        }
+
+        if ($hebergement->getCapaciteh() <= 0) {
+            $this->addFlash('error', 'La capacité de cet hébergement est déjà pleine.');
+            return $this->redirectToRoute('app_hebergement_index');
+        }
+
+        $reservation = new ReservationHebergement();
+        $reservation->setHebergement($hebergement);
+
+        $form = $this->createForm(ReservationHebergementType::class, $reservation, [
+            'hebergement_name' => $hebergement->getNomh()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Decrease the capacity
+            $hebergement->setCapaciteh($hebergement->getCapaciteh() - 1);
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Réservation ajoutée avec succès et capacité mise à jour.');
+            return $this->redirectToRoute('app_reservation_hebergement_index');
+        }
+
+        return $this->render('reservation_hebergement/new.html.twig', [
+            'form' => $form->createView(),
+            'hebergement' => $hebergement
+        ]);
+    }
+
+    #[Route('/new-carousel/{id_hebergement}', name: 'app_reservation_hebergement_new_carousel')]
+public function newCarousel(
+    Request $request,
+    HebergementRepository $hebergementRepository,
+    EntityManagerInterface $entityManager,
     int $id_hebergement
 ): Response {
     $hebergement = $hebergementRepository->find($id_hebergement);
@@ -42,24 +86,31 @@ public function new(
     $reservation->setHebergement($hebergement);
 
     $form = $this->createForm(ReservationHebergementType::class, $reservation, [
-        'hebergement_name' => $hebergement->getNomh() // Pass the hebergement name here
+        'hebergement_name' => $hebergement->getNomh()
     ]);
-    
+
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+        $hebergement->setCapaciteh($hebergement->getCapaciteh() - 1);
+
         $entityManager->persist($reservation);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_reservation_hebergement_index');
+        $this->addFlash('success', 'Réservation ajoutée avec succès et capacité mise à jour.');
+
+        return $this->redirectToRoute('app_reservation_hebergement_show_carousel', [
+            'id_reservationh' => $reservation->getIdReservationh()
+        ]);
     }
 
-    return $this->render('reservation_hebergement/new.html.twig', [
-        'form' => $form,
+    return $this->render('reservation_hebergement/new_carousel.html.twig', [
+        'form' => $form->createView(),
         'hebergement' => $hebergement
     ]);
 }
 
+    
     #[Route('/{id_reservationh}', name: 'app_reservation_hebergement_show', methods: ['GET'])]
     public function show(ReservationHebergement $reservationHebergement): Response
     {
@@ -76,8 +127,7 @@ public function new(
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_hebergement_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_reservation_hebergement_index');
         }
 
         return $this->render('reservation_hebergement/edit.html.twig', [
@@ -95,9 +145,47 @@ public function new(
             $entityManager->remove($reservationHebergement);
             $entityManager->flush();
         }
-    
+
         // Redirect to the reservation index page
         return $this->redirectToRoute('app_reservation_hebergement_index');
     }
+    #[Route('/reservation/show/{id_reservationh}', name: 'app_reservation_hebergement_show_carousel', methods: ['GET'])]
+public function showReservationCarousel(ReservationHebergement $reservationHebergement): Response
+{
+    return $this->render('reservation_hebergement/show_carousel.html.twig', [
+        'reservation_hebergement' => $reservationHebergement,
+    ]);
+}
+#[Route('/reservation/carousel/{id_reservationh}/delete', name: 'app_reservation_hebergement_delete_carousel', methods: ['POST'])]
+public function deleteCarousel(ReservationHebergement $reservationHebergement, Request $request, EntityManagerInterface $entityManager): Response
+{
+    if ($this->isCsrfTokenValid('delete' . $reservationHebergement->getIdReservationh(), $request->get('_token'))) {
+        $entityManager->remove($reservationHebergement);
+        $entityManager->flush();
+        $this->addFlash('success', 'Réservation supprimée avec succès.');
+    }
 
+    return $this->redirectToRoute('app_hebergement_carousel');
+}
+#[Route('/reservation/carousel/{id_reservationh}/edit', name: 'app_reservation_hebergement_edit_carousel', methods: ['GET', 'POST'])]
+public function editCarousel(Request $request, ReservationHebergement $reservationHebergement, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(ReservationHebergementType::class, $reservationHebergement);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
+        $this->addFlash('success', 'Réservation mise à jour avec succès.');
+        
+        // Redirect to show page after update
+        return $this->redirectToRoute('app_reservation_hebergement_show_carousel', [
+            'id_reservationh' => $reservationHebergement->getIdReservationh()
+        ]);
+    }
+
+    return $this->render('reservation_hebergement/edit_carousel.html.twig', [
+        'reservation_hebergement' => $reservationHebergement,
+        'form' => $form->createView(),
+    ]);
+}
 }
