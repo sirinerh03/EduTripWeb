@@ -18,72 +18,70 @@
             </nav>
         </div>
 
-        <div class="row" style="margin-left: 15%; margin-right: 5%;">
-            <div class="col-12 grid-margin">
-                <div class="card">
-                    <div class="card-body">
-                        {% for message in app.flashes('success') %}
-                            <div class="alert alert-success">{{ message }}</div>
-                        {% endfor %}
-                        {% for message in app.flashes('error') %}
-                            <div class="alert alert-danger">{{ message }}</div>
-                        {% endfor %}
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
 
-                        {% if posts is defined and posts|length > 0 %}
-                            <div class="row">
-                                {% for post in posts %}
-                                    <div class="col-md-6 col-lg-4 mb-4">
-                                        <div class="card h-100">
-                                            {% if post.image %}
-                                                <img src="{{ asset('images/' ~ post.image) }}" 
-                                                     class="card-img-top" 
-                                                     style="height: 200px; object-fit: cover;">
-                                            {% endif %}
-                                            <div class="card-body">
-                                                {% if post.utilisateur %}
-                                                    <h5 class="card-title text-primary">
-                                                        {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
-                                                    </h5>
-                                                {% else %}
-                                                    <h5 class="card-title text-danger">Utilisateur inconnu</h5>
-                                                {% endif %}
-                                                
-                                                <p class="card-text">
-                                                    {{ post.contenu|length > 100 ? post.contenu|slice(0, 100) ~ '...' : post.contenu }}
-                                                </p>
-                                                
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <small class="text-muted">
-                                                        <strong>Catégorie:</strong> {{ post.categorie }}
-                                                    </small>
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="card-footer">
-                                                <small class="text-muted">
-                                                    Posté le: {{ post.dateCreation|date('d/m/Y H:i') }}
-                                                </small>
-                                                <div class="float-end">
-                                                    <a href="{{ path('app_post_detail', {'id': post.getIdPost()}) }}" class="btn btn-sm btn-outline-primary">
-                                                        Voir détails
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+            {% if pagination is defined %}
+                <div class="row">
+                    {% for post in pagination %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                {% if post.image %}
+                                    <img src="{{ asset('images/' ~ post.image) }}" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    {% if post.utilisateur %}
+                                        <h5 class="card-title text-primary text-center">
+                                            {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                                        </h5>
+                                    {% else %}
+                                        <h5 class="card-title text-danger text-center">Utilisateur inconnu</h5>
+                                    {% endif %}
+
+                                    <p class="card-text">
+                                        {{ post.contenu|length > 100 ? post.contenu|slice(0, 100) ~ '...' : post.contenu }}
+                                    </p>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <strong>Catégorie:</strong> {{ post.categorie }}
+                                        </small>
                                     </div>
-                                {% endfor %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">
+                                        Posté le: {{ post.dateCreation|date('d/m/Y H:i') }}
+                                    </small>
+                                    <div class="float-end">
+                                        <a href="{{ path('app_post_detail', {'id': post.getIdPost()}) }}" class="btn btn-sm btn-outline-primary">
+                                            Voir détails
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        {% else %}
-                            <div class="alert alert-info text-center">
-                                Aucun post trouvé dans la base de données.
-                            </div>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    Aucun post trouvé dans la base de données.
+                </div>
+            {% endif %}
+
+            {# Affichage de la pagination #}
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
             </div>
         </div>
     </div>
-    
+
     {# Espace réservé pour le footer #}
     <div style="height: 60px;"></div>
 </div>
