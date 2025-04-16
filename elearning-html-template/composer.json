@@ -1,0 +1,32 @@
+{
+    "name": "fmahmoudi/elearning-html-template",
+    "autoload": {
+        "psr-4": {
+            "Fmahmoudi\\ElearningHtmlTemplate\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "fmahmoudi1",
+            "email": "fatma.mahmoudi@esprit.tn"
+        }
+    ],
+    "require": {
+        "symfony/console": "^6.0",
+        "symfony/skeleton": "^7.2",
+        "doctrine/dbal": "^3",
+        "doctrine/doctrine-bundle": "^2.14",
+        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/orm": "^3.3"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php generate-env.php"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        }
+    }
+}

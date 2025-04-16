@@ -1,0 +1,33 @@
+{% extends 'homeadmin.html.twig' %}
+
+{% block title %}New University{% endblock %}
+
+{% block Content %}
+    <!-- New University Section Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">New University</h6>
+                <h1 class="mb-5">Add a New University</h1>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-8 col-md-10 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="course-item bg-light">
+                        <div class="p-4 pb-0">
+                            {{ include('university/_form.html.twig') }}
+                        </div>
+                        <div class="p-4 pt-2">
+                            <div class="text-center">
+                                <a href="{{ path('app_university_index') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Universities
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New University Section End -->
+{% endblock %}

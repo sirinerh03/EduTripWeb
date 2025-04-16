@@ -1,0 +1,27 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}New Application{% endblock %}
+
+{% block content %}
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">New Application</h6>
+                <h1 class="mb-5">Add a new candidature</h1>
+            </div>
+
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-8 col-md-10 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="course-item bg-light">
+            <div class="p-4">
+                {{ include('candidature/_form.html.twig', {'form': form, 'candidature': candidature}) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+{% endblock %}
