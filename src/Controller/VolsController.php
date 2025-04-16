@@ -18,7 +18,7 @@ final class VolsController extends AbstractController
     {
         $vols = $volRepository->findAll();
 
-        return $this->render('vols/vols.html.twig', [
+        return $this->render('admin/vols/vols.html.twig', [
             'vols' => $vols,
         ]);
     }
