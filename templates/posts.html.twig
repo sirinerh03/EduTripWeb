@@ -46,7 +46,7 @@
                                 </small>
 
                                <div>
-                    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleCommentaires({{ post.idPost }})">
+                    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleCommentaires({{ post.getIdPost() }})">
                         💬 Commentaires
                     </button>
                 </div>
@@ -72,7 +72,7 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ commentaire.idCommentaire }}">
                 <li>
-                    <a class="dropdown-item" href="#" onclick="modifierCommentaire({{ commentaire.idCommentaire }}, '{{ commentaire.contenu|e('js') }}')" style="color: black !important;">Modifier</a>
+                     <a class="dropdown-item" href="{{ path('commentaire_edit', {'id': commentaire.idCommentaire}) }}" style="color: black !important;">Modifier</a>
                 </li>
                 <li>
                     <a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire({{ commentaire.idCommentaire }})"style="color: black !important;">Supprimer</a>

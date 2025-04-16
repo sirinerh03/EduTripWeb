@@ -4,8 +4,10 @@ namespace App\Controller;
 use App\Entity\Utilisateur;  
 use App\Entity\Commentaire; 
 use Symfony\Component\HttpFoundation\JsonResponse;
+
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Form\CommentaireType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,10 +19,12 @@ use Symfony\Component\Security\Core\Security;
 class PostController extends AbstractController
 {
     private $security;
-
-    public function __construct(Security $security)
+    private $entityManager;
+    public function __construct(EntityManagerInterface $entityManager,Security $security)
     {
         $this->security = $security;
+        $this->entityManager = $entityManager;
+
     }
 
     #[Route('/newpost', name: 'app_new_post', methods: ['GET', 'POST'])]
@@ -170,19 +174,7 @@ $post->setUtilisateur($utilisateur);
         return new JsonResponse(['contenu' => $commentaire->getContenu()]);
     }
     
-    #[Route('/commentaire/{id}/edit', name: 'edit_commentaire', methods: ['POST'])]
-    public function editCommentaire(Request $request, Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
-    {
-        $contenu = $request->request->get('contenu');
-        if (!$contenu) {
-            return new JsonResponse(['success' => false], 400);
-        }
-    
-        $commentaire->setContenu($contenu);
-        $em->flush();
-    
-        return new JsonResponse(['success' => true]);
-    }
+  
     
     #[Route('/commentaire/{id}/delete', name: 'delete_commentaire', methods: ['POST'])]
     public function deleteCommentaire(Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
@@ -192,6 +184,25 @@ $post->setUtilisateur($utilisateur);
     
         return new JsonResponse(['success' => true]);
     }
+    #[Route('/commentaire/{id}/edit', name: 'commentaire_edit')]
+    public function editCommentaire(Request $request, Commentaire $commentaire)
+    {
+        // Création du formulaire pour modifier le commentaire
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Sauvegarde des modifications
+            $this->entityManager->flush(); // Utilisation de l'EntityManager injecté
+
+            // Redirection vers la page du post après la modification
+            return $this->redirectToRoute('app_posts', ['id' => $commentaire->getPost()->getIdPost()]);
+        }
+
+        return $this->render('/editCommentaire.html.twig', [
+            'form' => $form->createView(),
+            'commentaire' => $commentaire,
+        ]);
+    }
     
 }
