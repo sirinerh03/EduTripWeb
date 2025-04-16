@@ -18,6 +18,11 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig');
     }
 
+    #[Route('/adminhome', name: 'base_admin')]
+    public function homeadmin(): Response
+    {
+        return $this->render('admin/homeadmin.html.twig');
+    }
     
     #[Route('/base', name: 'show_base_template')]
     public function base(): Response
@@ -38,17 +43,7 @@ class HomeController extends AbstractController
     }*/
 
 
-    #[Route('/posts', name: 'app_posts')]
-    public function posts(EntityManagerInterface $entityManager): Response
-    {
-        $postRepository = $entityManager->getRepository(Post::class);
-        $posts = $postRepository->findAll();
-        
-        return $this->render('posts.html.twig', [
-            'posts' => $posts,
-    
-        ]);
-    }
+   
 
 
 
