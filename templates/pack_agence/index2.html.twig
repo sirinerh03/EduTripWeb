@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Packs d'Agence{% endblock %}
+
+{% block content %}
+    <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {% if packAgences is not empty %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for pack in packAgences %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow" style="background: #f0f8ff;">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">{{ pack.nomPk }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><span class="fw-bold text-secondary">💰 Prix :</span><br>{{ pack.prix }} TND</p>
+                            <p><span class="fw-bold text-secondary">⏳ Durée :</span><br>{{ pack.duree }} jours</p>
+                            <p><span class="fw-bold text-secondary">📋 Services inclus :</span><br>{{ pack.servicesInclus }}</p>
+                            <p><span class="fw-bold text-secondary">🗓️ Date d'ajout :</span><br>{{ pack.dateAjout ? pack.dateAjout|date('Y-m-d') : 'Non renseignée' }}</p>
+                            <p><span class="fw-bold text-secondary">📌 Statut :</span><br>{{ pack.status }}</p>
+                            <p><span class="fw-bold text-secondary">📝 Description :</span><br>{{ pack.descriptionPk }}</p>
+                            <p><span class="fw-bold text-secondary">🏢 Agence :</span><br>{{ pack.idAgence.nomAg }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4">
+            Aucun pack trouvé.
+        </div>
+    {% endif %}
+{% endblock %}

@@ -24,6 +24,15 @@ final class PackAgenceController extends AbstractController
             'packAgences' => $packAgences,
         ]);
     }
+    #[Route('/pack/agence/liste', name: 'app_pack_agence_liste')]
+    public function simpleList(Pack_agenceRepository $packAgenceRepository): Response
+    {
+        $packAgences = $packAgenceRepository->findAll();
+    
+        return $this->render('pack_agence/index2.html.twig', [
+            'packAgences' => $packAgences,
+        ]);
+    }
 
     #[Route('/pack/agence/new', name: 'app_pack_agence_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

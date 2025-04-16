@@ -27,6 +27,16 @@ final class AgenceController extends AbstractController
             'agences' => $agences,
         ]);
     }
+    #[Route('/liste', name: 'app_agence_liste', methods: ['GET'])]
+    public function simpleList(EntityManagerInterface $entityManager): Response
+    {
+        $agences = $entityManager->getRepository(Agence::class)->findAll();
+    
+        return $this->render('agence/index2.html.twig', [
+            'agences' => $agences,
+        ]);
+    }
+    
 
     #[Route('/new', name: 'app_agence_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

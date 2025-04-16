@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Agences{% endblock %}
+
+{% block content %}
+    <h1 class="my-4 text-primary">🌍 Liste des Agences</h1>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {% if agences is not empty %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for agence in agences %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow" style="background: #f0f8ff;">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">{{ agence.nomAg }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <span class="fw-bold text-secondary">📅 Date de création :</span><br>
+                                {{ agence.dateCreation ? agence.dateCreation|date('Y-m-d') : 'Non renseignée' }}
+                            </p>
+                            <p>
+                                <span class="fw-bold text-secondary">📞 Téléphone :</span><br>
+                                {{ agence.telephoneAg }}
+                            </p>
+                            <p>
+                                <span class="fw-bold text-secondary">📍 Adresse :</span><br>
+                                {{ agence.adresseAg }}
+                            </p>
+                            <p>
+                                <span class="fw-bold text-secondary">✉️ Email :</span><br>
+                                {{ agence.emailAg }}
+                            </p>
+                            <p>
+                                <span class="fw-bold text-secondary">📝 Description :</span><br>
+                                {{ agence.descriptionAg }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-4">
+            Aucune agence trouvée.
+        </div>
+    {% endif %}
+{% endblock %}
