@@ -31,4 +31,13 @@ class AdminController extends AbstractController
     
         ]);
     }
+    #[Route('/admin/post/{id}', name: 'app_post_detail')]
+public function detail(Post $post): Response
+{
+    return $this->render('admin/detailsPosts.html.twig', [
+        'post' => $post,
+        'commentaires' => $post->getCommentaires(),
+    ]);
+}
+
 }
