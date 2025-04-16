@@ -6,19 +6,56 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ReservationVolType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', null, ['label' => 'Nom'])
-            ->add('prenom', null, ['label' => 'Prénom'])
-            ->add('email', null, ['label' => 'Email'])
-            ->add('id_etudiant', null, ['label' => 'ID Étudiant'])
-            ->add('nb_palce', null, ['label' => 'Nombre de places'])
-            ->add('submit', SubmitType::class, ['label' => 'Réserver']);
-    }
+        ->add('nom', TextType::class, [
+            'label' => 'Nom',
+            'attr' => [
+                'placeholder' => 'Votre nom',
+                'pattern' => '[A-Za-zÀ-ÿ\s\-]{3,50}',
+                'title' => '2-50 caractères alphabétiques'
+            ]
+        ])
+        ->add('prenom', TextType::class, [
+            'label' => 'Prénom',
+            'attr' => ['placeholder' => 'Votre prénom']
+        ])
+        ->add('email', EmailType::class, [
+            'label' => 'Email',
+            'attr' => [
+                'placeholder' => 'exemple@domain.com',
+                'pattern' => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
+            ]
+        ])
+        ->add('id_etudiant', TextType::class, [
+            'label' => 'ID Étudiant',
+            'attr' => [
+                'pattern' => '[A-Z]\d{8}',
+                'title' => 'Format: A12345678'
+            ]
+        ])
+        ->add('nb_palce', IntegerType::class, [
+            'label' => 'Nombre de places',
+            'attr' => [
+                'min' => 1,
+                'max' => 10
+            ]
+        ])
+        ->add('submit', SubmitType::class, [
+            'label' => ' ',
+            'attr' => [
+                'class' => 'btn-reserver',
+                'title' => 'Confirmer la réservation'
+            ]
+        ]);
+}
 
     public function configureOptions(OptionsResolver $resolver): void
     {

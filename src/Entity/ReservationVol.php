@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ReservationVolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,19 +21,45 @@ class ReservationVol
     private ?float $prix = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+#[Assert\NotBlank(message: "Le nom est obligatoire")]
+#[Assert\Length(
+    min: 3,
+    max: 50,
+    minMessage: "3 caractères minimum",
+    maxMessage: "50 caractères maximum"
+)]
+#[Assert\Regex(
+    pattern: "/^[a-zA-ZÀ-ÿ\s\-']+$/",
+    message: "Caractères spéciaux non autorisés"
+)]
+private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+#[ORM\Column(length: 255)]
+#[Assert\NotBlank(message: "Le prénom est obligatoire")]
+#[Assert\Length(min: 3, max: 50)]
+private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
+#[ORM\Column(length: 255)]
+#[Assert\NotBlank(message: "L'email est obligatoire")]
+#[Assert\Email(message: "Format email invalide")]
+private ?string $email = null;
 
-    #[ORM\Column]
-    private ?int $id_etudiant = null;
+#[ORM\Column]
+#[Assert\NotBlank(message: "L'ID étudiant est obligatoire")]
+#[Assert\Regex(
+    pattern: "/^[A-Z]\d{8}$/",
+    message: "Format : Lettre majuscule suivie de 8 chiffres"
+)]
+private ?int $id_etudiant = null;
 
-    #[ORM\Column]
-    private ?int $nb_palce = null;
+#[ORM\Column]
+#[Assert\NotBlank(message: "Nombre de places requis")]
+#[Assert\Positive(message: "Doit être supérieur à 0")]
+#[Assert\LessThanOrEqual(
+    value: 10,
+    message: "Maximum 10 places par réservation"
+)]
+private ?int $nb_palce = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservationVols')]
     #[ORM\JoinColumn(name:"id_vol",referencedColumnName:"id_vol",nullable: false)]

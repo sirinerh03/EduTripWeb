@@ -3,27 +3,173 @@
 {% block title %}Réservation de Vol{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="ticket p-4 mb-4 bg-white rounded shadow">
-        <h2 class="text-center mb-4">🛫 Réservation pour le vol {{ vol.numVol }}</h2>
+<style>
+    body {
+        background: linear-gradient(to right, #e0f7fa, #ffffff);
+        font-family: 'Segoe UI', sans-serif;
+        color: #004d40;
+        min-height: 100vh;
+        padding: 30px 20px;
+    }
 
-        <p><strong>Départ :</strong> {{ vol.aeroportDepart }}</p>
-        <p><strong>Arrivée :</strong> {{ vol.aeroportArrivee }}</p>
-        <p><strong>Date :</strong> {{ vol.dateDepart|date('d/m/Y H:i') }}</p>
-        <p><strong>Prix :</strong> {{ vol.prixVol }} TND</p>
+    h2 {
+        color: #00bfa5;
+        font-weight: bold;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    .form-error {
+    color: #dc3545;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: block;
+    }
 
-        {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-6">{{ form_row(form.nom) }}</div>
-            <div class="col-md-6">{{ form_row(form.prenom) }}</div>
-            <div class="col-md-6">{{ form_row(form.email) }}</div>
-            <div class="col-md-6">{{ form_row(form.nb_palce) }}</div>
-            <div class="col-md-6">{{ form_row(form.id_etudiant) }}</div>
+    input:invalid {
+    border-color: #dc3545 !important;
+   }
+
+   input:valid {
+    border-color: #28a745 !important;
+    }
+    .ticket-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        border-left: 6px solid #00bfa5;
+    }
+
+    .ticket-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .ticket-row p {
+        flex: 1 1 45%;
+        margin: 5px 0;
+    }
+
+    .ticket-info {
+        border-bottom: 2px dashed #00bfa5;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .ticket-info p {
+        font-size: 1.1rem;
+        margin: 8px 0;
+        color: #00695c;
+    }
+
+    .ticket-info p strong {
+        color: #004d40;
+    }
+
+    /* Group form fields under separate lines */
+    .form-row-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .form-row-inline .form-row {
+        flex: 1 1 30%; /* Adjust the flex-basis to get the desired width */
+        margin-bottom: 20px;
+    }
+
+    /* Make sure fields are not stretched to the full width */
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    .form-row input, .form-row select {
+        border-radius: 10px;
+        border: 1px solid #00bfa5;
+        padding: 12px 15px;
+        width: 100%;
+        font-size: 1rem;
+        transition: 0.3s;
+    }
+
+    .form-row input:focus, .form-row select:focus {
+        border-color: #00796b;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 191, 165, 0.4);
+    }
+
+    .btn-reserver {
+    background-color: #007bff; /* Blue color */
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 20px 20px; /k */
+    border-radius: 50%; /* Make it a circle */
+    font-size: 1.5rem; /* Font size */
+    width: 60px; /* Fixed width for circular button */
+    height: 60px; /* Fixed height for circular button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+    .btn-reserver:hover {
+        background-color: #008e76;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 191, 165, 0.3);
+    }
+
+    .text-end {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
+
+<div class="ticket-container">
+    <h2>🛫 Réservation pour le vol {{ vol.numVol }}</h2>
+
+    <div class="ticket-info">
+        <div class="ticket-row">
+            <p><strong>Départ :</strong> {{ vol.aeroportDepart }}</p>
+            <p><strong>Arrivée :</strong> {{ vol.aeroportArrivee }}</p>
         </div>
-        <div class="text-end mt-3">
-            {{ form_row(form.submit) }}
+        <div class="ticket-row">
+            <p><strong>Date de départ :</strong> {{ vol.dateDepart|date('d/m/Y H:i') }}</p>
+            <p><strong>Date d’arrivée :</strong> {{ vol.dateArrivee|date('d/m/Y H:i') }}</p>
         </div>
-        {{ form_end(form) }}
+        <div class="ticket-row">
+            <p><strong>Places disponibles :</strong> {{ vol.placesDispo }}</p>
+            <p><strong>Prix :</strong> {{ vol.prixVol }} TND</p>
+        </div>
     </div>
+
+    {{ form_start(form) }}
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flashError }}</div>
+    {% endfor %}
+
+        <div class="form-row-inline">
+            <div class="form-row">{{ form_label(form.nom) }} {{ form_widget(form.nom) }} {{ form_errors(form.nom) }}</div>
+            <div class="form-row"> {{ form_label(form.prenom) }} {{ form_widget(form.prenom) }}  {{ form_errors(form.prenom) }}</div>
+            <div class="form-row">{{ form_label(form.email) }} {{ form_widget(form.email) }} {{ form_errors(form.email) }}</div>
+        </div>
+
+        <div class="form-row-inline">
+            <div class="form-row">{{ form_label(form.nb_palce) }} {{ form_widget(form.nb_palce) }} {{ form_errors(form.nb_palce) }}</div>
+            <div class="form-row"> {{ form_label(form.id_etudiant) }} {{ form_widget(form.id_etudiant) }} {{ form_errors(form.id_etudiant) }}</div>
+        </div>
+ <div class="text-end mt-3">
+        {{ form_widget(form.submit, {'attr': {'class': 'btn-reserver'}}) }}
+    </div>
+     {{ form_end(form) }}
 </div>
 {% endblock %}
