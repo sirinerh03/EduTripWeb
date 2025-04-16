@@ -25,6 +25,7 @@ final class CandidatureController extends AbstractController
         ]);
     }
 
+
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -93,6 +94,7 @@ final class CandidatureController extends AbstractController
         return $this->redirectToRoute('app_candidature_index');
     }
 
+    
     private function handleFileUploads($form, Candidature $candidature): void
     {
         $uploadedFiles = [
@@ -111,3 +113,5 @@ final class CandidatureController extends AbstractController
         }
     }
 }
+
+
