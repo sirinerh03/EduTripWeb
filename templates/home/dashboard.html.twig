@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de Bord - EduTrip{% endblock %}
+
+{% block body %}
+    <!-- Dashboard Header Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Tableau de Bord</h6>
+                <h1 class="mb-5">Bienvenue, {{ user.prenom }} !</h1>
+            </div>
+            
+            <!-- Flash Messages -->
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            
+            <!-- User Profile Card -->
+            <div class="row mb-5">
+                <div class="col-lg-4">
+                    <div class="card shadow-lg border-0 rounded-lg h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Profil Utilisateur</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Nom:</strong> {{ user.nom }}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Prénom:</strong> {{ user.prenom }}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> {{ user.mail }}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Téléphone:</strong> {{ user.tel }}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Rôle:</strong> 
+                                {% if 'ROLE_USER' in user.roles %}
+                                    Étudiant
+                                {% elseif 'ROLE_AGENCY' in user.roles %}
+                                    Responsable Agence
+                                {% endif %}
+                            </div>
+                            <div class="d-grid">
+                                <a href="#" class="btn btn-outline-primary">Modifier mon profil</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Management Options -->
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0 rounded-lg h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Options de Gestion</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-4">
+                                {% for option in managementOptions %}
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm">
+                                            <div class="card-body text-center">
+                                                <div class="d-inline-flex align-items-center justify-content-center bg-{{ option.color }} rounded-circle mb-3" style="width: 60px; height: 60px;">
+                                                    <i class="{{ option.icon }} text-white fs-4"></i>
+                                                </div>
+                                                <h5 class="card-title">{{ option.title }}</h5>
+                                                <p class="card-text small">{{ option.description }}</p>
+                                                <a href="{{ path(option.path) }}" class="btn btn-{{ option.color }} btn-sm">
+                                                    <i class="fa fa-arrow-right me-2"></i> Accéder
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Reviews -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-lg border-0 rounded-lg">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Mes Avis</h5>
+                            <a href="{{ path('app_avis_new') }}" class="btn btn-light btn-sm">
+                                <i class="fa fa-plus me-2"></i> Ajouter un avis
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            {% if userAvis|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Note</th>
+                                                <th>Commentaire</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for avis in userAvis %}
+                                                <tr>
+                                                    <td>{{ avis.createdAt|date('d/m/Y') }}</td>
+                                                    <td>
+                                                        {% for i in 1..5 %}
+                                                            {% if i <= avis.rating %}
+                                                                <i class="fas fa-star text-warning"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star text-warning"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td>{{ avis.comment|slice(0, 50) }}{% if avis.comment|length > 50 %}...{% endif %}</td>
+                                                    <td>
+                                                        <a href="{{ path('app_avis_show', {'id': avis.id}) }}" class="btn btn-info btn-sm">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ path('app_avis_edit', {'id': avis.id}) }}" class="btn btn-primary btn-sm">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                                    <p class="mb-0">Vous n'avez pas encore publié d'avis.</p>
+                                    <a href="{{ path('app_avis_new') }}" class="btn btn-primary mt-3">
+                                        <i class="fa fa-plus me-2"></i> Ajouter mon premier avis
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dashboard Header End -->
+{% endblock %} 

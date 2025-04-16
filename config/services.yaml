@@ -23,12 +23,18 @@ services:
         tags: ['controller.service_arguments']
         public: true
 
-    # Charge toutes les classes de src/, à l’exception de quelques dossiers
+    # Charge toutes les classes de src/, à l'exception de quelques dossiers
     App\:
-        resource: '../src/*'
+        resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
-            - '../src/Migrations/'
-            - '../src/Tests/'
             - '../src/Kernel.php'
+
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: ['doctrine.repository_service']

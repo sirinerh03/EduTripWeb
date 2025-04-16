@@ -8,7 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,11 +22,6 @@ class UserType extends AbstractType
     {
         $builder
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre prénom'
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre prénom',
@@ -41,11 +35,6 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre nom'
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre nom',
@@ -59,11 +48,6 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('mail', EmailType::class, [
-                'label' => 'Email',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre email'
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre email',
@@ -71,11 +55,6 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('tel', TelType::class, [
-                'label' => 'Téléphone',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre numéro de téléphone'
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre numéro de téléphone',
@@ -86,26 +65,11 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                    'label' => 'Mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Entrez votre mot de passe'
-                    ],
-                ],
-                'second_options' => [
-                    'label' => 'Confirmez le mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Confirmez votre mot de passe'
-                    ],
-                ],
-                'invalid_message' => 'Les mots de passe doivent être identiques',
-                'required' => false,
-                'mapped' => false,
+            ->add('password', PasswordType::class, [
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un mot de passe',
+                    ]),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
@@ -113,33 +77,22 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('status', ChoiceType::class, [
-                'label' => 'Statut',
-                'choices' => [
-                    'Actif' => 'active',
-                    'Inactif' => 'inactive',
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ],
+            ->add('confirmPassword', PasswordType::class, [
+                'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un statut',
+                        'message' => 'Veuillez confirmer votre mot de passe',
                     ]),
                 ],
             ])
             ->add('role', ChoiceType::class, [
-                'label' => 'Rôle',
                 'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'attr' => [
-                    'class' => 'form-control',
+                    'Étudiant' => 'ROLE_USER',
+                    'Gérant d\'agence' => 'ROLE_AGENCY',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un rôle',
+                        'message' => 'Veuillez sélectionner un type de compte',
                     ]),
                 ],
             ])
@@ -150,6 +103,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'csrf_protection' => false,
         ]);
     }
 }

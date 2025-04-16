@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SecurityController extends AbstractController
 {
@@ -20,7 +21,7 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_dashboard');
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -33,47 +34,53 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
-        }
-
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifier que les mots de passe correspondent
+            if ($form->get('password')->getData() !== $form->get('confirmPassword')->getData()) {
+                $this->addFlash('error', 'Les mots de passe ne correspondent pas.');
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
+            // encode the plain password
             $user->setPassword(
-                $passwordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('password')->getData()
                 )
             );
-            
-            $user->setRole('ROLE_USER');
+
+            // Définir le rôle et le statut
+            $user->setRole($form->get('role')->getData());
             $user->setStatus('active');
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.');
-            return $this->redirectToRoute('app_login');
+            $this->addFlash('success', 'Votre compte a été créé avec succès !');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('security/register.html.twig', [
-            'form' => $form->createView(),
+            'registrationForm' => $form->createView(),
         ]);
     }
 
     #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
-        // This method can be empty - it will be intercepted by the logout key on your firewall
+        // Cette méthode peut rester vide
+        // Le système de sécurité de Symfony gère la déconnexion
     }
 
     #[Route('/profile', name: 'app_profile')]
-    #[IsGranted('ROLE_USER')]
     public function profile(): Response
     {
         return $this->render('security/profile.html.twig', [

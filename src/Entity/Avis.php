@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AvisRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,32 +14,29 @@ class Avis
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id_user', nullable: false)]
-    #[Assert\NotNull(message: 'L\'utilisateur est obligatoire')]
-    private ?User $user = null;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message: 'Le commentaire est obligatoire')]
-    #[Assert\Length(min: 10, minMessage: 'Le commentaire doit faire au moins {{ limit }} caractères')]
-    private ?string $commentaire = null;
+    #[Assert\Length(min: 10, max: 1000, minMessage: 'Le commentaire doit faire au moins {{ limit }} caractères', maxMessage: 'Le commentaire ne peut pas dépasser {{ limit }} caractères')]
+    private ?string $comment = null;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column]
+    #[Assert\NotBlank(message: 'La note est obligatoire')]
     #[Assert\Range(min: 1, max: 5, notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}')]
-    private ?int $note = null;
+    private ?int $rating = null;
 
-    #[ORM\Column(type: 'datetime', name: 'date_creation', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeInterface $dateCreation = null;
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $photo = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
-        $this->dateCreation = new \DateTime();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -46,58 +44,47 @@ class Avis
         return $this->id;
     }
 
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): static
+    {
+        $this->comment = $comment;
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(int $rating): static
+    {
+        $this->rating = $rating;
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $user): static
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getCommentaire(): ?string
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->commentaire;
+        return $this->createdAt;
     }
 
-    public function setCommentaire(string $commentaire): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->commentaire = $commentaire;
-        return $this;
-    }
-
-    public function getNote(): ?int
-    {
-        return $this->note;
-    }
-
-    public function setNote(?int $note): self
-    {
-        $this->note = $note;
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
-    {
-        $this->dateCreation = $dateCreation;
-        return $this;
-    }
-
-    public function getPhoto(): ?string
-    {
-        return $this->photo;
-    }
-
-    public function setPhoto(string $photo): self
-    {
-        $this->photo = $photo;
+        $this->createdAt = $createdAt;
         return $this;
     }
 }
