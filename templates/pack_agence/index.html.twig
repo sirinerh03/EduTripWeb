@@ -3,66 +3,20 @@
 {% block title %}Liste des Packs d'Agence{% endblock %}
 
 {% block content %}
-<style>
-    .example-wrapper {
-        margin: 1em auto;
-        max-width: 800px;
-        width: 95%;
-        font: 18px/1.5 sans-serif;
-    }
-    .example-wrapper code {
-        background: #F5F5F5;
-        padding: 2px 6px;
-    }
-    .pack-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .pack-table th, .pack-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-    .pack-table th {
-        background-color: #f4f4f4;
-    }
-    .btn {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px; /* Uniform padding */
-        border: none;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 16px; /* Ensure the font size is consistent */
-        display: inline-block; /* Ensure buttons align properly */
-        text-align: center;
-        border-radius: 5px; /* Optional: adds rounded corners */
-    }
-    .btn:hover {
-        background-color: #45a049;
-    }
-    /* Ensure the delete form button has the same style */
-    .btn-delete {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        display: inline-block;
-        text-align: center;
-        border-radius: 5px;
-    }
-    .btn-delete:hover {
-        background-color: #45a049;
-    }
-</style>
+    <h1 class="my-4">Liste des Packs d'Agence</h1>
 
-<div class="example-wrapper">
-    <h1>Liste des Packs d'Agence</h1>
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
 
-    <table class="pack-table">
-        <thead>
+    <div class="mb-4">
+        <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
             <tr>
                 <th>Nom du Pack</th>
                 <th>Prix</th>
@@ -77,23 +31,19 @@
                 <td>{{ pack.prix }}</td>
                 <td>{{ pack.duree }}</td>
                 <td>
-                    <a href="{{ path('app_pack_agence_show', {'id': pack.idPack}) }}" class="btn">Voir</a>
-                    <a href="{{ path('app_pack_agence_edit', {'id': pack.idPack}) }}" class="btn">Modifier</a>
-                    {# Delete Button Form (Green button) #}
+                    <a href="{{ path('app_pack_agence_show', {'id': pack.idPack}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_pack_agence_edit', {'id': pack.idPack}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     <form action="{{ path('app_pack_agence_delete', {'id': pack.idPack}) }}" method="post" style="display:inline;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pack.idPack) }}">
-                        <button type="submit" class="btn-delete">Supprimer</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                     </form>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">Aucun pack trouvé.</td>
+                <td colspan="4" class="text-center">Aucun pack trouvé.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_pack_agence_new') }}" class="btn">Créer un nouveau Pack</a>
-</div>
 {% endblock %}
