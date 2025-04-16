@@ -34,23 +34,20 @@ final class AgenceController extends AbstractController
         $agence = new Agence();
         $form = $this->createForm(AgenceType::class, $agence);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $entityManager->persist($agence);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'L\'agence a été créée avec succès.');
-                return $this->redirectToRoute('app_agence_index');
-            } else {
-                $this->addFlash('error', 'Veuillez corriger les erreurs dans le formulaire.');
-            }
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($agence);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'L\'agence a été créée avec succès.');
+            return $this->redirectToRoute('app_agence_index');
         }
-
+    
         return $this->render('agence/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+    
 #[Route('/{id_agence}', name: 'app_agence_show', methods: ['GET'])]
     public function show(Agence $agence): Response
     {

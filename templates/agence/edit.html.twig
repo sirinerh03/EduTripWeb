@@ -2,7 +2,7 @@
 
 {% block title %}Modifier l'agence{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Modifier l'agence "{{ agence.nomAg }}"</h1>
 
     <a href="{{ path('app_agence_index') }}" class="btn btn-secondary mb-3">Retour à la liste des agences</a>
@@ -10,7 +10,7 @@
     {{ form_start(form) }}
         {{ form_row(form.nom_ag) }}
         {{ form_row(form.adresse_ag) }}
-        {{ form_row(form.telephoneAg) }}
+        {{ form_row(form.telephone_ag) }}
         {{ form_row(form.email_ag) }}
         {{ form_row(form.description_ag) }}
         {{ form_row(form.date_creation) }}

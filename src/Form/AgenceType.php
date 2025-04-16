@@ -30,13 +30,11 @@ class AgenceType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('telephoneAg', TelType::class, [
+            ->add('telephone_ag', TelType::class, [ // Changer ici pour correspondre à la propriété 'telephone_ag'
                 'label' => 'Téléphone*',
                 'attr' => [
                     'placeholder' => '12345678',
-                    'class' => 'form-control',
-                    'pattern' => '[0-9]{8}',
-                    'title' => '8 chiffres requis'
+                    'class' => 'form-control'
                 ]
             ])
             ->add('email_ag', EmailType::class, [
@@ -58,8 +56,7 @@ class AgenceType extends AbstractType
                 'label' => 'Date de création*',
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'form-control',
-                    'max' => date('Y-m-d')
+                    'class' => 'form-control'
                 ]
             ]);
     }

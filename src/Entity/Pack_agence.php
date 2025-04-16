@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Agence;
 
 #[ORM\Entity]
 class Pack_agence
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]  // Cette ligne permet la génération automatique de l'ID
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: "integer")]
     private int $id_pack;
 
@@ -18,25 +19,48 @@ class Pack_agence
     private Agence $id_agence;
 
     #[ORM\Column(type: "float")]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
     private float $prix;
 
     #[ORM\Column(type: "integer")]
+    #[Assert\GreaterThan(value: 0, message: "La durée doit être supérieure à 0.")]
     private int $duree;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "Les services inclus sont obligatoires.")]
+    #[Assert\Regex(
+        pattern: "/^[^0-9]*$/",
+        message: "Les services inclus ne doivent pas contenir de chiffres."
+    )]
     private string $services_inclus;
 
     #[ORM\Column(type: "date")]
+    #[Assert\NotNull(message: "La date d'ajout est obligatoire.")]
+    #[Assert\GreaterThanOrEqual("today", message: "La date d'ajout ne peut pas être inférieure à aujourd'hui.")]
     private \DateTimeInterface $date_ajout;
 
     #[ORM\Column(type: "string")]
+    #[Assert\NotBlank(message: "Le statut est obligatoire.")]
+   
     private string $status;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "Le nom du pack est obligatoire.")]
+    #[Assert\Regex(
+        pattern: "/^[^0-9]*$/",
+        message: "Le nom du pack ne doit pas contenir de chiffres."
+    )]
     private string $nom_pk;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        min: 10,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères."
+    )]
     private string $description_pk;
+
+    // --- Getters et Setters ---
 
     public function getIdPack(): int
     {

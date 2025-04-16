@@ -1,110 +1,141 @@
 <?php
-
 // src/Entity/Agence.php
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Pack_agence;
 
 #[ORM\Entity]
 class Agence
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "AUTO")]  // Add this to make id_agence auto-increment
+    #[ORM\GeneratedValue(strategy: "AUTO")]
     #[ORM\Column(type: "integer")]
     private $id_agence;
 
     #[ORM\Column(type: "date")]
+    #[Assert\NotNull(message: "La date de création est obligatoire.")]
+    #[Assert\GreaterThanOrEqual("today", message: "La date de création doit être supérieure ou égale à aujourd'hui.")]
     private \DateTimeInterface $date_creation;
 
     #[ORM\Column(type: "integer")]
+    #[Assert\NotNull(message: "Le numéro de téléphone est obligatoire.")]
+    #[Assert\Regex(
+        pattern: "/^\d{8}$/",
+        message: "Le numéro de téléphone doit contenir exactement 8 chiffres."
+    )]
     private int $telephone_ag;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "Le nom de l'agence est obligatoire.")]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s'-]+$/u",
+        message: "Le nom de l'agence ne doit contenir que des lettres."
+    )]
     private string $nom_ag;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "L'adresse est obligatoire.")]
     private string $adresse_ag;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Email(message: "Le format de l'email est invalide. Il doit contenir un '@' et un '.'.")]
     private string $email_ag;
 
     #[ORM\Column(type: "string", length: 200)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(min: 10, minMessage: "La description doit contenir au moins {{ limit }} caractères.")]
     private string $description_ag;
 
     #[ORM\OneToMany(mappedBy: "id_agence", targetEntity: Pack_agence::class)]
     private Collection $pack_agences;
 
-    public function getIdAgence()
+    public function __construct()
+    {
+        // Initialisation de la collection
+        $this->pack_agences = new ArrayCollection();
+    }
+
+    public function getIdAgence(): ?int
     {
         return $this->id_agence;
     }
 
-    public function setIdAgence($value)
+    public function setIdAgence(int $value): self
     {
         $this->id_agence = $value;
+        return $this;
     }
 
-    public function getDateCreation()
+    public function getDateCreation(): ?\DateTimeInterface
     {
         return $this->date_creation;
     }
 
-    public function setDateCreation($value)
+    public function setDateCreation(\DateTimeInterface $value): self
     {
         $this->date_creation = $value;
+        return $this;
     }
 
-    public function getTelephoneAg()
+    public function getTelephoneAg(): ?int
     {
         return $this->telephone_ag;
     }
 
-    public function setTelephoneAg($value)
+    public function setTelephoneAg(int $value): self
     {
         $this->telephone_ag = $value;
+        return $this;
     }
 
-    public function getNomAg()
+    public function getNomAg(): ?string
     {
         return $this->nom_ag;
     }
 
-    public function setNomAg($value)
+    public function setNomAg(string $value): self
     {
         $this->nom_ag = $value;
+        return $this;
     }
 
-    public function getAdresseAg()
+    public function getAdresseAg(): ?string
     {
         return $this->adresse_ag;
     }
 
-    public function setAdresseAg($value)
+    public function setAdresseAg(string $value): self
     {
         $this->adresse_ag = $value;
+        return $this;
     }
 
-    public function getEmailAg()
+    public function getEmailAg(): ?string
     {
         return $this->email_ag;
     }
 
-    public function setEmailAg($value)
+    public function setEmailAg(string $value): self
     {
         $this->email_ag = $value;
+        return $this;
     }
 
-    public function getDescriptionAg()
+    public function getDescriptionAg(): ?string
     {
         return $this->description_ag;
     }
 
-    public function setDescriptionAg($value)
+    public function setDescriptionAg(string $value): self
     {
         $this->description_ag = $value;
+        return $this;
     }
 
     public function getPackAgences(): Collection
@@ -133,3 +164,5 @@ class Agence
         return $this;
     }
 }
+
+

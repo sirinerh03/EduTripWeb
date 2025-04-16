@@ -2,7 +2,7 @@
 
 {% block title %}Détails de l'Agence{% endblock %}
 
-{% block body %}
+{% block content %}
     <div class="container mt-4">
         <h1 class="mb-4">Détails de l'Agence: {{ agence.nomAg }}</h1>
 
@@ -42,7 +42,7 @@
                 <ul class="list-group">
                     {% for pack in agence.packAgences %}
                         <li class="list-group-item">
-                            {{ pack.nom_pk }} - {{ pack.description_pk }}
+                            {{ pack.nomPk }} - {{ pack.descriptionPk }}
                         </li>
                     {% endfor %}
                 </ul>

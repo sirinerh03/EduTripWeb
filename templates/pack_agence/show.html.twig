@@ -2,19 +2,19 @@
 
 {% block title %}Pack d'Agence - Détails{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Détails du Pack d'Agence</h1>
 
     <ul>
-        <li><strong>Nom du Pack :</strong> {{ packAgence.nomPk }}</li> <!-- Changement ici -->
-        <li><strong>Agence :</strong> {{ packAgence.idAgence.nomAg }}</li> <!-- Assurez-vous que la méthode "getNomAg" existe dans Agence -->
+        <li><strong>Nom du Pack :</strong> {{ packAgence.nomPk }}</li>
+        <li><strong>Agence :</strong> {{ packAgence.idAgence.nomAg }}</li>
         <li><strong>Prix :</strong> {{ packAgence.prix }} €</li>
         <li><strong>Durée :</strong> {{ packAgence.duree }} jours</li>
         <li><strong>Status :</strong> {{ packAgence.status }}</li>
-        <li><strong>Services Inclus :</strong> {{ packAgence.services_inclus }}</li>
-        <li><strong>Description :</strong> {{ packAgence.descriptionPk }}</li> <!-- Changement ici -->
+        <li><strong>Services Inclus :</strong> {{ packAgence.servicesInclus }}</li>
+        <li><strong>Description :</strong> {{ packAgence.descriptionPk }}</li>
+        <li><strong>Date d'Ajout :</strong> {{ packAgence.dateAjout|date('d/m/Y') }}</li>
     </ul>
 
     <a href="{{ path('app_pack_agence') }}">Retour à la liste des packs</a>
-
 {% endblock %}
