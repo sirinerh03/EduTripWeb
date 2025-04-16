@@ -34,7 +34,7 @@ final class VolsController extends AbstractController
             $entityManager->persist($vol);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin/vols/app_vols');
+            return $this->redirectToRoute('app_vols');
         } else {
             dump($form);
         }
@@ -44,7 +44,7 @@ final class VolsController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'vol_edit')]
+    #[Route('/vols/edit/{id}', name: 'vol_edit')]
     public function edit(Vol $vol, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(VolType::class, $vol);
@@ -54,7 +54,7 @@ final class VolsController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Le vol a été modifié avec succès.');
-            return $this->redirectToRoute('admin/vols/app_vols');
+            return $this->redirectToRoute('app_vols');
         }
 
         return $this->render('admin/vols/vol_edit.html.twig', [
@@ -73,6 +73,6 @@ final class VolsController extends AbstractController
             $this->addFlash('success', '✈️ Le vol a été supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('admin/vols/app_vols');
+        return $this->redirectToRoute('app_vols');
     }
 }
