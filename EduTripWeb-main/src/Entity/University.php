@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Candidature;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class University
@@ -22,6 +23,8 @@ class University
     private string $ville;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank(message: "Email is required.")]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private string $email;
 
     #[ORM\Column(type: "string", length: 255)]

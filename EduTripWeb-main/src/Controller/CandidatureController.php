@@ -94,7 +94,7 @@ final class CandidatureController extends AbstractController
         return $this->redirectToRoute('app_candidature_index');
     }
 
-    
+
     private function handleFileUploads($form, Candidature $candidature): void
     {
         $uploadedFiles = [
@@ -107,7 +107,9 @@ final class CandidatureController extends AbstractController
             $file = $form->get($field)->getData();
             if ($file) {
                 $fileName = uniqid() . '.' . $file->guessExtension();
-                $file->move($this->getParameter('kernel.project_dir') . '/public/uploads', $fileName);
+                $file->move($this->getParameter('kernel.project_dir') . '/public/uploads', $fileName);//Uploads each file to the public/uploads/ folder.
+
+
                 $candidature->$method($fileName);
             }
         }

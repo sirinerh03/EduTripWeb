@@ -20,7 +20,7 @@ class CandidatureType extends AbstractType
         $isEdit = $candidature && $candidature->getId() !== null;
 
         $builder
-            ->add('university', EntityType::class, [
+            ->add('university', EntityType::class, [//choicelabel
                 'class' => University::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Choose a university',
