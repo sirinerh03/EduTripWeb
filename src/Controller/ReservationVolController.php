@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 namespace App\Controller;
 
 use App\Entity\Vol;
@@ -19,35 +18,42 @@ class ReservationVolController extends AbstractController
     {
         $vols = $volRepository->findAll();
         return $this->render('reservation_vol/listeREV.html.twig', [
-            'vols' => $vols, 
+            'vols' => $vols,
         ]);
     }
 
+    #[Route('/ticket/new/{idVol}', name: 'ticket_new')]
+    public function new(
+        Request $request, 
+        int $idVol, 
+        EntityManagerInterface $em, 
+        VolRepository $volRepository
+    ): Response {
+        $vol = $volRepository->find($idVol);
+        
+        if (!$vol) {
+            throw $this->createNotFoundException('Vol introuvable pour l\'ID : '.$idVol);
+        }
     
-    #[Route('/reservation_ticket/{id}', name: 'ticket_new')]
-public function ajouterReservation($id, Request $request, EntityManagerInterface $entityManager, VolRepository $volRepository): Response
-{
-    // Récupère le vol en fonction de l'ID
-    $vol = $volRepository->find($id);
-    if (!$vol) {
-        throw $this->createNotFoundException('Vol non trouvé.');
+        $reservation = new ReservationVol();
+        $reservation->setVol($vol)
+                    ->setPrix($vol->getPrixVol())
+                    ->setDateReservation(new \DateTime());
+    
+        $form = $this->createForm(ReservationVolType::class, $reservation);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($reservation);
+            $em->flush();
+    
+            $this->addFlash('success', 'Réservation confirmée !');
+            return $this->redirectToRoute('app_reservation_vol');
+        }
+    
+        return $this->render('reservation_vol/Ticket_Reser.html.twig', [
+            'form' => $form->createView(),
+            'vol' => $vol
+        ]);
     }
-
-    $reservation = new ReservationVol();
-    $form = $this->createForm(ReservationVolType::class, $reservation);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($reservation);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Réservation enregistrée avec succès !');
-        return $this->redirectToRoute('app_reservation_vol');
-    }
-
-    return $this->render('reservation_vol/Ticket_Reser.html.twig', [
-        'form' => $form->createView(),
-        'vol' => $vol, 
-    ]);
-}
 }

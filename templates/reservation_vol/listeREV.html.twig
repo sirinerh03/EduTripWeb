@@ -184,7 +184,7 @@
                 </div>
                 <div class="ticket-footer">
                     <small>Généré par VolFinder™</small>
-                  <a href="{{ path('ticket_new', {'id': vol.id}) }}"> class="btn-reserver">Réserver</a>
+                  <a href="{{ path('ticket_new', {idVol: vol.getIdvol()}) }}" class="btn-reserver">Réserver</a>
                 </div>
             </div>
         {% endfor %}

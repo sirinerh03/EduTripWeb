@@ -36,7 +36,7 @@ class ReservationVol
     private ?int $nb_palce = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservationVols')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:"id_vol",referencedColumnName:"id_vol",nullable: false)]
     private ?Vol $vol = null;
 
     public function getId(): ?int
