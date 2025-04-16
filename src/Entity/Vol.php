@@ -80,7 +80,7 @@ class Vol
         $this->reservationVols = new ArrayCollection();
     }
 
-    public function getId_vol(): ?int
+    public function getIdVol(): ?int
     {
         return $this->id_vol;
     }

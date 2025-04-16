@@ -84,6 +84,15 @@
         background: white;
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -98,48 +107,85 @@
         <div class="col-md-8 offset-md-2">
             <div class="form-section">
                 {{ form_start(form) }}
-                {{ form_errors(form) }}
+                
+                {% if form_errors(form) %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in form_errors(form) %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-numeric form-icon"></i> Numéro de vol</label>
-                    {{ form_widget(form.num_vol, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.num_vol) }}
+                    {{ form_widget(form.num_vol, {'attr': {'class': form.num_vol.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.num_vol.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.num_vol) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-airplane-takeoff form-icon"></i> Aéroport de départ</label>
-                    {{ form_widget(form.aeroport_depart, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.aeroport_depart) }}
+                    {{ form_widget(form.aeroport_depart, {'attr': {'class': form.aeroport_depart.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.aeroport_depart.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.aeroport_depart) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-airplane-landing form-icon"></i> Aéroport d’arrivée</label>
-                    {{ form_widget(form.aeroport_arrivee, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.aeroport_arrivee) }}
+                    {{ form_widget(form.aeroport_arrivee, {'attr': {'class': form.aeroport_arrivee.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.aeroport_arrivee.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.aeroport_arrivee) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-calendar-start form-icon"></i> Date de départ</label>
-                    {{ form_widget(form.date_depart, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.date_depart) }}
+                    {{ form_widget(form.date_depart, {'attr': {'class': form.date_depart.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.date_depart.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.date_depart) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-calendar-end form-icon"></i> Date d’arrivée</label>
-                    {{ form_widget(form.date_arrivee, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.date_arrivee) }}
+                    {{ form_widget(form.date_arrivee, {'attr': {'class': form.date_arrivee.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.date_arrivee.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.date_arrivee) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-seat-recline-normal form-icon"></i> Places disponibles</label>
-                    {{ form_widget(form.places_dispo, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.places_dispo) }}
+                    {{ form_widget(form.places_dispo, {'attr': {'class': form.places_dispo.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.places_dispo.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.places_dispo) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">
                     <label><i class="mdi mdi-currency-eur form-icon"></i> Prix du vol</label>
-                    {{ form_widget(form.prix_vol, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.prix_vol) }}
+                    {{ form_widget(form.prix_vol, {'attr': {'class': form.prix_vol.vars.errors|length > 0 ? 'form-control is-invalid' : 'form-control'}}) }}
+                    {% if form.prix_vol.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.prix_vol) }}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">

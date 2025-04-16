@@ -20,9 +20,6 @@ class ReservationVol
     #[ORM\Column]
     private ?float $prix = null;
 
-    #[ORM\Column]
-    private ?int $id_vol = null;
-
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -39,9 +36,8 @@ class ReservationVol
     private ?int $nb_palce = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservationVols')]
-    #[ORM\JoinColumn(name: 'id_vol', referencedColumnName: 'id_vol')]
-
-    private ?Vol $Vol = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Vol $vol = null;
 
     public function getId(): ?int
     {
@@ -69,18 +65,6 @@ class ReservationVol
     {
         $this->prix = $prix;
 
-        return $this;
-    }
-
-    public function getVol(): ?Vol
-    {
-        return $this->vol;
-    }
-    
-    public function setVol(?Vol $vol): static
-    {
-        $this->vol = $vol;
-    
         return $this;
     }
 
@@ -140,6 +124,18 @@ class ReservationVol
     public function setNbPalce(int $nb_palce): static
     {
         $this->nb_palce = $nb_palce;
+
+        return $this;
+    }
+
+    public function getVol(): ?Vol
+    {
+        return $this->vol;
+    }
+
+    public function setVol(?Vol $vol): static
+    {
+        $this->vol = $vol;
 
         return $this;
     }

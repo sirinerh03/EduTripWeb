@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation de Vol{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="ticket p-4 mb-4 bg-white rounded shadow">
+        <h2 class="text-center mb-4">🛫 Réservation pour le vol {{ vol.numVol }}</h2>
+
+        <p><strong>Départ :</strong> {{ vol.aeroportDepart }}</p>
+        <p><strong>Arrivée :</strong> {{ vol.aeroportArrivee }}</p>
+        <p><strong>Date :</strong> {{ vol.dateDepart|date('d/m/Y H:i') }}</p>
+        <p><strong>Prix :</strong> {{ vol.prixVol }} TND</p>
+
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.nom) }}</div>
+                <div class="col-md-6">{{ form_row(form.prenom) }}</div>
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+                <div class="col-md-6">{{ form_row(form.nb_palce) }}</div>
+                <div class="col-md-6">{{ form_row(form.id_etudiant) }}</div>
+            </div>
+            <div class="text-end">
+                {{ form_row(form.submit) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<style>
+    body {
+        background: #f0f8ff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .ticket {
+        border-left: 5px solid #00bfa5;
+        transition: 0.3s;
+    }
+
+    .ticket:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 15px rgba(0, 191, 165, 0.4);
+    }
+
+    label {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
