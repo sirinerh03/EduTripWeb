@@ -34,12 +34,12 @@ final class VolsController extends AbstractController
             $entityManager->persist($vol);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_vols');
+            return $this->redirectToRoute('admin/vols/app_vols');
         } else {
             dump($form);
         }
             
-        return $this->render('vols/vol_add.html.twig', [
+        return $this->render('admin/vols/vol_add.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -54,10 +54,10 @@ final class VolsController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Le vol a été modifié avec succès.');
-            return $this->redirectToRoute('app_vols');
+            return $this->redirectToRoute('admin/vols/app_vols');
         }
 
-        return $this->render('vols/vol_edit.html.twig', [
+        return $this->render('admin/vols/vol_edit.html.twig', [
             'form' => $form->createView(),
             'vol' => $vol,
         ]);
@@ -73,6 +73,6 @@ final class VolsController extends AbstractController
             $this->addFlash('success', '✈️ Le vol a été supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('app_vols');
+        return $this->redirectToRoute('admin/vols/app_vols');
     }
 }
