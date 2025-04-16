@@ -12,7 +12,7 @@ class UniversityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
+            ->add('nom')//txt fiealds 
             ->add('ville')
             ->add('email')
             ->add('description')
@@ -22,7 +22,7 @@ class UniversityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => University::class,
+            'data_class' => University::class,//ties to uni class
         ]);
     }
 }

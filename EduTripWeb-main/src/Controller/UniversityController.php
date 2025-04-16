@@ -37,16 +37,16 @@ final class UniversityController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_university_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_university_new', methods: ['GET', 'POST'])]//get shows from post saves uni
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $university = new University();
-        $form = $this->createForm(UniversityType::class, $university);
+        $university = new University();//ueses the form unitype
+        $form = $this->createForm(UniversityType::class, $university);//checks validity of form 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($university);
-            $entityManager->flush();
+            $entityManager->persist($university);//save to db 
+            $entityManager->flush();//commit changes 
 
             return $this->redirectToRoute('app_university_index', [], Response::HTTP_SEE_OTHER);
         }
