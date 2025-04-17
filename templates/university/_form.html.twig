@@ -1,0 +1,35 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="row g-3">
+        <div class="col-md-6">
+            {{ form_row(form.nom, {
+                'label_attr': {'class': 'form-label fw-bold'},
+                'attr': {'class': 'form-control', 'placeholder': 'Enter university name'}
+            }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.ville, {
+                'label_attr': {'class': 'form-label fw-bold'},
+                'attr': {'class': 'form-control', 'placeholder': 'Enter city'}
+            }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.email, {
+                'label_attr': {'class': 'form-label fw-bold'},
+                'attr': {'class': 'form-control', 'placeholder': 'Enter email address'}
+            }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.description, {
+                'label_attr': {'class': 'form-label fw-bold'},
+                'attr': {'class': 'form-control', 'placeholder': 'Enter description'}
+            }) }}
+        </div>
+
+        <div class="col-12 text-center mt-4">
+            <button type="submit" class="btn btn-primary py-3 px-5">
+                <i class="fas {{ button_label is defined ? 'fa-save' : 'fa-plus-circle' }} me-2"></i>
+                {{ button_label|default('Add University') }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

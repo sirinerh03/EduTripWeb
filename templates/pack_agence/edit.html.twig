@@ -1,0 +1,59 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Modifier le Pack d'Agence{% endblock %}
+
+{% block Content %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Modifier le Pack d'Agence</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form) }}
+
+                        {{ form_row(form.nom_pk) }}
+                        {{ form_row(form.id_agence) }} {# Affichage de la relation avec l'agence #}
+                        {{ form_row(form.prix) }}
+                        {{ form_row(form.duree) }}
+                        {{ form_row(form.status) }}
+                        {{ form_row(form.services_inclus) }}
+                        {{ form_row(form.date_ajout) }}
+                        {{ form_row(form.description_pk) }}
+
+                        <button class="btn btn-primary w-100 mt-3" type="submit">
+                            <i class="fas fa-save me-2"></i> Sauvegarder
+                        </button>
+
+                    {{ form_end(form) }}
+
+                    <a href="{{ path('app_pack_agence') }}" class="btn btn-secondary w-100 mt-3">
+                        <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div style="height: 60px;"></div>
+
+
+<style>
+    /* Correction du positionnement */
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white; 
+    }
+</style>
+{% endblock %}

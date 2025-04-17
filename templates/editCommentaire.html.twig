@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Commentaire{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center rounded-top">
+                    <h2 class="my-2">✏️ Modifier le Commentaire</h2>
+                </div>
+
+                <div class="card-body bg-light">
+                    {{ form_start(form) }}
+
+                    {# ➤ Contenu modifiable #}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Contenu :</label>
+                        {{ form_widget(form.contenu, {'attr': {'class': 'form-control', 'placeholder': 'Modifier le contenu ici...'}}) }}
+                        <div class="text-danger mt-1"> {{ form_errors(form.contenu) }}
+                    </div>
+                                 </div>
+
+
+                    {# ➤ Image modifiable si elle existe #}
+                    {% if form.image is defined %}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Image :</label>
+                        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.image) }}
+                    </div>
+                    {% endif %}
+
+                    {# ➤ Affichage résumé du post (pas le champ directement) #}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Post :</label>
+                        <input type="text" class="form-control" value="{{ commentaire.post.titre ?? commentaire.post.contenu|slice(0, 50) ~ '...' }}" disabled>
+                    </div>
+
+                    {# ➤ Affichage utilisateur (pas le champ directement) #}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Utilisateur :</label>
+                        <input type="text" class="form-control" value="{{ commentaire.utilisateur.nom ?? 'Utilisateur inconnu' }}" disabled>
+                    </div>
+
+                    {# ➤ Date lecture seule #}
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Date :</label>
+                        {{ form_widget(form.date_commentaire, {'attr': {'class': 'form-control', 'readonly': 'readonly'}}) }}
+                    </div>
+
+                    {# ➤ Champs cachés pour éviter qu’ils soient affichés dans le rendu du formulaire #}
+                    {{ form_widget(form.post, {'attr': {'style': 'display:none'}}) }}
+                    {{ form_widget(form.utilisateur, {'attr': {'style': 'display:none'}}) }}
+
+                    <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-primary px-4 py-2">
+    Sauvegarder
+</button>
+
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
