@@ -27,9 +27,11 @@
         ]
     },
 
+
     "knplabs/knp-paginator-bundle": {
         "version": "v6.8.0"
     },
+
 
     "phpunit/phpunit": {
         "version": "9.6",
@@ -291,6 +293,7 @@
     "twig/extra-bundle": {
         "version": "v3.20.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
     },
     "vich/uploader-bundle": {
         "version": "2.6",
@@ -305,5 +308,7 @@
         ]
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 1295508 (gestion university)
     }
 }

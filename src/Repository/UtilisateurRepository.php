@@ -16,28 +16,36 @@ class UtilisateurRepository extends ServiceEntityRepository
         parent::__construct($registry, Utilisateur::class);
     }
 
-    //    /**
-    //     * @return Utilisateur[] Returns an array of Utilisateur objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Returns the first user found (can be used as a default user fetcher).
+     */
+    public function findDefaultUser(): ?Utilisateur
+    {
+        return $this->createQueryBuilder('u')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Utilisateur
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Uncomment and customize if needed
+
+    // public function findByExampleField($value): array
+    // {
+    //     return $this->createQueryBuilder('u')
+    //         ->andWhere('u.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('u.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+
+    // public function findOneBySomeField($value): ?Utilisateur
+    // {
+    //     return $this->createQueryBuilder('u')
+    //         ->andWhere('u.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->getQuery()
+    //         ->getOneOrNullResult();
+    // }
 }

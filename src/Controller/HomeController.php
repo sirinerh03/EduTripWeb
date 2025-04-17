@@ -1,12 +1,14 @@
 <?php
 namespace App\Controller;
 
+
 use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostRepository;
+
 
 
 
@@ -24,11 +26,13 @@ class HomeController extends AbstractController
     }
 
 
+
     #[Route('/adminhome', name: 'base_admin')]
     public function homeadmin(): Response
     {
         return $this->render('admin/homeadmin.html.twig');
     }
+
 
 
     
@@ -44,7 +48,6 @@ class HomeController extends AbstractController
         return $this->render('website/about.html.twig');
     }
 
-
     /*#[Route('/posts', name: 'app_posts')]
     public function posts(): Response
     {
@@ -53,6 +56,7 @@ class HomeController extends AbstractController
 
 
    
+
 
 
 
@@ -91,8 +95,5 @@ class HomeController extends AbstractController
     {
         return $this->render('website/notfound.html.twig');
     }
-
- 
-
 
 }

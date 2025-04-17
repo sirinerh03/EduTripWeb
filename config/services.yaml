@@ -1,5 +1,9 @@
 parameters:
     upload_directory: '%kernel.project_dir%/public/images'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
+    diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
+    candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
 
 services:
     _defaults:
@@ -13,17 +17,14 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # Déclaration explicite des services sans créer de référence circulaire
     Symfony\Component\Finder\Finder:
         class: Symfony\Component\Finder\Finder
         public: false
-        shared: false # Important pour Finder qui n'est pas un service partagé
+        shared: false
 
     Symfony\Component\Filesystem\Filesystem:
         class: Symfony\Component\Filesystem\Filesystem
         public: false
 
-    # Configuration de la commande
     App\Command\GenerateRepositoriesCommand:
         tags: ['console.command']
-        # Les arguments seront injectés automatiquement grâce à l'autowiring

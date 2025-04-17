@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -64,9 +63,11 @@ class Utilisateur
     }
 
     public function getNom(): ?string
+
     {
         return $this->nom;
     }
+
 
     public function setNom(string $nom): static
     {
@@ -76,9 +77,11 @@ class Utilisateur
     }
 
     public function getPrenom(): ?string
+
     {
         return $this->prenom;
     }
+
 
     public function setPrenom(string $prenom): static
     {
@@ -88,9 +91,11 @@ class Utilisateur
     }
 
     public function getTel(): ?int
+
     {
         return $this->tel;
     }
+
 
     public function setTel(int $tel): static
     {
@@ -100,9 +105,11 @@ class Utilisateur
     }
 
     public function getPassword(): ?string
+
     {
         return $this->password;
     }
+
 
     public function setPassword(string $password): static
     {
@@ -123,7 +130,14 @@ class Utilisateur
         return $this;
     }
 
-    public function getStatus(): ?string
+
+    public function setConfirm_password($value)
+    {
+        $this->confirm_password = $value;
+    }
+
+    public function getStatus()
+
     {
         return $this->status;
     }
@@ -136,6 +150,7 @@ class Utilisateur
     }
 
     public function getRole(): ?string
+
     {
         return $this->role;
     }
@@ -176,4 +191,5 @@ class Utilisateur
 
         return $this;
     }
+
 }
