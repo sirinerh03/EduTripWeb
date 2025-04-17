@@ -101,6 +101,7 @@ class University
 
         return $this;
     }
+    
 
     public function removeCandidature(Candidature $candidature): self
     {
