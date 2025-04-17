@@ -431,6 +431,7 @@
     margin-right: 0;
     padding-right: 0;
     border-right: none;
+
 }
 .form-error-message {
     color: red;
@@ -440,3 +441,4 @@
 .post-card textarea {
     color: black !important;
 }
+

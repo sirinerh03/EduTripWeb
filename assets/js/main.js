@@ -53,6 +53,7 @@
         }
     });
 
+
     $(document).ready(function(){
         $(".header-carousel").owlCarousel({
             items: 1,
@@ -67,6 +68,8 @@
             ]
         });
     });
+
+
     
     
     // Back to top button

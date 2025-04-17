@@ -1,0 +1,73 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Détails du Pack d'Agence{% endblock %}
+
+{% block Content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Détails du Pack : {{ packAgence.nomPk }}</h1>
+
+        <a href="{{ path('app_pack_agence') }}" class="btn btn-secondary mb-4">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des packs
+        </a>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Informations sur le pack</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Nom du Pack :</strong> {{ packAgence.nomPk }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Agence :</strong> {{ packAgence.idAgence.nomAg }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Prix :</strong> {{ packAgence.prix }} €
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Durée :</strong> {{ packAgence.duree }} jours
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Status :</strong> {{ packAgence.status }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Services Inclus :</strong> {{ packAgence.servicesInclus }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Description :</strong> {{ packAgence.descriptionPk }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date d'Ajout :</strong> {{ packAgence.dateAjout|date('d/m/Y') }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-4">
+           <a href="{{ path('app_pack_agence_edit', {'id': packAgence.idPack}) }}" class="btn btn-warning">
+    <i class="fas fa-edit"></i> Modifier le pack
+</a>
+
+        </div>
+    </div>
+    {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+
+
+<style>
+    /* Correction du positionnement */
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white; 
+    }
+</style>
+{% endblock %}
