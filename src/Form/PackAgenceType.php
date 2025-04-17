@@ -14,18 +14,18 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PackAgenceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('id_agence', EntityType::class, [
-            'class' => Agence::class,
-            'choice_label' => 'nom_ag',
-            'label' => 'Agence',
-        ])
-        
+            ->add('id_agence', EntityType::class, [
+                'class' => Agence::class,
+                'choice_label' => 'nom_ag',
+                'label' => 'Agence',
+            ])
             ->add('prix', NumberType::class, [
                 'label' => 'Prix',
                 'required' => true,
@@ -42,12 +42,17 @@ class PackAgenceType extends AbstractType
             ->add('services_inclus', TextType::class, [
                 'label' => 'Services inclus',
             ])
-            
             ->add('date_ajout', DateType::class, [
                 'label' => 'Date d\'ajout',
                 'widget' => 'single_text',
                 'required' => true,
                 'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'La date d\'ajout est obligatoire.'
+                    ])
+                ],
+                'empty_data' => (new \DateTime())->format('Y-m-d'),  // Définit la date actuelle si vide
             ])
             ->add('status', ChoiceType::class, [
                 'label' => 'Statut',

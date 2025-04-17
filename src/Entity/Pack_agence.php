@@ -62,8 +62,14 @@ class Pack_agence
     )]
     private string $description_pk;
 
-    // --- Getters et Setters ---
+    // Constructor to set default values
+    public function __construct()
+    {
+        // Initialize date_ajout with the current date
+        $this->date_ajout = new \DateTime(); // Set default to current date
+    }
 
+    // --- Getters et Setters ---
     public function getIdPack(): int
     {
         return $this->id_pack;
