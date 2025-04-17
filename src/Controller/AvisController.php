@@ -39,24 +39,81 @@ class AvisController extends AbstractController
         }
 
         $avi = new Avis();
+        // Set default rating to ensure it's not null
+        $avi->setRating(5);
+        
         $form = $this->createForm(AvisType::class, $avi);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $avi->setUser($this->getUser());
-            $avi->setCreatedAt(new \DateTimeImmutable());
-            
-            $entityManager->persist($avi);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Votre avis a été ajouté avec succès !');
-            return $this->redirectToRoute('app_avis_index');
+        
+        if ($request->isMethod('POST')) {
+            try {
+                // Get the form data directly from the request
+                $submittedData = $request->request->all();
+                
+                // Extract rating from the form data if it exists
+                if (isset($submittedData['avis']) && is_array($submittedData['avis']) && isset($submittedData['avis']['rating'])) {
+                    $rating = (int)$submittedData['avis']['rating'];
+                    $avi->setRating($rating);
+                }
+                
+                // Set the comment if it exists
+                if (isset($submittedData['avis']) && is_array($submittedData['avis']) && isset($submittedData['avis']['comment'])) {
+                    $comment = $submittedData['avis']['comment'];
+                    $avi->setComment($comment);
+                }
+                
+                // Set additional required data
+                $avi->setUser($this->getUser());
+                $avi->setCreatedAt(new \DateTimeImmutable());
+                
+                // Validate manually
+                $errors = $this->validateAvis($avi);
+                
+                if (empty($errors)) {
+                    $entityManager->persist($avi);
+                    $entityManager->flush();
+                    
+                    $this->addFlash('success', 'Votre avis a été ajouté avec succès !');
+                    return $this->redirectToRoute('app_avis_index');
+                } else {
+                    foreach ($errors as $error) {
+                        $this->addFlash('error', $error);
+                    }
+                }
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors du traitement du formulaire: ' . $e->getMessage());
+            }
         }
-
+        
         return $this->render('avis/new.html.twig', [
             'avi' => $avi,
             'form' => $form,
         ]);
+    }
+    
+    /**
+     * Simple validation for Avis entity
+     */
+    private function validateAvis(Avis $avis): array
+    {
+        $errors = [];
+        
+        // Validate rating
+        if (null === $avis->getRating()) {
+            $errors[] = 'Veuillez sélectionner une note.';
+        } elseif ($avis->getRating() < 1 || $avis->getRating() > 5) {
+            $errors[] = 'La note doit être comprise entre 1 et 5.';
+        }
+        
+        // Validate comment
+        if (null === $avis->getComment() || trim($avis->getComment()) === '') {
+            $errors[] = 'Le commentaire est obligatoire.';
+        } elseif (strlen($avis->getComment()) < 10) {
+            $errors[] = 'Le commentaire doit faire au moins 10 caractères.';
+        } elseif (strlen($avis->getComment()) > 1000) {
+            $errors[] = 'Le commentaire ne peut pas dépasser 1000 caractères.';
+        }
+        
+        return $errors;
     }
 
     #[Route('/{id}', name: 'app_avis_show', methods: ['GET'])]

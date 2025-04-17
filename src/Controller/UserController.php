@@ -60,7 +60,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_user_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
         // Check if the user is viewing their own profile or is an admin
@@ -74,7 +74,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_user}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Check if the user is editing their own profile or is an admin
@@ -104,7 +104,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id_user}', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, User $user, EntityManagerInterface $em): Response
     {

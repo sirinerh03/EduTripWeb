@@ -35,7 +35,6 @@
 </head>
 
 <body>
-{% block body %}
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -44,7 +43,10 @@
     </div>
     <!-- Spinner End -->
 
+    {% set current_route = app.request.attributes.get('_route') %}
+    {% set show_navbar = current_route == 'app_home' or current_route == 'app_login' or current_route == 'app_register' %}
 
+    {% if show_navbar %}
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
        {% block Navbar %}
@@ -63,25 +65,24 @@
                     <a href="{{ path('app_avis_index') }}" class="nav-item nav-link">Avis</a>
                 {% endif %}
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences</a>
-                    <div class="dropdown-menu m-0">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
+                    <div class="dropdown-menu fade-down m-0">
                         <a href="{{ path('app_agencies') }}" class="dropdown-item">Liste des agences</a>
                         <a href="{{ path('app_flights') }}" class="dropdown-item">Vols</a>
                     </div>
                 </div>
-                {% if app.user %}
-                    <a href="{{ path('app_dashboard') }}" class="nav-item nav-link">Tableau de bord</a>
-                    <a href="{{ path('app_logout') }}" class="nav-item nav-link">Déconnexion</a>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="nav-item nav-link">Connexion</a>
-                    <a href="{{ path('app_register') }}" class="nav-item nav-link">Inscription</a>
-                {% endif %}
+                <a href="{{ path('app_flights') }}" class="nav-item nav-link">Vols</a>
+                <a href="{{ path('app_contact') }}" class="nav-item nav-link">Contact</a>
             </div>
+            <a href="{{ path('app_register') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
         {% endblock %}
     </nav>
     <!-- Navbar End -->
-{% block content %}
+    {% endif %}
+    
+    {% block body %}
+    {% block content %}
     <!-- Carousel Start -->
     {% block carousel %}
     <div class="container-fluid p-0 mb-5">

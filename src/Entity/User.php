@@ -17,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'id_user', type: 'integer')]
+    #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(name: 'mail', type: 'string', length: 180, unique: true)]
@@ -28,8 +28,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'role', type: 'string', length: 20)]
     #[Assert\NotBlank(message: 'Le rôle est obligatoire')]
     #[Assert\Choice(
-        choices: ['ROLE_USER', 'ROLE_AGENCY'],
-        message: 'Le rôle doit être soit ROLE_USER soit ROLE_AGENCY'
+        choices: ['ROLE_USER', 'ROLE_AGENCY', 'ROLE_ADMIN'],
+        message: 'Le rôle doit être soit ROLE_USER, ROLE_AGENCY ou ROLE_ADMIN'
     )]
     private ?string $role = null;
 
@@ -83,6 +83,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getIdUser(): ?int
     {
         return $this->id;
     }
