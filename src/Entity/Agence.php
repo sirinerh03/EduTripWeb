@@ -17,13 +17,13 @@ class Agence
     #[ORM\Column(type: "integer")]
     private $id_agence;
 
-    #[ORM\Column(type: "date")]
-    #[Assert\NotNull(message: "La date de création est obligatoire.")]
+    #[ORM\Column(type: "date", nullable: true)]
+    #[Assert\NotBlank(message: "La date de création est obligatoire.")]
     #[Assert\GreaterThanOrEqual("today", message: "La date de création doit être supérieure ou égale à aujourd'hui.")]
-    private \DateTimeInterface $date_creation;
+    private ?\DateTimeInterface $date_creation;
 
     #[ORM\Column(type: "integer")]
-    #[Assert\NotNull(message: "Le numéro de téléphone est obligatoire.")]
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire.")]
     #[Assert\Regex(
         pattern: "/^\d{8}$/",
         message: "Le numéro de téléphone doit contenir exactement 8 chiffres."
@@ -59,6 +59,8 @@ class Agence
     {
         // Initialisation de la collection
         $this->pack_agences = new ArrayCollection();
+        // Initialisation de la date_creation avec la date actuelle si elle est null
+        $this->date_creation = new \DateTime();
     }
 
     public function getIdAgence(): ?int
@@ -77,7 +79,7 @@ class Agence
         return $this->date_creation;
     }
 
-    public function setDateCreation(\DateTimeInterface $value): self
+    public function setDateCreation(?\DateTimeInterface $value): self
     {
         $this->date_creation = $value;
         return $this;
@@ -164,5 +166,3 @@ class Agence
         return $this;
     }
 }
-
-

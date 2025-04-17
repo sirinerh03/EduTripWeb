@@ -16,14 +16,17 @@ class Pack_agence
 
     #[ORM\ManyToOne(targetEntity: Agence::class, inversedBy: "pack_agences")]
     #[ORM\JoinColumn(name: 'id_agence', referencedColumnName: 'id_agence', onDelete: 'CASCADE')]
+    #[Assert\NotNull(message: "L'agence est obligatoire.")]
     private Agence $id_agence;
 
     #[ORM\Column(type: "float")]
     #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
+    #[Assert\NotBlank(message: "Le prix est obligatoire.")]
     private float $prix;
 
     #[ORM\Column(type: "integer")]
     #[Assert\GreaterThan(value: 0, message: "La durée doit être supérieure à 0.")]
+    #[Assert\NotBlank(message: "La durée est obligatoire.")]
     private int $duree;
 
     #[ORM\Column(type: "string", length: 200)]
@@ -41,7 +44,6 @@ class Pack_agence
 
     #[ORM\Column(type: "string")]
     #[Assert\NotBlank(message: "Le statut est obligatoire.")]
-   
     private string $status;
 
     #[ORM\Column(type: "string", length: 200)]

@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AgenceType extends AbstractType
 {
@@ -30,7 +31,7 @@ class AgenceType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('telephone_ag', TelType::class, [ // Changer ici pour correspondre à la propriété 'telephone_ag'
+            ->add('telephone_ag', TelType::class, [
                 'label' => 'Téléphone*',
                 'attr' => [
                     'placeholder' => '12345678',
@@ -55,9 +56,13 @@ class AgenceType extends AbstractType
             ->add('date_creation', DateType::class, [
                 'label' => 'Date de création*',
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'La date de création est obligatoire.'
+                    ])
+                ],
+                'empty_data' => (new \DateTime())->format('Y-m-d'),  // Définit la date actuelle si vide
             ]);
     }
 
