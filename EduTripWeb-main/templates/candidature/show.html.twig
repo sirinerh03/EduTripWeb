@@ -3,32 +3,49 @@
 {% block title %}Candidature{% endblock %}
 
 {% block body %}
-    <h1>Candidature</h1>
+    <h1>Détails de la Candidature</h1>
 
     <table class="table">
         <tbody>
-         
             <tr>
-                <th>Cv</th>
-                <td>{{ candidature.cv }}</td>
+                <th>CV</th>
+                <td>
+                    {% if candidature.cv %}
+                        <a href="{{ asset('uploads/' ~ candidature.cv) }}" target="_blank">{{ candidature.cv }}</a>
+                    {% else %}
+                        Non fourni
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Lettre de motivation</th>
-                <td>{{ candidature.lettreMotivation }}</td>
+                <td>
+                    {% if candidature.lettreMotivation %}
+                        <a href="{{ asset('uploads/' ~ candidature.lettreMotivation) }}" target="_blank">{{ candidature.lettreMotivation }}</a>
+                    {% else %}
+                        Non fournie
+                    {% endif %}
+                </td>
             </tr>
             <tr>
-                <th>Diplome</th>
-                <td>{{ candidature.diplome }}</td>
+                <th>Diplôme</th>
+                <td>
+                    {% if candidature.diplome %}
+                        <a href="{{ asset('uploads/' ~ candidature.diplome) }}" target="_blank">{{ candidature.diplome }}</a>
+                    {% else %}
+                        Non fourni
+                    {% endif %}
+                </td>
             </tr>
             <tr>
-                <th>Etat</th>
+                <th>État</th>
                 <td>{{ candidature.etat }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_candidature_index') }}">Back to list</a>
-    <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}">Edit</a>
+    <a href="{{ path('app_candidature_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="btn btn-primary">Modifier</a>
 
     {{ include('candidature/_delete_form.html.twig') }}
 {% endblock %}
