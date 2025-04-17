@@ -108,4 +108,11 @@ final class HebergementController extends AbstractController
 
         return $this->redirectToRoute('app_hebergement_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/carousel/{id_hebergement}', name: 'app_hebergement_show_carousel', methods: ['GET'])]
+public function showCarousel(Hebergement $hebergement): Response
+{
+    return $this->render('hebergement/show_carousel.html.twig', [
+        'hebergement' => $hebergement,
+    ]);
+}
 }

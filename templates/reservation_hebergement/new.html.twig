@@ -1,11 +1,133 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouvelle Réservation Hébergement{% endblock %}
+{% block title %}Nouvelle Réservation - {{ hebergement.nomh }}{% endblock %}
 
 {% block body %}
-<h1>Créer une nouvelle Réservation Hébergement</h1>
+<section class="container py-5">
+    <h1 class="text-center mb-5 fw-bold display-4 text-primary">
+        Nouvelle réservation pour {{ hebergement.nomh }}
+    </h1>
 
-{{ include('reservation_hebergement/_form.html.twig') }}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 rounded">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <td class="align-middle">{{ form_label(form.date_d, "Date de début") }}</td>
+                            <td>{{ form_widget(form.date_d, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td class="text-danger">{{ form_errors(form.date_d) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle">{{ form_label(form.date_f, "Date de fin") }}</td>
+                            <td>{{ form_widget(form.date_f, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td class="text-danger">{{ form_errors(form.date_f) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle">{{ form_label(form.status, "Statut") }}</td>
+                            <td>{{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td class="text-danger">{{ form_errors(form.status) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle">Hébergement</td>
+                            <td>
+                                <input type="text" class="form-control" value="{{ hebergement.nomh }}" readonly>
+                                {{ form_widget(form.hebergement, {'attr': {'class': 'd-none'}}) }}
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
 
-<a href="{{ path('app_reservation_hebergement_index') }}">Retour à la liste</a>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn custom-btn">Confirmer la réservation</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_hebergement_index') }}" class="btn btn-secondary">
+            Retour à la liste
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.custom-btn {
+            background-color: #06BBCC;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn.custom-btn:hover {
+            background-color: #00aabb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            border-radius: 50px;
+            padding: 10px 20px;
+        }
+
+        h1 {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus {
+            border-color: #06BBCC;
+            box-shadow: 0 0 0 0.2rem rgba(6, 187, 204, 0.25);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 15px;
+            border-top: 1px solid #f0f4f8;
+        }
+
+        .text-danger ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        
+        .d-none {
+            display: none;
+        }
+    </style>
 {% endblock %}

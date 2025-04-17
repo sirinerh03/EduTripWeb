@@ -20,10 +20,10 @@
                             <p class="text-light mb-2">{{ hebergement.typeh }} - {{ hebergement.capaciteh }} personnes</p>
 
                             <div class="d-flex justify-content-center gap-3">
-                                <a href="{{ path('app_hebergement_show', {'id_hebergement': hebergement.id}) }}"
-                                   class="btn btn-outline-light">
-                                    Voir Détails
-                                </a>
+                               <a href="{{ path('app_hebergement_show_carousel', {'id_hebergement': hebergement.id}) }}"
+   class="btn btn-outline-light">
+    Voir Détails
+</a>
                                 <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}"
                                    class="btn btn-outline-light">
                                     Faire une Réservation
@@ -43,11 +43,7 @@
         </button>
     </div>
 
-    <div class="text-center mt-5">
-        <a href="{{ path('app_hebergement_index') }}" class="btn btn-dark px-4 py-2 rounded-pill">
-            Retour à la liste
-        </a>
-    </div>
+   
 </section>
 
 <style>

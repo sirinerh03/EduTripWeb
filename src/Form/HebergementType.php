@@ -19,7 +19,7 @@ class HebergementType extends AbstractType
             'empty_data' => '', // Ensure empty submits as "" instead of null
         ])
         ->add('typeh', ChoiceType::class, [
-            'choices' => Hebergement::AVAILABILITY_CHOICES,
+            'choices' => Hebergement::TYPE_CHOICES,
                 'placeholder' => 'Choisir un type',
                 'required' => true,
                 'empty_data' => 0, 
