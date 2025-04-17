@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints\File;
 class CandidatureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
+    
     {
         $candidature = $options['data'];
         $isEdit = $candidature && $candidature->getId() !== null;
