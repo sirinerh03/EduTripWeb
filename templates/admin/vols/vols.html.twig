@@ -92,7 +92,7 @@
                         <div class="row" id="vols-container">
                             {% for vol in vols %}
                                 <div class="col-md-6 mb-4 vol-item {% if loop.index > 4 %}d-none{% endif %}">
-                                    <div class="vol-ticket p-4" data-vol-id="{{ vol.id_vol }}">
+                                    <div class="vol-ticket p-4" data-vol-id="{{ vol.getIdVol()}}">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="text-primary mb-0">
                                                 <i class="mdi mdi-airplane-takeoff"></i> 
@@ -127,15 +127,15 @@
                                         </div>
 
                                         <div class="d-flex justify-content-end mt-3">
-                                            <a href="{{ path('vol_edit', {'id': vol.id_vol}) }}" 
+                                            <a href="{{ path('vol_edit', {'id': vol.getIdVol}) }}" 
                                                class="btn btn-sm btn-outline-secondary me-2">
                                                 <i class="mdi mdi-pencil"></i>
                                             </a>
                                             <form method="post"
-                                                  action="{{ path('vol_delete', {'id': vol.id_vol}) }}" 
+                                                  action="{{ path('vol_delete', {'id': vol.getIdVol()}) }}" 
                                                   onsubmit="return confirm('Supprimer ce vol ?');">
                                                 <input type="hidden" name="_token" 
-                                                       value="{{ csrf_token('delete' ~ vol.id_vol) }}">
+                                                       value="{{ csrf_token('delete' ~ vol.getIdVol()) }}">
                                                 <button class="btn btn-sm btn-outline-danger">
                                                     <i class="mdi mdi-delete"></i> 
                                                 </button>

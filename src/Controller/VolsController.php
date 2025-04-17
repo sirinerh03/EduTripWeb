@@ -45,28 +45,25 @@ final class VolsController extends AbstractController
     }
 
     #[Route('/vols/edit/{id}', name: 'vol_edit')]
-    public function edit(Vol $vol, Request $request, EntityManagerInterface $em): Response
+    public function modifierVol(Request $request, Vol $vol, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(VolType::class, $vol);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-
-            $this->addFlash('success', 'Le vol a été modifié avec succès.');
-            return $this->redirectToRoute('app_vols');
+            $this->addFlash('success', 'Vol modifié avec succès !');
+            return $this->redirectToRoute('app_vols'); // modifie si besoin
         }
 
         return $this->render('admin/vols/vol_edit.html.twig', [
             'form' => $form->createView(),
-            'vol' => $vol,
         ]);
     }
-
     #[Route('/vols/{id}/delete', name: 'vol_delete', methods: ['POST'])]
     public function delete(Request $request, Vol $vol, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $vol->getId_vol(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $vol->getIdVol(), $request->request->get('_token'))) {
             $entityManager->remove($vol);
             $entityManager->flush();
 

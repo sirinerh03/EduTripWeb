@@ -1,0 +1,60 @@
+{# editTicket.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Réservation{% endblock %}
+
+{% block content %}
+<style>
+.invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
+    }
+    </style>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🛠️ Modifier votre Réservation #{{ reservation.id }}</h2>
+
+   {{ form_start(form, {
+    'action': path('edit_ticket', {'id': reservation.getId()}),
+    'attr': {'novalidate': 'novalidate'}
+}) }}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.nom) }} {# Add error display #}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.prenom) }}
+                {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.prenom) }} {# Add error display #}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.email) }} {# Add error display #}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.nb_place) }}
+            {{ form_widget(form.nb_place, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.nb_place) }} {# Add error display #}
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-success" type="submit">💾 Enregistrer</button>
+            <a href="{{ path('delete_ticket', { id: reservation.id }) }}" class="btn btn-danger ms-2">🗑️ Annuler</a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

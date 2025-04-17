@@ -36,7 +36,12 @@ private ?string $nom = null;
 
 #[ORM\Column(length: 255)]
 #[Assert\NotBlank(message: "Le prénom est obligatoire")]
-#[Assert\Length(min: 3, max: 50)]
+#[Assert\Length(
+    min: 3,
+    max: 50,
+    minMessage: "3 caractères minimum",
+    maxMessage: "50 caractères maximum"
+)]
 private ?string $prenom = null;
 
 #[ORM\Column(length: 255)]
@@ -45,12 +50,8 @@ private ?string $prenom = null;
 private ?string $email = null;
 
 #[ORM\Column]
-#[Assert\NotBlank(message: "L'ID étudiant est obligatoire")]
-#[Assert\Regex(
-    pattern: "/^[A-Z]\d{8}$/",
-    message: "Format : Lettre majuscule suivie de 8 chiffres"
-)]
-private ?int $id_etudiant = null;
+
+private ?int $id_etudiant = 1; 
 
 #[ORM\Column]
 #[Assert\NotBlank(message: "Nombre de places requis")]
@@ -59,7 +60,7 @@ private ?int $id_etudiant = null;
     value: 10,
     message: "Maximum 10 places par réservation"
 )]
-private ?int $nb_palce = null;
+private ?int $nb_place = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservationVols')]
     #[ORM\JoinColumn(name:"id_vol",referencedColumnName:"id_vol",nullable: false)]
@@ -136,21 +137,19 @@ private ?int $nb_palce = null;
     }
 
     public function setIdEtudiant(int $id_etudiant): static
-    {
-        $this->id_etudiant = $id_etudiant;
+{
+    $this->id_etudiant = $id_etudiant;
+    return $this;
+}
 
-        return $this;
+    public function getNbPlace(): ?int
+    {
+        return $this->nb_place;
     }
-
-    public function getNbPalce(): ?int
+    
+    public function setNbPlace(int $nb_place): static
     {
-        return $this->nb_palce;
-    }
-
-    public function setNbPalce(int $nb_palce): static
-    {
-        $this->nb_palce = $nb_palce;
-
+        $this->nb_place = $nb_place;
         return $this;
     }
 

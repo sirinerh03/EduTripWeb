@@ -26,18 +26,17 @@ class Vol
     #[Assert\Regex(
         pattern: '/^[A-Za-z0-9\W]{1,7}$/',
         message: 'Le numéro de vol peut contenir lettres, chiffres et caractères spéciaux.'
-    )]    private ?string $num_vol = null;
+    )]    
+    private ?string $num_vol = null;
 
     #[ORM\Column(length: 255)]
-    
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank(message: 'L’aéroport de départ est obligatoire.')]
     private ?string $aeroport_depart = null;
 
     #[ORM\Column(length: 255)]
-  
     #[Assert\Length(max: 255)]
-    #[Assert\NotBlank(message: 'L’aéroport  d’arrivée est obligatoire.')]
+    #[Assert\NotBlank(message: 'L’aéroport d’arrivée est obligatoire.')]
     private ?string $aeroport_arrivee = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -46,17 +45,14 @@ class Vol
     private ?\DateTimeInterface $date_depart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-
     #[Assert\NotNull(message: 'La date d’arrivée est obligatoire.')]
     #[Assert\GreaterThan(propertyPath: 'date_depart', message: 'La date d’arrivée doit être après la date de départ.')]
-    
     private ?\DateTimeInterface $date_arrivee = null;
 
     #[ORM\Column]
     #[Assert\NotNull(message: 'Le nombre de places est requis.')]
     #[Assert\Type(type: 'integer', message: 'Le nombre de places doit être un entier.')]
     #[Assert\PositiveOrZero(message: 'Le nombre de places doit être positif ou nul.')]
-    
     #[Assert\Range(min: 0)]
     private ?int $places_dispo = null;
 
@@ -80,6 +76,8 @@ class Vol
         $this->reservationVols = new ArrayCollection();
     }
 
+    // Getters and setters
+
     public function getIdVol(): ?int
     {
         return $this->id_vol;
@@ -93,7 +91,6 @@ class Vol
     public function setNumVol(string $num_vol): static
     {
         $this->num_vol = $num_vol;
-
         return $this;
     }
 
@@ -105,7 +102,6 @@ class Vol
     public function setAeroportDepart(string $aeroport_depart): static
     {
         $this->aeroport_depart = $aeroport_depart;
-
         return $this;
     }
 
@@ -117,7 +113,6 @@ class Vol
     public function setAeroportArrivee(string $aeroport_arrivee): static
     {
         $this->aeroport_arrivee = $aeroport_arrivee;
-
         return $this;
     }
 
@@ -126,22 +121,21 @@ class Vol
         return $this->date_depart;
     }
 
-    public function setDateDepart(\DateTimeInterface $date_depart): static
-    {
-        $this->date_depart = $date_depart;
+    public function setDateDepart(?\DateTimeInterface $date_depart): self
+{
+    $this->date_depart = $date_depart;
+    return $this;
+}
 
-        return $this;
-    }
 
     public function getDateArrivee(): ?\DateTimeInterface
     {
         return $this->date_arrivee;
     }
 
-    public function setDateArrivee(\DateTimeInterface $date_arrivee): static
+    public function setDateArrivee(?\DateTimeInterface $date_arrivee): static
     {
         $this->date_arrivee = $date_arrivee;
-
         return $this;
     }
 
@@ -153,7 +147,6 @@ class Vol
     public function setPlacesDispo(int $places_dispo): static
     {
         $this->places_dispo = $places_dispo;
-
         return $this;
     }
 
@@ -165,7 +158,6 @@ class Vol
     public function setPrixVol(float $prix_vol): static
     {
         $this->prix_vol = $prix_vol;
-
         return $this;
     }
 
@@ -190,7 +182,6 @@ class Vol
     public function removeReservationVol(ReservationVol $reservationVol): static
     {
         if ($this->reservationVols->removeElement($reservationVol)) {
-            // set the owning side to null (unless already changed)
             if ($reservationVol->getVol() === $this) {
                 $reservationVol->setVol(null);
             }
@@ -199,7 +190,6 @@ class Vol
         return $this;
     }
 
-    // Méthode pour rendre l'entité plus lisible dans les formulaires
     public function __toString(): string
     {
         return $this->num_vol ?? 'Vol';

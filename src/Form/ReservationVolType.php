@@ -13,8 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class ReservationVolType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
+{
+    $builder
         ->add('nom', TextType::class, [
             'label' => 'Nom',
             'attr' => [
@@ -34,14 +34,7 @@ class ReservationVolType extends AbstractType
                 'pattern' => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
             ]
         ])
-        ->add('id_etudiant', TextType::class, [
-            'label' => 'ID Étudiant',
-            'attr' => [
-                'pattern' => '[A-Z]\d{8}',
-                'title' => 'Format: A12345678'
-            ]
-        ])
-        ->add('nb_palce', IntegerType::class, [
+        ->add('nb_place', IntegerType::class, [
             'label' => 'Nombre de places',
             'attr' => [
                 'min' => 1,
@@ -49,11 +42,8 @@ class ReservationVolType extends AbstractType
             ]
         ])
         ->add('submit', SubmitType::class, [
-            'label' => ' ',
-            'attr' => [
-                'class' => 'btn-reserver',
-                'title' => 'Confirmer la réservation'
-            ]
+            'label' => 'Réserver',
+            'attr' => ['class' => 'btn-reserver']
         ]);
 }
 
