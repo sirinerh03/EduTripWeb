@@ -59,5 +59,11 @@ class HomeController extends AbstractController
     {
         return $this->render('website/notfound.html.twig');
     }
-   
+        
+    #[Route('/adminhome', name: 'base_admin')]
+    public function homeadmin(): Response
+    {
+        return $this->render('admin/homeadmin.html.twig');
+    }
+
 }
