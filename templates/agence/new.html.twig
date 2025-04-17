@@ -1,46 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer agence{% endblock %}
+{% block title %}Créer une nouvelle Agence{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">Créer une agence</h1>
+    <h1 class="mb-4">Créer une nouvelle Agence</h1>
 
     <a href="{{ path('app_agence_index') }}" class="btn btn-secondary mb-4">
         <i class="fas fa-arrow-left"></i> Retour à la liste
     </a>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    {{ form_start(form) }}
-                        <div class="mb-3">
-                            {{ form_row(form.nom_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_row(form.adresse_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_row(form.telephone_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_row(form.email_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_row(form.description_ag, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_row(form.date_creation, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                        </div>
+    {% for flash in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ flash }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
 
-                        <button class="btn btn-success w-100 mt-3" type="submit" style="background-color:rgb(40, 133, 167); border-color: #28a745;">
-                            <i class="fas fa-save me-2"></i> Ajouter l'agence
-                        </button>
-                    {{ form_end(form) }}
+    {% for flash in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ flash }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    
+                    {{ form_widget(field, {
+                        'attr': {
+                            'class': 'form-control' ~ (field.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+
+                    {% if field.vars.errors|length > 0 %}
+                        <div class="invalid-feedback d-block mt-1">
+                            {{ form_errors(field) }}
+                        </div>
+                    {% endif %}
                 </div>
+            {% endfor %}
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-success btn-lg" type="submit">
+                    <i class="fas fa-save me-2"></i> Créer l'agence
+                </button>
             </div>
+
+            {{ form_end(form) }}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+    </script>
 {% endblock %}
