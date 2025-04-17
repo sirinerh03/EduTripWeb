@@ -34,27 +34,30 @@ final class PackAgenceController extends AbstractController
         ]);
     }
 
-    #[Route('/pack/agence/new', name: 'app_pack_agence_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/pack/agence/new', name: 'app_pack_agence_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $packAgence = new Pack_agence();
     $form = $this->createForm(PackAgenceType::class, $packAgence);
-
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($packAgence);
-        $entityManager->flush();
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            $entityManager->persist($packAgence);
+            $entityManager->flush();
 
-        $this->addFlash('success', 'Pack d\'agence créé avec succès !');
-
-        return $this->redirectToRoute('app_pack_agence');
+            $this->addFlash('success', 'Le pack d\'agence a été créé avec succès.');
+            return $this->redirectToRoute('app_pack_agence');
+        } else {
+            $this->addFlash('error', 'Le formulaire contient des erreurs.Veuillez les corriger.');
+        }
     }
 
     return $this->render('pack_agence/new.html.twig', [
         'form' => $form->createView(),
     ]);
 }
+
 
 
     #[Route('/pack/agence/{id}', name: 'app_pack_agence_show')]
