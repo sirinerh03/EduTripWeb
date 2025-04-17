@@ -13,17 +13,17 @@ class Candidature
     #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $cv = null;
 
-    #[ORM\Column(type: "string", length: 255)]
-    private string $lettre_motivation;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $lettre_motivation = null;
 
-    #[ORM\Column(type: "string", length: 255)]
-    private string $diplome;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $diplome = null;
 
     #[ORM\Column(type: "string", length: 30)]
-    private $etat = 'en_attente';
+    private string $etat = 'en_attente';
 
     #[ORM\ManyToOne(targetEntity: University::class, inversedBy: "candidatures")]
     #[ORM\JoinColumn(name: 'idUniversity', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -39,7 +39,7 @@ class Candidature
         return $this->cv;
     }
 
-    public function setCv(string $cv): self
+    public function setCv(?string $cv): self
     {
         $this->cv = $cv;
         return $this;
@@ -50,7 +50,7 @@ class Candidature
         return $this->lettre_motivation;
     }
 
-    public function setLettreMotivation(string $lettre_motivation): self
+    public function setLettreMotivation(?string $lettre_motivation): self
     {
         $this->lettre_motivation = $lettre_motivation;
         return $this;
@@ -61,7 +61,7 @@ class Candidature
         return $this->diplome;
     }
 
-    public function setDiplome(string $diplome): self
+    public function setDiplome(?string $diplome): self
     {
         $this->diplome = $diplome;
         return $this;

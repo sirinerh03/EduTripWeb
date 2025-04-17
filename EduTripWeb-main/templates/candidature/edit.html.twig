@@ -6,16 +6,58 @@
     <!-- Edit Application Section Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <!-- Section Header -->
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Edit </h6>
-                <h1 class="mb-5">Update candidature</h1>
+                <h6 class="section-title bg-white text-center text-primary px-3">Edit</h6>
+                <h1 class="mb-5">Update Candidature</h1>
             </div>
 
+            <!-- Form Container -->
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-8 col-md-10 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="course-item bg-light">
+                    <div class="course-item bg-light shadow rounded">
                         <div class="p-4">
-                            {{ include('candidature/_form.html.twig', {'button_label': 'Update'}) }}
+                            <!-- Form Start with enctype for file uploads -->
+                            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                            <!-- Form Fields -->
+                            <div class="mb-4">
+                                {{ form_label(form.university, 'Select University', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.university, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.university) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form_label(form.etat, 'Application Status', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.etat, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.etat) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form_label(form.cv, 'Upload CV (PDF file)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.cv, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.cv) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form_label(form.lettre_motivation, 'Upload Lettre de Motivation (PDF file)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.lettre_motivation, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.lettre_motivation) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form_label(form.diplome, 'Upload Diplôme (PDF file)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.diplome, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.diplome) }}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button class="btn btn-primary mt-3" type="submit">
+                                {{ button_label|default('Update') }}
+                            </button>
+
+                            <!-- End Form -->
+                            {{ form_end(form) }}
                         </div>
                     </div>
                 </div>
