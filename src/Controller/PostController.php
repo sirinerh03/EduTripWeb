@@ -133,12 +133,14 @@ $post->setUtilisateur($utilisateur);
     {
         $postRepository = $entityManager->getRepository(Post::class);
         $posts = $postRepository->findAll();
-        
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire);
         foreach ($posts as $post) {
             $post->getCommentaires();  // Cette ligne est nécessaire pour éviter un problème de lazy loading
         }
         return $this->render('posts.html.twig', [
             'posts' => $posts,
+            'form' => $form->createView(),
     
         ]);
     }

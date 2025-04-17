@@ -192,7 +192,10 @@
                                                       id="contenu-commentaire-{{ post.idPost }}" 
                                                       rows="2" 
                                                       placeholder="Écrire un commentaire..." 
-                                                      required></textarea>
+                                                      ></textarea><div class="text-danger mt-1">
+    {{ form_errors(form.contenu) }}
+</div>
+
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fas fa-paper-plane"></i>
                                             </button>
