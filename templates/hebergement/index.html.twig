@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/homeadmin.html.twig' %}
 
 {% block title %}Hebergement index{% endblock %}
 
-{% block body %}
-    <h1>Hebergement index</h1>
-
+{% block Content %}
+   
+<div style="overflow-x: auto;">
     <table class="table">
         <thead>
             <tr>
@@ -77,6 +77,59 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
+   <div class="create-button">
+    <a href="{{ path('app_hebergement_new') }}" class="create-btn">
+        ➕ Créer un nouvel hébergement
+    </a>
+</div>
 
-    <a href="{{ path('app_hebergement_new') }}">Cree nouvelle hebergement </a>
+</div>
+    {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+
+
+<style>
+    /* Correction du positionnement */
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white; 
+    }
+    .create-button {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.create-btn {
+    display: inline-block;
+    background-color: #06BBCC;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.create-btn:hover {
+    background-color: #0498a8;
+    text-decoration: none;
+}
+
+</style>
+
 {% endblock %}
+

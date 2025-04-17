@@ -1,10 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/homeadmin.html.twig' %}
 
 {% block title %}ReservationHebergement index{% endblock %}
 
-{% block body %}
-    <h1>ReservationHebergement index</h1>
-
+{% block Content %}
+<div style="overflow-x: auto;">
     <table class="table">
         <thead>
             <tr>
@@ -30,22 +29,30 @@
                 <td>{{ reservation_hebergement.dateD ? reservation_hebergement.dateD|date('Y-m-d') : '' }}</td>
                 <td>{{ reservation_hebergement.dateF ? reservation_hebergement.dateF|date('Y-m-d') : '' }}</td>
                 <td>{{ reservation_hebergement.status }}</td>
-                <td>
-                    <div style="display: flex; gap: 5px;">
-                        <a href="{{ path('app_reservation_hebergement_show', {'id_reservationh': reservation_hebergement.idReservationh}) }}" 
-                           class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;">
-                            details
-                        </a>
-                        <a href="{{ path('app_reservation_hebergement_edit', {'id_reservationh': reservation_hebergement.idReservationh}) }}" 
-                           class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;">
-                            modifier
-                        </a>
-                        <form method="post" action="{{ path('app_reservation_hebergement_delete', {'id_reservationh': reservation_hebergement.idReservationh}) }}" 
-                              onsubmit="return confirm('Are you sure you want to delete this item?');" style="display: inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_hebergement.idReservationh) }}">
-                            <button class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;">supprimer</button>
-                        </form>
-                    </div>
+                <td style="display: flex; gap: 10px;">
+                    <button class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;"
+                            onclick="window.location.href='{{ path('app_reservation_hebergement_show', {'id_reservationh': reservation_hebergement.idReservationh}) }}'">
+                        details
+                    </button>
+
+                    <button class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;"
+                            onclick="window.location.href='{{ path('app_reservation_hebergement_edit', {'id_reservationh': reservation_hebergement.idReservationh}) }}'">
+                        modifier
+                    </button>
+
+                    <form id="delete-form-{{ reservation_hebergement.idReservationh }}" method="post"
+                          action="{{ path('app_reservation_hebergement_delete', {'id_reservationh': reservation_hebergement.idReservationh}) }}"
+                          style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_hebergement.idReservationh) }}">
+                    </form>
+
+                    <button class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;"
+                            onclick="event.preventDefault(); 
+                            if(confirm('Are you sure you want to delete this item?')) { 
+                                document.getElementById('delete-form-{{ reservation_hebergement.idReservationh }}').submit(); 
+                            }">
+                        supprimer
+                    </button>
                 </td>
             </tr>
         {% else %}
@@ -55,8 +62,54 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
 
-    <a href="{{ path('app_hebergement_index') }}" class="btn" style="background-color: white; color: #06BBCC; border: 2px solid white;">
-        faire une nouvelle reservation
+<div class="create-button">
+    <a href="{{ path('app_hebergement_index') }}" class="create-btn">
+        ➕ faire une nouvelle reservation
     </a>
+</div>
+
+<div style="height: 60px;"></div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+    }
+
+    .create-button {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .create-btn {
+        display: inline-block;
+        background-color: #06BBCC;
+        color: white;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        border: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-btn:hover {
+        background-color: #0498a8;
+        text-decoration: none;
+    }
+</style>
 {% endblock %}
