@@ -39,24 +39,29 @@ final class AgenceController extends AbstractController
     
 
     #[Route('/new', name: 'app_agence_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $agence = new Agence();
-        $form = $this->createForm(AgenceType::class, $agence);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
+public function new(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $agence = new Agence();
+    $form = $this->createForm(AgenceType::class, $agence);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
             $entityManager->persist($agence);
             $entityManager->flush();
-    
+
             $this->addFlash('success', 'L\'agence a été créée avec succès.');
             return $this->redirectToRoute('app_agence_index');
+        } else {
+            $this->addFlash('error', 'Le formulaire contient des erreurs. Veuillez les corriger.');
         }
-    
-        return $this->render('agence/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
     }
+
+    return $this->render('agence/new.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
     
 #[Route('/{id_agence}', name: 'app_agence_show', methods: ['GET'])]
     public function show(Agence $agence): Response

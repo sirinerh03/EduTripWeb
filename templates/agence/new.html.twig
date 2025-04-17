@@ -11,16 +11,16 @@
     </a>
 
     {% for flash in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ flash }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
     {% endfor %}
 
     {% for flash in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ flash }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
     {% endfor %}
 
@@ -31,7 +31,7 @@
             {% for field in form %}
                 <div class="mb-3">
                     {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                    
+
                     {{ form_widget(field, {
                         'attr': {
                             'class': 'form-control' ~ (field.vars.errors|length > 0 ? ' is-invalid' : '')
@@ -39,7 +39,7 @@
                     }) }}
 
                     {% if field.vars.errors|length > 0 %}
-                        <div class="invalid-feedback d-block mt-1">
+                        <div class="invalid-feedback d-block">
                             {{ form_errors(field) }}
                         </div>
                     {% endif %}
@@ -68,7 +68,19 @@
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
+
+                        // Message d'erreur personnalisé (facultatif)
+                        const alertContainer = document.createElement('div');
+                        alertContainer.className = 'alert alert-danger alert-dismissible fade show mt-3 custom-client-validation';
+                        alertContainer.innerHTML = `
+                            <strong>Erreur !</strong> Veuillez remplir tous les champs requis.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                        `;
+                        if (!document.querySelector('.custom-client-validation')) {
+                            form.parentElement.prepend(alertContainer);
+                        }
                     }
+
                     form.classList.add('was-validated');
                 }, false);
             });
