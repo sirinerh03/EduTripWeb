@@ -22,26 +22,20 @@ class VolType extends AbstractType
             ->add('num_vol', TextType::class, [
                 'label' => 'Numéro du vol',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Le numéro de vol est requis.'
-                    ])
+                   
                 ]
             ])
             ->add('aeroport_depart', TextType::class, [
                 'required' => true,
                 'label' => 'Aéroport de départ',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Aéroport de départ requis.'
-                    ])
+                    
                 ]
             ])
             ->add('aeroport_arrivee', TextType::class, [
                 'label' => 'Aéroport d\'arrivée',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Aéroport d’arrivée requis.'
-                    ])
+                   
                 ]
             ])
             ->add('date_depart', DateTimeType::class, [
