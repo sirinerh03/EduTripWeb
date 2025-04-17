@@ -292,8 +292,7 @@
     },
     "twig/extra-bundle": {
         "version": "v3.20.0"
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     },
     "vich/uploader-bundle": {
         "version": "2.6",
@@ -306,9 +305,6 @@
         "files": [
             "./config/packages/vich_uploader.yaml"
         ]
-=======
->>>>>>> origin/main
-=======
->>>>>>> 1295508 (gestion university)
+
     }
 }

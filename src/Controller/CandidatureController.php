@@ -38,7 +38,7 @@ final class CandidatureController extends AbstractController
             $entityManager->persist($candidature);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_candidature_index');
+            
         }
 
         return $this->render('candidature/new.html.twig', [
