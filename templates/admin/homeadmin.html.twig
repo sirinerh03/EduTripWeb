@@ -5,6 +5,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
     <title>EduTrip Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{asset('admin/assets/vendors/mdi/css/materialdesignicons.min.css')}}">
@@ -245,10 +249,15 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-                <span class="menu-title">Hébergement</span>
-                <i class="mdi mdi-contacts menu-icon"></i>
-              </a>
+
+
+             <a class="nav-link" href="{{ path('app_hebergement_index') }}">
+    <span class="menu-title">Hébergement</span>
+    <i class="mdi mdi-contacts menu-icon"></i>
+</a>
+
+
+
               <div class="collapse" id="icons">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
@@ -265,12 +274,20 @@
               <div class="collapse" id="forms">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="pages/forms/basic_elements.html">Form Elements</a>
+
+
+
+
+
+                    <a class="nav-link" href="{{ path('app_agence_index') }}">Agences</a>
+                    <a class="nav-link" href="{{ path('app_pack_agence') }}">pack_Agences</a>
+
                   </li>
                 </ul>
               </div>
             </li>
             <li class="nav-item">
+
               <a class="nav-link" href="{{ path('app_vols') }}">
                 <span  class="menu-title">vols</span>
                 <i class="mdi mdi-home menu-icon"></i>
@@ -288,6 +305,12 @@
                   </li>
                 </ul>
               </div>
+            </li>
+                         <li class="nav-item">
+              <a class="nav-link" href="{{ path('admin_posts') }}">
+                <span  class="menu-title">Posts</span>
+                <i class="mdi mdi-home menu-icon"></i>
+              </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">

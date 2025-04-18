@@ -1,23 +1,30 @@
 <?php
+
+
 namespace App\Controller;
 
+
+use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\PostRepository;
 
 class HomeController extends AbstractController
 {
+
+
+
+
+
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
         return $this->render('home/index.html.twig');
     }
 
-    #[Route('/base', name: 'show_base_template')]
-    public function base(): Response
-    {
-        return $this->render('base.html.twig');
-    }
+
 
     #[Route('/adminhome', name: 'base_admin')]
     public function homeadmin(): Response
@@ -25,11 +32,45 @@ class HomeController extends AbstractController
         return $this->render('admin/homeadmin.html.twig');
     }
 
+
+    
+    #[Route('/base', name: 'show_base_template')]
+    public function base(): Response
+    {
+        return $this->render('base.html.twig');
+    }
+
+    #[Route('/about', name: 'app_about')]
+    public function about(): Response
+    {
+        return $this->render('website/about.html.twig');
+    }
+
+
+    /*#[Route('/posts', name: 'app_posts')]
+    public function posts(): Response
+    {
+        return $this->render('posts.html.twig');
+    }*/
+
+
+   
+
+
+
+
+
+
+
+
+
+
     #[Route('/posts', name: 'app_posts')]
     public function posts(): Response
     {
         return $this->render('posts.html.twig');
     }
+
 
     #[Route('/team', name: 'app_team')]
     public function team(): Response
@@ -53,6 +94,4 @@ class HomeController extends AbstractController
     public function not_found(): Response
     {
         return $this->render('website/notfound.html.twig');
-    }
-   
-}
+    }}
