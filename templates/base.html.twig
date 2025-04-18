@@ -44,81 +44,51 @@
     </div>
     <!-- Spinner End -->
 
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-       {% block Navbar %}
-
-
-
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    {% block Navbar %}
         <a href="{{ path('app_home') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-
-
-
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduTrip</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
+        
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-
-
-
-
                 <a href="{{ path('show_base_template') }}" class="nav-item nav-link active">Accueil</a>
-               
-
-                <a href="courses.html" class="nav-item nav-link">Hébergement</a>
+                <a href="{{ path('app_hebergement_carousel') }}" class="nav-item nav-link {% if app.request.attributes.get('_route') == 'app_hebergement_carousel' %}active text-primary fw-bold{% endif %}">Hébergement</a>
                 <a href="{{ path('app_posts') }}" class="nav-item nav-link">Posts</a>
+                <a href="{{ path('app_reservation_vol') }}" class="nav-item nav-link">Vols</a>
+                <!-- Dropdown Agences -->
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences</a>
                     <div class="dropdown-menu fade-down m-0">
-
-               <a href="{{ path('app_reservation_vol') }}" class="nav-item nav-link">Vols</a>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
-            </div>
-            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
-=
-
-
-
-                        <a href="{{path('app_agence_liste')}}" class="dropdown-item">liste agence</a>
-                        <a href="{{path('app_pack_agence_liste')}}" class="dropdown-item">Packs</a> 
+                        <a href="{{path('app_agence_liste')}}" class="dropdown-item">Liste agence</a>
+                        <a href="{{path('app_pack_agence_liste')}}" class="dropdown-item">Packs</a>
                        
-
-             
-
-                    </div>
-                </div>
-                <a href="contact.html" class="nav-item nav-link">Vols</a>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
-            </div>
-
-        
-
-                
-                
-                <a href="{{ path('app_university_index') }}" class="nav-item nav-link {{ app.request.get('_route') starts with 'app_university_' ? 'active' : '' }}">Universités</a>
-                <a href="{{ path('app_candidature_new') }}" class="nav-item nav-link {{ app.request.get('_route') starts with 'app_candidature_' ? 'active' : '' }}">Candidatures</a>
-               
-                
-                <div class="nav-item dropdown">
-                
                     
-                    <div class="dropdown-menu fade-down m-0">
-                        
-                        <a href="{{ path('app_university_new') }}" class="dropdown-item">Ajouter université</a>
                     </div>
                 </div>
+
+                <a href="{{ path('app_university_index') }}" 
+                   class="nav-item nav-link {{ app.request.get('_route') starts with 'app_university_' ? 'active' : '' }}">
+                   Universités
+                </a>
+                
+                <a href="{{ path('app_candidature_new') }}" 
+                   class="nav-item nav-link {{ app.request.get('_route') starts with 'app_candidature_' ? 'active' : '' }}">
+                   Candidatures
+                </a>
+
             </div>
 
-
-
+            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+                Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i>
+            </a>
         </div>
-        {% endblock %}
-    </nav>
-    <!-- Navbar End -->
+    {% endblock %}
+</nav>
 {% block content %}
     <!-- Carousel Start -->
     {% block carousel %}
@@ -569,9 +539,9 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-3">Contact</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>ariana tunis</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+216 28 345 890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>edutrip@gmail.com</p>
                     <div class="d-flex pt-2">
                         <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
