@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Agences{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Animation pour le changement de contenu */
+        .agences-container {
+            transition: opacity 0.3s ease;
+            min-height: 300px;
+        }
+
+        .agences-container.loading {
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+
+        /* Style pour les champs de recherche */
+        #filter-form input {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #filter-form input:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4 text-primary">🌍 Liste des Agences</h1>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {# Formulaire de filtrage #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" 
+                           value="{{ app.request.query.get('nom') }}" 
+                           placeholder="Filtrer par nom">
+                </div>
+                <div class="col-md-4">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" 
+                           value="{{ app.request.query.get('description') }}" 
+                           placeholder="Filtrer par description">
+                </div>
+                <div class="col-md-4">
+                    <label for="date_creation" class="form-label">Date de création</label>
+                    <input type="date" class="form-control" id="date_creation" name="date_creation" 
+                           value="{{ app.request.query.get('date_creation') }}">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{{ path('app_agence_liste') }}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Conteneur des agences #}
+    <div class="agences-container" id="agences-container">
+        {% include 'agence/_agences_cards.html.twig' %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    const agencesContainer = document.getElementById('agences-container');
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'loading-overlay';
+    loadingOverlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div>';
+    
+    // Écoute la soumission du formulaire
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        filterAgences();
+    });
+    
+    // Écoute les changements dans les champs de filtre (déclenche la recherche après un délai)
+    const filterInputs = document.querySelectorAll('#filter-form input');
+    let searchTimeout;
+    
+    filterInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(filterAgences, 500); // Délai de 500ms
+        });
+    });
+    
+    function filterAgences() {
+        // Affiche l'indicateur de chargement
+        agencesContainer.classList.add('loading');
+        agencesContainer.appendChild(loadingOverlay);
+        
+        // Récupère les données du formulaire
+        const formData = new FormData(filterForm);
+        const searchParams = new URLSearchParams(formData).toString();
+        
+        // Envoie la requête AJAX
+        fetch('{{ path('app_agence_liste') }}?' + searchParams, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau');
+            }
+            return response.text();
+        })
+        .then(html => {
+            // Remplace le contenu du tableau
+            agencesContainer.innerHTML = html;
+            
+            // Met à jour l'URL sans recharger la page
+            const newUrl = window.location.pathname + '?' + searchParams;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            agencesContainer.innerHTML = '<div class="alert alert-danger text-center">Erreur lors du chargement des données</div>';
+        })
+        .finally(() => {
+            agencesContainer.classList.remove('loading');
+        });
+    }
+    
+    // Gère les boutons de navigation avant/arrière
+    window.addEventListener('popstate', function() {
+        filterAgences();
+    });
+});
+</script>
+{% endblock %}

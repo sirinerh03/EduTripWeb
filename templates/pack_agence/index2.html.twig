@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Packs d'Agence{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .packs-container {
+            min-height: 300px;
+            transition: opacity 0.3s;
+        }
+        
+        .search-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .filter-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .range-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .range-input {
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
+
+    {# Carte de filtres #}
+    <div class="filter-card">
+        <form id="filter-form" class="row g-3">
+            {# Champ Nom #}
+            <div class="col-md-4">
+                <label for="nom" class="form-label">🔍 Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" 
+                       value="{{ app.request.query.get('nom') }}" 
+                       placeholder="Rechercher...">
+            </div>
+            
+            {# Filtre Prix #}
+            <div class="col-md-4">
+                <label class="form-label">💰 Prix (TND)</label>
+                <div class="range-input-group">
+                    <input type="number" class="form-control range-input" 
+                           id="prix_min" name="prix_min" 
+                           min="100" max="10000" step="100" 
+                           value="{{ prix_min ?? 100 }}">
+                    <span class="text-muted">à</span>
+                    <input type="number" class="form-control range-input" 
+                           id="prix_max" name="prix_max" 
+                           min="100" max="10000" step="100" 
+                           value="{{ prix_max ?? 10000 }}">
+                </div>
+            </div>
+            
+            {# Filtre Durée #}
+            <div class="col-md-4">
+                <label class="form-label">⏳ Durée (jours)</label>
+                <div class="range-input-group">
+                    <input type="number" class="form-control range-input" 
+                           id="duree_min" name="duree_min" 
+                           min="1" max="30" step="1" 
+                           value="{{ duree_min ?? 1 }}">
+                    <span class="text-muted">à</span>
+                    <input type="number" class="form-control range-input" 
+                           id="duree_max" name="duree_max" 
+                           min="1" max="30" step="1" 
+                           value="{{ duree_max ?? 30 }}">
+                </div>
+            </div>
+            
+            {# Boutons d'action #}
+            <div class="col-12">
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter me-2"></i>Filtrer
+                    </button>
+                    <button type="button" id="reset-btn" class="btn btn-outline-secondary">
+                        <i class="fas fa-undo me-2"></i>Réinitialiser
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {# Résultats #}
+    <div id="packs-results">
+        {% include 'pack_agence/_pack_cards.html.twig' %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    const resetBtn = document.getElementById('reset-btn');
+    const resultsContainer = document.getElementById('packs-results');
+    let searchTimeout;
+    
+    // Fonction de recherche
+    const performSearch = () => {
+        resultsContainer.classList.add('search-loading');
+        
+        const params = new URLSearchParams();
+        params.append('nom', document.getElementById('nom').value);
+        params.append('prix_min', document.getElementById('prix_min').value);
+        params.append('prix_max', document.getElementById('prix_max').value);
+        params.append('duree_min', document.getElementById('duree_min').value);
+        params.append('duree_max', document.getElementById('duree_max').value);
+        
+        fetch('{{ path('app_pack_agence_liste') }}?' + params.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            resultsContainer.innerHTML = html;
+            window.history.replaceState(null, null, '?' + params.toString());
+        })
+        .finally(() => {
+            resultsContainer.classList.remove('search-loading');
+        });
+    };
+    
+    // Réinitialisation des filtres
+    const resetFilters = () => {
+        document.getElementById('nom').value = '';
+        document.getElementById('prix_min').value = 100;
+        document.getElementById('prix_max').value = 10000;
+        document.getElementById('duree_min').value = 1;
+        document.getElementById('duree_max').value = 30;
+        performSearch();
+    };
+    
+    // Événements
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        performSearch();
+    });
+    
+    resetBtn.addEventListener('click', resetFilters);
+    
+    filterForm.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(performSearch, 500);
+        });
+    });
+    
+    // Validation des plages
+    document.getElementById('prix_min').addEventListener('change', function() {
+        if (parseInt(this.value) > parseInt(document.getElementById('prix_max').value)) {
+            document.getElementById('prix_max').value = this.value;
+        }
+    });
+    
+    document.getElementById('duree_min').addEventListener('change', function() {
+        if (parseInt(this.value) > parseInt(document.getElementById('duree_max').value)) {
+            document.getElementById('duree_max').value = this.value;
+        }
+    });
+});
+</script>
+{% endblock %}

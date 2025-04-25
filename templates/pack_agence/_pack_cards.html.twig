@@ -1,0 +1,25 @@
+{% if packAgences is not empty %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for pack in packAgences %}
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm" style="background: #f8faff;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">{{ pack.nomPk }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><span class="fw-bold text-muted">💰 Prix :</span> {{ pack.prix|number_format(0, ',', ' ') }} TND</p>
+                        <p><span class="fw-bold text-muted">⏳ Durée :</span> {{ pack.duree }} jours</p>
+                        <p><span class="fw-bold text-muted">📋 Services :</span> {{ pack.servicesInclus }}</p>
+                        <p><span class="fw-bold text-muted">📅 Date :</span> {{ pack.dateAjout|date('d/m/Y') }}</p>
+                        <p><span class="fw-bold text-muted">🔄 Statut :</span> {{ pack.status }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-light text-center border">
+        <i class="fas fa-info-circle me-2"></i>
+        Aucun résultat trouvé pour ces critères
+    </div>
+{% endif %}
