@@ -1,0 +1,48 @@
+
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+
+
+parameters:
+    upload_directory: '%kernel.project_dir%/public/images'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
+    diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
+    candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
+    env(RAPIDAPI_KEY): 'db9079933msh7a6e8d3fc763abcp1647c1iand4518b66527'
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+        shared: false
+
+    Symfony\Component\Filesystem\Filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+        public: false
+
+    App\Command\GenerateRepositoriesCommand:
+        tags: ['console.command']
+
+    App\Service\BadWordsChecker:
+         arguments:
+            $apiKey: '%env(RAPIDAPI_KEY)%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previo
+
+
+

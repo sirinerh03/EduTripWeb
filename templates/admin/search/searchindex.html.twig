@@ -1,0 +1,15 @@
+<h4>Résultats pour "{{ query }}"</h4>
+
+{% if posts is not empty %}
+  <h5>Posts</h5>
+  {% for post in posts %}
+    <div>{{ post.titre }}</div>
+  {% endfor %}
+{% endif %}
+
+{% if users is not empty %}
+  <h5>Utilisateurs</h5>
+  {% for user in users %}
+    <div>{{ user.nom }} - {{ user.email }}</div>
+  {% endfor %}
+{% endif %}
