@@ -2,6 +2,35 @@
 
 {% block title %}Connexion - EduTrip{% endblock %}
 
+{% block Navbar %}
+    <a href="{{ path('app_home') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduTrip</h2>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <a href="{{ path('app_home') }}" class="nav-item nav-link">Accueil</a>
+            <a href="{{ path('app_universities') }}" class="nav-item nav-link">Universités</a>
+            <a href="{{ path('app_housing') }}" class="nav-item nav-link">Hébergement</a>
+            {% if app.user %}
+                <a href="{{ path('app_avis_index') }}" class="nav-item nav-link">Avis</a>
+            {% endif %}
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
+                <div class="dropdown-menu fade-down m-0">
+                    <a href="{{ path('app_agencies') }}" class="dropdown-item">Liste des agences</a>
+                    <a href="{{ path('app_flights') }}" class="dropdown-item">Vols</a>
+                </div>
+            </div>
+            <a href="{{ path('app_flights') }}" class="nav-item nav-link">Vols</a>
+            <a href="{{ path('app_contact') }}" class="nav-item nav-link">Contact</a>
+        </div>
+        <a href="{{ path('app_register') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
+    </div>
+{% endblock %}
+
 {% block body %}
     <div class="container-fluid py-5">
         <div class="container py-5">
@@ -25,13 +54,13 @@
                                 </div>
                             {% endif %}
 
-                            <form method="post">
+                            <form method="post" action="{{ path('app_login') }}">
                                 <div class="form-floating mb-3">
-                                    <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                                    <input type="email" value="{{ last_username }}" name="mail" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
                                     <label for="inputEmail">Email</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="password" name="_password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+                                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
                                     <label for="inputPassword">Mot de passe</label>
                                 </div>
 

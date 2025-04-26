@@ -8,7 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Email;
 
 class UserType extends AbstractType
 {
@@ -25,8 +25,7 @@ class UserType extends AbstractType
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre prénom'
+                    'placeholder' => 'Votre prénom'
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -38,13 +37,16 @@ class UserType extends AbstractType
                         'minMessage' => 'Votre prénom doit faire au moins {{ limit }} caractères',
                         'maxMessage' => 'Votre prénom ne peut pas dépasser {{ limit }} caractères',
                     ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s\-]+$/',
+                        'message' => 'Votre prénom ne doit contenir que des lettres',
+                    ]),
                 ],
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre nom'
+                    'placeholder' => 'Votre nom'
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -56,56 +58,52 @@ class UserType extends AbstractType
                         'minMessage' => 'Votre nom doit faire au moins {{ limit }} caractères',
                         'maxMessage' => 'Votre nom ne peut pas dépasser {{ limit }} caractères',
                     ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s\-]+$/',
+                        'message' => 'Votre nom ne doit contenir que des lettres',
+                    ]),
                 ],
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre email'
+                    'placeholder' => 'exemple@email.com'
                 ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre email',
+                    ]),
+                    new Email([
+                        'message' => 'Veuillez entrer une adresse email valide',
                     ]),
                 ],
             ])
             ->add('tel', TelType::class, [
                 'label' => 'Téléphone',
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez votre numéro de téléphone'
+                    'placeholder' => '8 chiffres sans espaces',
+                    'maxlength' => 8,
+                    'pattern' => '[0-9]{8}'
                 ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer votre numéro de téléphone',
                     ]),
                     new Regex([
-                        'pattern' => '/^[0-9]{10}$/',
-                        'message' => 'Le numéro de téléphone doit contenir 10 chiffres',
+                        'pattern' => '/^[0-9]{8}$/',
+                        'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres',
                     ]),
                 ],
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                    'label' => 'Mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Entrez votre mot de passe'
-                    ],
+            ->add('password', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'attr' => [
+                    'placeholder' => 'Minimum 6 caractères'
                 ],
-                'second_options' => [
-                    'label' => 'Confirmez le mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Confirmez votre mot de passe'
-                    ],
-                ],
-                'invalid_message' => 'Les mots de passe doivent être identiques',
-                'required' => false,
-                'mapped' => false,
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un mot de passe',
+                    ]),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
@@ -113,33 +111,27 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('status', ChoiceType::class, [
-                'label' => 'Statut',
-                'choices' => [
-                    'Actif' => 'active',
-                    'Inactif' => 'inactive',
-                ],
+            ->add('confirmPassword', PasswordType::class, [
+                'label' => 'Confirmer le mot de passe',
+                'mapped' => false,
                 'attr' => [
-                    'class' => 'form-control',
+                    'placeholder' => 'Répétez votre mot de passe'
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un statut',
+                        'message' => 'Veuillez confirmer votre mot de passe',
                     ]),
                 ],
             ])
             ->add('role', ChoiceType::class, [
-                'label' => 'Rôle',
+                'label' => 'Type de compte',
                 'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'attr' => [
-                    'class' => 'form-control',
+                    'Étudiant' => 'ROLE_USER',
+                    'Gérant d\'agence' => 'ROLE_AGENCY',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez sélectionner un rôle',
+                        'message' => 'Veuillez sélectionner un type de compte',
                     ]),
                 ],
             ])
@@ -150,6 +142,9 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'csrf_token_id' => 'user_form',
         ]);
     }
 }

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel avis{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Ajouter un avis</h1>
+
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.comment, 'Commentaire', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.comment, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.comment) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.rating, 'Note', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.rating, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.rating) }}
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a href="{{ path('app_review_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %} 

@@ -1,0 +1,104 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Liste des avis{% endblock %}
+
+{% block Content %}
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+          <i class="mdi mdi-comment-text"></i>
+        </span> Liste des avis
+      </h3>
+      <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Avis</li>
+        </ul>
+      </nav>
+    </div>
+    
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h4 class="card-title">Tous les avis ({{ avis|length }})</h4>
+      </div>
+      
+      {% if avis is empty %}
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body text-center py-5">
+              <h4 class="text-muted">Aucun avis trouvé</h4>
+              <p>Aucun avis n'a été ajouté pour le moment.</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        {% for avi in avis %}
+        <div class="col-lg-4 col-md-6 col-sm-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <div class="rating mb-1">
+                    {% for i in 1..5 %}
+                      {% if i <= avi.rating %}
+                        <i class="mdi mdi-star text-warning"></i>
+                      {% else %}
+                        <i class="mdi mdi-star-outline"></i>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <small class="text-muted">{{ avi.createdAt ? avi.createdAt|date('d/m/Y H:i') : '' }}</small>
+                </div>
+                <div class="badge badge-gradient-primary">#{{ avi.id }}</div>
+              </div>
+              
+              <div class="d-flex align-items-center mb-3">
+                <div class="me-3">
+                  <div class="profile-pic bg-gradient-info text-white d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-account"></i>
+                  </div>
+                </div>
+                <h5 class="card-title mb-0">{{ avi.user ? avi.user.nom ~ ' ' ~ avi.user.prenom : 'Anonyme' }}</h5>
+              </div>
+              
+              <p class="card-text review-content">{{ avi.comment|length > 150 ? avi.comment|slice(0, 150) ~ '...' : avi.comment }}</p>
+              
+              <div class="d-flex justify-content-end">
+                <form method="post" action="{{ path('admin_avis_delete', {'id': avi.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
+                  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
+                  <button type="submit" class="btn btn-sm btn-gradient-danger">
+                    <i class="mdi mdi-delete"></i> Supprimer
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+  
+  .review-content {
+    min-height: 80px;
+  }
+</style>
+{% endblock %} 

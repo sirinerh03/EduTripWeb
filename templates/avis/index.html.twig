@@ -1,44 +1,361 @@
 {% extends 'base.html.twig' %}
-{% block title %}Liste des avis{% endblock %}
+
+{% block title %}Avis - EduTrip{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --success-gradient: linear-gradient(45deg, #11998e, #38ef7d);
+            --border-radius-lg: 20px;
+            --border-radius-md: 15px;
+            --border-radius-sm: 10px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 60px;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .review-card {
+            transition: var(--transition);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: none;
+            margin-bottom: 30px;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: var(--secondary-gradient);
+            padding: 25px;
+            border-bottom: none;
+            position: relative;
+        }
+        
+        .star-rating {
+            color: #FFC107;
+            font-size: 1.2rem;
+            display: flex;
+        }
+        
+        .star-rating .fa-star {
+            margin-right: 2px;
+        }
+        
+        .star-rating .empty-star {
+            color: #e0e0e0;
+        }
+        
+        .action-btn {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-primary {
+            border-color: #6a11cb;
+            color: #6a11cb;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+        }
+        
+        .btn-outline-danger {
+            border-color: #ff5959;
+            color: #ff5959;
+        }
+        
+        .btn-outline-danger:hover {
+            background: linear-gradient(45deg, #ff5959, #ff7676);
+            border-color: transparent;
+        }
+        
+        .new-review-btn {
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 15px 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            background: var(--success-gradient);
+            border: none;
+            transition: var(--transition);
+            color: white;
+        }
+        
+        .new-review-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #0f8a81, #32d871);
+            color: white;
+        }
+        
+        .new-review-btn i {
+            transition: var(--transition);
+        }
+        
+        .new-review-btn:hover i {
+            transform: rotate(90deg);
+        }
+        
+        .no-reviews {
+            background: var(--secondary-gradient);
+            padding: 60px;
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .user-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            margin-right: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid white;
+        }
+        
+        .review-date {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+        
+        .review-content {
+            min-height: 120px;
+            padding: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .review-footer {
+            padding: 20px 30px;
+            background: #fbfbfb;
+        }
+        
+        .alert {
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            border: none;
+        }
+        
+        .alert-success {
+            background: linear-gradient(to right, rgba(17, 153, 142, 0.1), rgba(56, 239, 125, 0.1));
+            border-left: 5px solid #38ef7d;
+            color: #11998e;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(to right, rgba(255, 89, 89, 0.1), rgba(255, 118, 118, 0.1));
+            border-left: 5px solid #ff5959;
+            color: #e74c3c;
+        }
+        
+        .rating-badge {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 767px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-section {
+                padding: 60px 0;
+                margin-bottom: 40px;
+            }
+            
+            .new-review-btn {
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <h1>Avis</h1>
-    <a href="{{ path('app_avis_new') }}">+ Nouvel avis</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Auteur</th>
-                <th>Commentaire</th>
-                <th>Note</th>
-                <th>Date</th>
-                <th>Photo</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center hero-content">
+            <div class="col-lg-8 col-md-7">
+                <h1 class="hero-title">Avis des utilisateurs</h1>
+                <p class="hero-subtitle">Découvrez ce que nos utilisateurs pensent d'EduTrip. Leurs expériences authentiques vous aideront à faire le bon choix.</p>
+            </div>
+            <div class="col-lg-4 col-md-5 text-md-end text-center">
+                <a href="{{ path('app_avis_new') }}" class="btn new-review-btn">
+                    <i class="fas fa-plus-circle me-2"></i>Ajouter votre avis
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container pb-5">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {% if avis|length > 0 %}
+        <div class="row">
             {% for avi in avis %}
-                <tr>
-                    <td>{{ avi.id }}</td>
-                    <td>{{ avi.user.prenom }} {{ avi.user.nom }}</td>
-                    <td>{{ avi.commentaire }}</td>
-                    <td>{{ avi.note }}</td>
-                    <td>{{ avi.dateCreation|date('Y-m-d H:i') }}</td>
-                    <td>
-                        {% if avi.photo %}
-                            <img src="{{ asset('uploads/avis/'~avi.photo) }}" style="max-height:50px">
+                <div class="col-lg-6 mb-4">
+                    <div class="review-card card h-100">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar">
+                                    {{ avi.user.prenom|first|upper }}{{ avi.user.nom|first|upper }}
+                                </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold">
+                                        {{ avi.user.prenom }} {{ avi.user.nom }}
+                                        <span class="rating-badge">{{ avi.rating }}/5</span>
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <div class="star-rating">
+                                            {% for i in 1..5 %}
+                                                {% if i <= avi.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star empty-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="review-date ms-2">{{ avi.createdAt|date('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <p class="mb-0">{{ avi.comment }}</p>
+                        </div>
+                        
+                        {% if app.user and app.user == avi.user %}
+                            <div class="review-footer">
+                                <div class="d-flex justify-content-end">
+                                    <a href="{{ path('app_avis_edit', {'id': avi.id}) }}" class="btn btn-outline-primary action-btn me-2">
+                                        <i class="fas fa-edit me-1"></i>Modifier
+                                    </a>
+                                    <form method="post" action="{{ path('app_avis_delete', {'id': avi.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
+                                        <button class="btn btn-outline-danger action-btn">
+                                            <i class="fas fa-trash-alt me-1"></i>Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         {% endif %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_avis_show', {'id': avi.id}) }}">Voir</a>
-                        <a href="{{ path('app_avis_edit', {'id': avi.id}) }}">Éditer</a>
-                        {{ include('avis/_delete_form.html.twig') }}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7">Aucun avis trouvé.</td>
-                </tr>
+                    </div>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    {% else %}
+        <div class="no-reviews mt-4">
+            <i class="fas fa-comment-slash fa-4x mb-4 text-muted"></i>
+            <h3 class="mb-3">Aucun avis pour le moment</h3>
+            <p class="lead mb-4">Soyez le premier à partager votre expérience avec la communauté EduTrip !</p>
+            <a href="{{ path('app_avis_new') }}" class="btn btn-lg new-review-btn">
+                <i class="fas fa-plus-circle me-2"></i>Ajouter votre avis
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
