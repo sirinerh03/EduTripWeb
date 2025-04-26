@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Posts Favoris{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Mes Posts Favoris</h1>
+    
+    {% if posts is empty %}
+        <div class="alert alert-info">
+            Vous n'avez aucun post favori pour le moment.
+        </div>
+    {% else %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        {% if post.image %}
+                            <img src="{{ asset('uploads/posts/' ~ post.image) }}" class="card-img-top" alt="Image du post">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.categorie }}</h5>
+                            <p class="card-text">{{ post.contenu }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Posté le {{ post.dateCreation|date('d/m/Y H:i') }}
+                                </small>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-danger favorite-btn active"
+                                            data-post-id="{{ post.id_post }}"
+                                            onclick="toggleFavorite({{ post.id_post }}, this)">
+                                        <i class="fas fa-star"></i>
+                                    </button>
+                                    <span class="badge bg-primary ms-2">
+                                        {{ post.likes ?? 0 }} <i class="fas fa-thumbs-up"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Reprendre la même fonction JavaScript que pour la page des posts
+function toggleFavorite(postId, button) {
+    fetch(`/post/${postId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (!data.isFavorite) {
+                // Si le post est retiré des favoris, actualiser la page
+                window.location.reload();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+{% endblock %}

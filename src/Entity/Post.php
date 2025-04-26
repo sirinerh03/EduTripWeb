@@ -7,6 +7,8 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
+use JMS\TranslationBundle\Model\Message;
+use JMS\TranslationBundle\Translation\TranslationContainerInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -66,7 +68,26 @@ public function __construct()
 {
     $this->commentaires = new ArrayCollection();
 }
+private $translations = [];
 
+    public static function getTranslationMessages()
+    {
+        return [
+            new Message('post.content', 'messages'),
+        ];
+    }
+
+    // Getters/Setters pour translations
+    public function getTranslations(): ?array 
+    {
+        return $this->translations;
+    }
+
+    public function setTranslations(?array $translations): self
+    {
+        $this->translations = $translations;
+        return $this;
+    }
 public function getCommentaires(): Collection
 {
     return $this->commentaires;

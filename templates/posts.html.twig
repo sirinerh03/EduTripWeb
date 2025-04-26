@@ -2,9 +2,249 @@
 
 {% block title %}Liste des Posts{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
+
+
+{% block content %}
+
+
     <style>
+    /* Animation pour les boutons */
+.btn-animated {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    z-index: 1;
+}
+
+.btn-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.btn-animated:hover::before {
+    left: 0;
+}
+
+/* Effet de surbrillance au survol */
+.highlight-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.highlight-hover:hover {
+    box-shadow: 0 0 15px rgba(24, 144, 255, 0.3);
+}
+
+/* Style pour les avatars */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.1);
+    border-color: #1890ff;
+}
+
+/* Style pour les timestamps */
+.timestamp {
+    font-size: 0.8rem;
+    color: #718096;
+    transition: color 0.3s ease;
+}
+
+.timestamp:hover {
+    color: #2d3748;
+}
+
+/* Style pour les dropdowns améliorés */
+.enhanced-dropdown .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    min-width: 180px;
+}
+
+.enhanced-dropdown .dropdown-item {
+    padding: 0.5rem 1.5rem;
+    transition: all 0.2s;
+}
+
+.enhanced-dropdown .dropdown-item:hover {
+    background-color: #f8fafc;
+    padding-left: 1.75rem;
+}
+
+/* Effet de zoom sur les images */
+.zoom-effect {
+    transition: transform 0.5s ease;
+}
+
+.zoom-effect:hover {
+    transform: scale(1.03);
+}
+
+/* Style pour les indicateurs de statut */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-online {
+    background-color: #48bb78;
+}
+
+.status-offline {
+    background-color: #e53e3e;
+}
+
+/* Style pour les séparateurs élégants */
+.elegant-divider {
+    position: relative;
+    height: 1px;
+    margin: 2rem 0;
+    background-color: #e2e8f0;
+}
+
+.elegant-divider::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #1890ff;
+    border-radius: 3px;
+}
+
+/* Style pour les cartes de statistiques */
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1890ff;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Style pour les badges animés */
+.animated-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Style pour les inputs avec icônes */
+.icon-input {
+    position: relative;
+}
+
+.icon-input i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+.icon-input input {
+    padding-left: 40px;
+}
+
+/* Style pour les tooltips personnalisés */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #2d3748;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Style pour les transitions de page */
+.page-transition {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Style pour les cartes avec bordure animée */
+.animated-border-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-border-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #1890ff, transparent);
+    transition: all 0.6s;
+}
+
+.animated-border-card:hover::before {
+    left: 100%;
+}
         /* Nouveaux styles spécifiques à cette page */
         .custom-main-container {
             background-color: #f8fafc;
@@ -23,13 +263,13 @@
         }
         
         .image-frame {
-            border: 2px solid #e2e8f0;
+           
             padding: 8px;
-            border-radius: 12px;
-            background: white;
-            display: inline-block;
+           
+            
+            
             margin: 1rem 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            
         }
         
         .action-bar {
@@ -48,8 +288,18 @@
             margin-bottom: 1rem;
         }
         
-       .post-card {
-    background: rgb(156, 228, 248);
+  .posts-container {
+    display: flex;
+   
+    flex-direction: column;
+    align-items: center; /* Centre les posts horizontalement */
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Carte de post */
+.post-card {
+   border -coul: 12px;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     margin-bottom: 2rem;
@@ -58,7 +308,8 @@
     border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
-    height: 100%; /* Important pour l'alignement */
+   max-width: 800px; /* Largeur maximale pour une bonne lisibilité */
+    margin: 0 auto 2rem;  /* Largeur maximale pour une meilleure lisibilité */
 }
         
         .vote-container {
@@ -74,39 +325,107 @@
             background: #f8fafc;
             padding: 1rem;
         }
-        .custom-search {
-    padding: 0.75rem 1.25rem;
-    padding-left: 2.5rem;
+/* Conteneur de recherche */
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    width: 100%;
+}
+
+/* Champ de recherche */
+.custom-search {
+    padding: 0.85rem 1.5rem;
+    padding-left: 3rem;
     border-radius: 50px;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease-in-out;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     background-color: #fff;
     font-size: 1rem;
-    background-image: url("data:image/svg+xml,%3Csvg fill='gray' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    color: #2d3748;
+    width: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg fill='%239ca3af' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 18px;
-    background-position: 12px center;
+    background-position: 1rem center;
+    font-family: inherit;
 }
 
 .custom-search:focus {
     outline: none;
     border-color: #1890ff;
-    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg fill='%231890ff' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.custom-search::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* Bouton de recherche */
+.search-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+    color: #1890ff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.search-btn:focus {
+    outline: none;
+    color: #1890ff;
+}
+/* Style pour les favoris */
+.favorite-btn {
+    background: transparent;
+    border: none;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+
+.favorite-btn:hover {
+    color: #f59e0b;
+}
+
+.favorite-btn.active {
+    color: #f59e0b;
+}
+
+.favorite-btn i {
+    pointer-events: none;
 }
 
     </style>
-{% endblock %}
 
-{% block content %}
+
 <div class="container-xl py-5">
-    <div class="custom-main-container"> <!-- Nouveau container principal -->
+   <!-- Nouveau container principal -->
         <div class="text-center mb-5">
             <h1 class="display-5 fw-bold">Liste des Posts</h1>
-            
+            <li class="nav-item">
+    <a class="nav-link" href="{{ path('app_favorites') }}">
+        <i class="fas fa-star me-1"></i> Mes Favoris
+    </a>
+</li>
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div></div> <!-- Espaceur -->
-                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-lg">
+                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-animated"">
                     <i class="fas fa-plus me-2"></i> Nouveau Post
                 </a>
             </div>
@@ -126,19 +445,25 @@
             </div>
         {% endfor %}
 
-        {% if posts is defined and posts|length > 0 %}
+{% if posts is defined and posts|length > 0 %}
+    <form id="searchForm" method="get" class="mb-4">
+        <div class="search-wrapper">
+            <input type="text" 
+                   id="searchInput" 
+                   class="form-control custom-search" 
+                   placeholder="Rechercher un post..."
+                   aria-label="Rechercher des posts">
+            <button type="button" 
+                    class="search-btn" 
+                    id="searchButton"
+                    aria-label="Lancer la recherche">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
 
-      <form id="searchForm" method="get" class="mb-4">
-<div class="search-wrapper mb-4 position-relative">
-    <input type="text" id="searchInput" class="form-control custom-search" placeholder="🔍 Rechercher un post...">
-    <button type="button" class="btn btn-outline-primary position-absolute top-50 end-0 translate-middle-y" id="searchButton">
-        <i class="fas fa-search"></i>
-    </button>
-</div>
 
-
-
-            <div class="row g-4">
+            
                 {% for post in posts %}
                 <div class="post-card"> 
 <div class="post-header-container">
@@ -180,8 +505,17 @@
         </div>
     </div>
 </div>
+<button class="favorite-btn" 
+        onclick="toggleFavorite({{ post.idPost }}, this)"
+        title="Gérer les favoris">
+    <i class="far fa-star"></i> {# Toujours vide par défaut #}
+</button>
+
+
                             <div class="p-4">
                                 <p class="card-text mb-4">{{ post.contenu }}</p>
+                                
+
                                 
                                 {% if post.image %}
                                     <div class="text-center">
@@ -434,5 +768,44 @@ async function ajouterCommentaire(event, postId) {
         card.style.display = text.includes(searchTerm) ? '' : 'none';
     });
 });
+function toggleFavorite(postId, button) {
+    fetch(`/post/${postId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            const icon = button.querySelector('i');
+            if (data.isFavorite) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = 'Retirer des favoris';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = 'Ajouter aux favoris';
+            }
+            
+            // Mettre à jour le compteur
+            const counter = button.nextElementSibling;
+            if (counter && counter.classList.contains('favorites-count')) {
+                counter.textContent = data.favoritesCount;
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Une erreur est survenue lors de la mise à jour des favoris');
+    });
+}
 </script>
 {% endblock %}

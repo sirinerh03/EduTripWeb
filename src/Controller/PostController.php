@@ -6,6 +6,7 @@ use App\Entity\Commentaire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\Post;
+use App\Entity\Favoris;
 use App\Form\PostType;
 use App\Form\CommentaireType;
 use App\Repository\PostRepository;
@@ -15,7 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\BadWordsChecker;
+
 class PostController extends AbstractController
 {
     private $security;
@@ -310,6 +313,63 @@ public function posts(Request $request, EntityManagerInterface $entityManager): 
         return $this->json([
             'success' => true,
             'count' => $post->getDislikes()
+        ]);
+    }
+    #[Route('/post/{id}/favorite', name: 'post_favorite', methods: ['POST'])]
+    public function toggleFavorite(Post $post, EntityManagerInterface $em): JsonResponse
+    {
+        $etudiant = $em->getRepository(Utilisateur::class)->find(1);
+        
+        $favoris = $em->getRepository(Favoris::class)
+            ->findOneBy([
+                'post' => $post,
+                'utilisateur' => $etudiant
+            ]);
+    
+        if ($favoris) {
+            $em->remove($favoris);
+            $em->flush();
+            
+            return $this->json([
+                'success' => true,
+                'isFavorite' => false,
+                'message' => 'Retiré des favoris'
+            ]);
+        }
+        
+        return $this->json([
+            'success' => false,
+            'message' => 'Non trouvé dans les favoris'
+        ], 404);
+    }
+    
+    #[Route('/mes-favoris', name: 'app_favorites')]
+    public function favorites(EntityManagerInterface $em): Response
+    {
+        // Récupérer l'étudiant avec ID 1
+        $etudiant = $em->getRepository(Utilisateur::class)->find(1);
+        
+        if (!$etudiant) {
+            $this->addFlash('error', 'Étudiant introuvable');
+            return $this->redirectToRoute('app_posts');
+        }
+    
+        // Récupérer les favoris avec jointure
+        $favoris = $em->getRepository(Favoris::class)
+            ->createQueryBuilder('f')
+            ->join('f.post', 'p')
+            ->where('f.utilisateur = :etudiant')
+            ->setParameter('etudiant', $etudiant)
+            ->orderBy('f.id_favoris', 'DESC')
+            ->getQuery()
+            ->getResult();
+    
+        // Extraire les posts
+        $posts = array_map(function($f) { return $f->getPost(); }, $favoris);
+    
+        return $this->render('post/favorites.html.twig', [
+            'posts' => $posts,
+            'etudiant_id' => 1 // Pour référence dans le template
         ]);
     }
 }
