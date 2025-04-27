@@ -72,6 +72,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $status = null;
 
+    // ✅ Nouveau champ ajouté
+    #[ORM\Column(name: 'is_verified', type: 'boolean')]
+    private bool $isVerified = false;
+
+    // ✅ Nouveau champ ajouté
+    #[ORM\Column(name: 'confirmation_token', type: 'string', length: 255, nullable: true)]
+    private ?string $confirmationToken = null;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
@@ -190,6 +198,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): static
+    {
+        $this->confirmationToken = $confirmationToken;
 
         return $this;
     }

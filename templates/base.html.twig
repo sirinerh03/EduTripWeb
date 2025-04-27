@@ -43,6 +43,15 @@
     </div>
     <!-- Spinner End -->
 
+    <!-- Back Button (only visible on non-home pages) -->
+    {% if app.request.attributes.get('_route') != 'app_home' %}
+    <div class="position-fixed back-btn" style="top: 20px; left: 20px; z-index: 1000;">
+        <a href="javascript:history.back()" class="btn btn-primary rounded-circle shadow" title="Retour à la page précédente">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    {% endif %}
+
     {% set current_route = app.request.attributes.get('_route') %}
     {% set show_navbar = current_route == 'app_home' or current_route == 'app_login' or current_route == 'app_register' %}
 

@@ -1,0 +1,616 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Félicitations ! Vous avez gagné une réduction{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .reward-container {
+            padding: 30px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .reward-card {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background-color: white;
+        }
+
+        .reward-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .reward-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .reward-body {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .reward-value {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #6a11cb;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reward-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .btn-claim, .btn-spin {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-claim:hover, .btn-spin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        .btn-spin {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #6a11cb;
+            border-radius: 50% 50% 50% 0;
+            transform: translateX(-50%) rotate(-45deg);
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            z-index: 10;
+            border: 4px solid white;
+        }
+
+        .wheel-pointer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .power-controls {
+            margin: 20px auto;
+            max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .power-gauge {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        .power-gauge-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transition: width 0.1s;
+        }
+
+        .result-message {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6a11cb;
+            margin: 20px 0;
+            animation: pop 0.5s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="reward-container">
+    <div class="reward-card">
+        <div class="reward-header">
+            <h1>Félicitations !</h1>
+            <p class="lead">Merci pour votre avis sur EduTrip</p>
+        </div>
+
+        <div class="reward-body">
+            <div id="spin-section">
+                <h2>Tournez la roue pour découvrir votre réduction !</h2>
+
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="canvas" width="400" height="400">
+                        Votre navigateur ne supporte pas le canvas HTML5.
+                    </canvas>
+                </div>
+
+                <div class="power-controls">
+                    <div class="power-gauge">
+                        <div class="power-gauge-fill" id="power-gauge-fill"></div>
+                    </div>
+                    <p class="text-muted small">Maintenez le bouton pour augmenter la puissance</p>
+                </div>
+
+                <button id="spin-button" class="btn-spin">
+                    <i class="fas fa-sync-alt me-2"></i>Tourner la roue
+                </button>
+            </div>
+
+            <div id="result-section" style="display: none;">
+                <h2>Vous avez gagné</h2>
+
+                <div class="result-message">
+                    <span id="result-value">0</span>% de réduction !
+                </div>
+
+                <p class="reward-description">
+                    Félicitations ! Vous avez gagné une réduction sur votre prochain voyage éducatif.
+                </p>
+
+                <button id="save-reward-button" class="btn-claim">
+                    <i class="fas fa-save me-2"></i>Sauvegarder ma réduction
+                </button>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{{ path('app_avis_index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Retour aux avis
+                </a>
+                <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Ajout des scripts nécessaires -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Éléments DOM
+            const spinButton = document.getElementById('spin-button');
+            const spinSection = document.getElementById('spin-section');
+            const resultSection = document.getElementById('result-section');
+            const powerGaugeFill = document.getElementById('power-gauge-fill');
+            const resultValue = document.getElementById('result-value');
+
+            // Valeur de la récompense
+            const percentage = {{ reward.percentage }};
+
+            // Vérifier si les bibliothèques sont chargées
+            if (typeof Winwheel === 'undefined') {
+                console.error('La bibliothèque Winwheel n\'est pas chargée');
+                // Afficher un message d'erreur à l'utilisateur
+                document.querySelector('.wheel-container').innerHTML = '<div style="color: red; text-align: center;">Erreur de chargement de la roue. Veuillez rafraîchir la page.</div>';
+                return;
+            }
+
+            // Couleurs encore plus douces pour la roue
+            const colors = [
+                '#FFB6C1', // Rose pâle
+                '#AFDFE4', // Bleu ciel
+                '#B5EAD7', // Vert menthe
+                '#FFDAC1', // Pêche
+                '#E0BBE4'  // Lavande
+            ];
+
+            // Créer les segments de la roue - 10%, 15%, 20%, 30%, 40%
+            let segments = [
+                {
+                    'fillStyle': colors[0],
+                    'text': '10%',
+                    'textFontSize': 24,
+                    'textFillStyle': '#333333',
+                    'textStrokeStyle': '#ffffff',
+                    'textStrokeWidth': 1,
+                    'textFontWeight': 'bold'
+                },
+                {
+                    'fillStyle': colors[1],
+                    'text': '15%',
+                    'textFontSize': 24,
+                    'textFillStyle': '#333333',
+                    'textStrokeStyle': '#ffffff',
+                    'textStrokeWidth': 1,
+                    'textFontWeight': 'bold'
+                },
+                {
+                    'fillStyle': colors[2],
+                    'text': '20%',
+                    'textFontSize': 24,
+                    'textFillStyle': '#333333',
+                    'textStrokeStyle': '#ffffff',
+                    'textStrokeWidth': 1,
+                    'textFontWeight': 'bold'
+                },
+                {
+                    'fillStyle': colors[3],
+                    'text': '30%',
+                    'textFontSize': 24,
+                    'textFillStyle': '#333333',
+                    'textStrokeStyle': '#ffffff',
+                    'textStrokeWidth': 1,
+                    'textFontWeight': 'bold'
+                },
+                {
+                    'fillStyle': colors[0],
+                    'text': '40%',
+                    'textFontSize': 24,
+                    'textFillStyle': '#333333',
+                    'textStrokeStyle': '#ffffff',
+                    'textStrokeWidth': 1,
+                    'textFontWeight': 'bold'
+                }
+            ];
+
+            try {
+                console.log("Initialisation de la roue"); // Debug
+
+                // Créer la roue
+                let theWheel = new Winwheel({
+                    'canvasId': 'canvas',
+                    'numSegments': segments.length,
+                    'segments': segments,
+                    'outerRadius': 190,        // Rayon extérieur
+                    'innerRadius': 40,         // Rayon intérieur (trou au centre)
+                    'textFontFamily': 'Arial',
+                    'textAlignment': 'center',
+                    'textOrientation': 'horizontal',
+                    'textMargin': 0,
+                    'animation': {
+                        'type': 'spinToStop',
+                        'duration': 5,
+                        'spins': 8,
+                        'callbackFinished': function() {
+                            console.log("Animation terminée, callback appelé"); // Debug
+                            alertPrize();
+                        }
+                    },
+                    'pins': {
+                        'number': 5,
+                        'fillStyle': '#FFFFFF',
+                        'outerRadius': 4,
+                        'strokeStyle': '#000000'
+                    }
+                });
+
+                // Dessiner la roue
+                theWheel.draw();
+
+                // Variables pour le contrôle de la puissance
+                let powerLevel = 0;
+                let powerInterval;
+                let isButtonDown = false;
+
+                // Fonction pour augmenter la puissance lorsque le bouton est maintenu
+                function increasePower() {
+                    if (powerLevel < 100) {
+                        powerLevel += 2;
+                        powerGaugeFill.style.width = powerLevel + '%';
+                    } else {
+                        // Arrêter l'augmentation si on atteint 100%
+                        clearInterval(powerInterval);
+                    }
+                }
+
+                // Événements pour le bouton de rotation
+                spinButton.addEventListener('mousedown', function() {
+                    isButtonDown = true;
+                    powerLevel = 0;
+                    powerGaugeFill.style.width = '0%';
+                    powerInterval = setInterval(increasePower, 100);
+                });
+
+                spinButton.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    isButtonDown = true;
+                    powerLevel = 0;
+                    powerGaugeFill.style.width = '0%';
+                    powerInterval = setInterval(increasePower, 100);
+                });
+
+                // Arrêter l'augmentation de puissance et faire tourner la roue
+                function stopPowerAndSpin() {
+                    if (isButtonDown) {
+                        isButtonDown = false;
+                        clearInterval(powerInterval);
+
+                        // Désactiver le bouton pendant l'animation
+                        spinButton.disabled = true;
+                        spinButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>La roue tourne...';
+
+                        // Calculer la vitesse en fonction de la puissance
+                        const wheelSpeed = 5 + (powerLevel / 10);
+
+                        // Calculer le nombre de tours en fonction de la puissance
+                        const spins = 3 + (powerLevel / 20);
+
+                        // Mettre à jour les paramètres d'animation
+                        theWheel.animation.duration = wheelSpeed;
+                        theWheel.animation.spins = spins;
+
+                        // Calculer l'angle d'arrêt pour un segment aléatoire (0%, 10%, 20% ou 30%)
+                        const randomSegment = Math.floor(Math.random() * segments.length);
+                        const segmentAngle = 360 / segments.length;
+                        const stopAngle = (360 - (randomSegment * segmentAngle) - (segmentAngle / 2)) % 360;
+
+                        console.log("Segment choisi:", randomSegment, "Angle d'arrêt:", stopAngle); // Debug
+
+                        // Faire tourner la roue avec un callback de secours
+                        theWheel.animation.stopAngle = stopAngle;
+                        theWheel.startAnimation();
+
+                        // Ajouter un timer de secours au cas où le callback ne se déclenche pas
+                        setTimeout(function() {
+                            // Vérifier si le résultat est déjà affiché
+                            if (spinSection.style.display !== 'none') {
+                                console.log("Timer de secours activé"); // Debug
+                                // Forcer l'arrêt de l'animation si elle est encore en cours
+                                theWheel.stopAnimation(false);
+                                // Appeler manuellement la fonction de prix
+                                alertPrize(segments[randomSegment]);
+                            }
+                        }, 8000); // 8 secondes devraient être suffisantes pour que l'animation se termine
+                    }
+                }
+
+                spinButton.addEventListener('mouseup', stopPowerAndSpin);
+                spinButton.addEventListener('mouseleave', stopPowerAndSpin);
+                spinButton.addEventListener('touchend', stopPowerAndSpin);
+
+                // Fonction appelée lorsque la roue s'arrête
+                function alertPrize(indicatedSegment) {
+                    console.log("Fonction alertPrize appelée"); // Debug
+
+                    // Forcer la récupération du segment indiqué si non fourni
+                    const winningSegment = indicatedSegment || theWheel.getIndicatedSegment();
+                    console.log("Segment gagnant:", winningSegment); // Debug
+
+                    // Extraire la valeur numérique du texte (enlever le symbole %)
+                    const winningText = winningSegment.text;
+                    const winningValue = parseInt(winningText);
+                    console.log("Valeur gagnée:", winningValue); // Debug
+
+                    // Réinitialiser le bouton de rotation
+                    spinButton.disabled = false;
+                    spinButton.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Tourner la roue';
+
+                    // Afficher immédiatement le résultat
+                    spinSection.style.display = 'none';
+                    resultSection.style.display = 'block';
+
+                    // Mettre à jour la valeur du résultat
+                    resultValue.textContent = winningValue;
+
+                    // Lancer les confettis si la bibliothèque est chargée
+                    if (typeof confetti !== 'undefined') {
+                        launchConfetti();
+                    }
+
+                    // Sauvegarder la réduction gagnée
+                    saveReward(winningValue);
+                }
+
+                // Fonction pour sauvegarder la réduction
+                function saveReward(rewardValue) {
+                    console.log("Fonction saveReward appelée avec valeur:", rewardValue); // Debug
+
+                    // Utiliser le bouton de sauvegarde existant
+                    const saveButton = document.getElementById('save-reward-button');
+
+                    if (!saveButton) {
+                        console.error("Bouton de sauvegarde non trouvé!");
+                        return;
+                    }
+
+                    // Supprimer les anciens écouteurs d'événements pour éviter les doublons
+                    const newSaveButton = saveButton.cloneNode(true);
+                    saveButton.parentNode.replaceChild(newSaveButton, saveButton);
+
+                    // Ajouter un événement de clic au nouveau bouton
+                    newSaveButton.addEventListener('click', function() {
+                        console.log("Bouton de sauvegarde cliqué"); // Debug
+
+                        // Désactiver le bouton pendant la sauvegarde
+                        newSaveButton.disabled = true;
+                        newSaveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sauvegarde en cours...';
+
+                        // Envoyer la valeur au serveur via une requête AJAX
+                        fetch('{{ path('app_save_spin_reward') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                reward: parseInt(rewardValue)
+                            })
+                        })
+                        .then(response => {
+                            console.log("Réponse du serveur (status):", response.status);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Réponse du serveur (data):", data);
+
+                            if (data.success) {
+                                // Afficher un message de succès
+                                newSaveButton.innerHTML = '<i class="fas fa-check me-2"></i>Réduction sauvegardée !';
+
+                                // Rediriger vers la page d'avis après 1 seconde
+                                setTimeout(function() {
+                                    console.log("Redirection vers la page d'avis");
+                                    window.location.href = '{{ path('app_avis_index') }}';
+                                }, 1000);
+                            } else {
+                                // Afficher un message d'erreur
+                                newSaveButton.innerHTML = '<i class="fas fa-times me-2"></i>Erreur lors de la sauvegarde';
+                                newSaveButton.disabled = false;
+                                console.error("Erreur lors de la sauvegarde:", data.message);
+
+                                // Afficher l'erreur dans la console pour le débogage
+                                console.error("Détails de l'erreur:", data);
+
+                                // Afficher un message d'erreur visible
+                                const errorDiv = document.createElement('div');
+                                errorDiv.className = 'alert alert-danger mt-3';
+                                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Erreur: ' + data.message;
+                                newSaveButton.parentNode.appendChild(errorDiv);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Erreur lors de la requête:", error);
+                            newSaveButton.innerHTML = '<i class="fas fa-times me-2"></i>Erreur lors de la sauvegarde';
+                            newSaveButton.disabled = false;
+
+                            // Afficher un message d'erreur visible
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-danger mt-3';
+                            errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Erreur technique: ' + error.message;
+                            newSaveButton.parentNode.appendChild(errorDiv);
+                        });
+                    });
+                }
+
+                // Fonction pour lancer les confettis
+                function launchConfetti() {
+                    // Utiliser la bibliothèque canvas-confetti
+                    const duration = 5 * 1000;
+                    const animationEnd = Date.now() + duration;
+
+                    function randomInRange(min, max) {
+                        return Math.random() * (max - min) + min;
+                    }
+
+                    // Lancer des confettis colorés
+                    (function frame() {
+                        const timeLeft = animationEnd - Date.now();
+
+                        if (timeLeft <= 0) {
+                            return;
+                        }
+
+                        const particleCount = 50 * (timeLeft / duration);
+
+                        // Confettis depuis les côtés
+                        confetti({
+                            particleCount: particleCount,
+                            angle: randomInRange(55, 125),
+                            spread: randomInRange(50, 70),
+                            origin: { x: 0 },
+                            colors: colors
+                        });
+
+                        confetti({
+                            particleCount: particleCount,
+                            angle: randomInRange(55, 125),
+                            spread: randomInRange(50, 70),
+                            origin: { x: 1 },
+                            colors: colors
+                        });
+
+                        requestAnimationFrame(frame);
+                    }());
+                }
+            } catch (error) {
+                console.error('Erreur lors de la création de la roue:', error);
+                // Afficher un message d'erreur à l'utilisateur
+                document.querySelector('.wheel-container').innerHTML = '<div style="color: red; text-align: center;">Erreur de chargement de la roue. Veuillez rafraîchir la page.</div>';
+            }
+
+            // Ajouter un gestionnaire d'erreurs global
+            window.addEventListener('error', function(event) {
+                console.error('Erreur JavaScript globale:', event.message);
+                // Essayer de récupérer si l'erreur se produit pendant l'animation
+                if (spinSection.style.display !== 'none' && typeof theWheel !== 'undefined') {
+                    try {
+                        // Forcer l'affichage du résultat
+                        spinSection.style.display = 'none';
+                        resultSection.style.display = 'block';
+
+                        // Mettre une valeur par défaut
+                        resultValue.textContent = '10';
+
+                        // Réinitialiser le bouton
+                        const spinButton = document.getElementById('spin-button');
+                        if (spinButton) {
+                            spinButton.disabled = false;
+                            spinButton.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Tourner la roue';
+                        }
+                    } catch (recoveryError) {
+                        console.error('Erreur lors de la récupération:', recoveryError);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

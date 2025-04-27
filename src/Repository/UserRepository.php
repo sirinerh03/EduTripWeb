@@ -23,4 +23,47 @@ class UserRepository extends ServiceEntityRepository
     }
 
     // ajoutez ici vos méthodes personnalisées si besoin
+
+    /**
+     * Recherche des utilisateurs en fonction de critères
+     *
+     * @param array $criteria Les critères de recherche
+     * @return User[] Les utilisateurs correspondants
+     */
+    public function searchUsers(array $criteria = []): array
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        // Recherche par nom ou prénom
+        if (!empty($criteria['search'])) {
+            $search = $criteria['search'];
+            $qb->andWhere('u.nom LIKE :search OR u.prenom LIKE :search OR u.mail LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par rôle
+        if (!empty($criteria['role'])) {
+            $qb->andWhere('u.role = :role')
+               ->setParameter('role', $criteria['role']);
+        }
+
+        // Filtre par statut
+        if (!empty($criteria['status'])) {
+            $qb->andWhere('u.status = :status')
+               ->setParameter('status', $criteria['status']);
+        }
+
+        // Tri
+        $sortField = $criteria['sort_field'] ?? 'id';
+        $sortOrder = $criteria['sort_order'] ?? 'DESC';
+
+        // Vérifier que le champ de tri est valide
+        if (!property_exists(User::class, $sortField)) {
+            $sortField = 'id';
+        }
+
+        $qb->orderBy('u.' . $sortField, $sortOrder);
+
+        return $qb->getQuery()->getResult();
+    }
 }

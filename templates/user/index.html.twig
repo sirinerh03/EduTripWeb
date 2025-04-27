@@ -2,11 +2,16 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 {% block body %}
     <h1>Utilisateurs</h1>
-    <a href="{{ path('app_user_new') }}">+ Nouvel utilisateur</a>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('app_user_new') }}" class="btn btn-primary">+ Nouvel utilisateur</a>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+        </a>
+    </div>
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
+                <!-- Colonne ID masquée -->
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Mail</th>
@@ -16,7 +21,7 @@
         <tbody>
             {% for user in users %}
                 <tr>
-                    <td>{{ user.idUser }}</td>
+                    <!-- ID masqué -->
                     <td>{{ user.prenom }}</td>
                     <td>{{ user.nom }}</td>
                     <td>{{ user.mail }}</td>

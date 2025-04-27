@@ -6,6 +6,9 @@
 parameters:
     # Chemin absolu vers le dossier d'upload des photos d'avis
     avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
+    # Clés Google reCAPTCHA (clés de test)
+    recaptcha.site_key: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+    recaptcha.secret_key: '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
 
 # ------------------------------------------------------------------
 # SERVICES

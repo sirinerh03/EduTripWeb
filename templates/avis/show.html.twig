@@ -10,9 +10,16 @@
                 <div class="card-body p-5">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h1 class="mb-0">Détails de l'avis</h1>
-                        <a href="{{ path('app_avis_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Retour à la liste
-                        </a>
+                        <div>
+                            <a href="{{ path('app_avis_index') }}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                            </a>
+                            {% if app.user %}
+                            <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+                            </a>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -38,8 +45,8 @@
                         </div>
                     </div>
 
-                    {% if app.user and app.user == avi.user %}
-                        <div class="d-flex gap-2">
+                    {% if isOwner %}
+                        <div class="d-flex gap-2 mb-4">
                             <a href="{{ path('app_avis_edit', {'id': avi.id}) }}" class="btn btn-primary">
                                 <i class="fas fa-edit me-2"></i>Modifier
                             </a>
@@ -50,6 +57,31 @@
                                 </button>
                             </form>
                         </div>
+
+                        {% if avi.spinReward %}
+                            <div class="card bg-light mb-4">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success mb-3">
+                                        <i class="fas fa-gift me-2"></i>Récompense obtenue
+                                    </h4>
+                                    <p class="lead">Vous avez gagné une réduction de <strong>{{ avi.spinReward.percentage }}%</strong> sur votre prochain voyage éducatif !</p>
+
+                                    {% if not avi.rewardClaimed %}
+                                        <a href="{{ path('app_spin_reward', {'id': avi.id}) }}" class="btn btn-success">
+                                            <i class="fas fa-gift me-2"></i>Voir ma récompense
+                                        </a>
+                                    {% else %}
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i>Récompense déjà réclamée
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-info-circle me-2"></i>Aucune récompense disponible pour cet avis.
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

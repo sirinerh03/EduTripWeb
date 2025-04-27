@@ -34,9 +34,16 @@ class Avis
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    private ?SpinReward $spinReward = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $rewardClaimed = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->rewardClaimed = false;
     }
 
     public function getId(): ?int
@@ -74,6 +81,28 @@ class Avis
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getSpinReward(): ?SpinReward
+    {
+        return $this->spinReward;
+    }
+
+    public function setSpinReward(?SpinReward $spinReward): static
+    {
+        $this->spinReward = $spinReward;
+        return $this;
+    }
+
+    public function isRewardClaimed(): ?bool
+    {
+        return $this->rewardClaimed;
+    }
+
+    public function setRewardClaimed(bool $rewardClaimed): static
+    {
+        $this->rewardClaimed = $rewardClaimed;
         return $this;
     }
 

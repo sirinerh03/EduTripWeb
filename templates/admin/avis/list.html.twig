@@ -18,25 +18,85 @@
         </ul>
       </nav>
     </div>
-    
+
     {% for message in app.flashes('success') %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       {{ message }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-    
+
+    <!-- Formulaire de recherche et filtrage -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Recherche et filtrage</h4>
+            <form method="get" action="{{ path('admin_avis_list') }}" class="row g-3">
+              <div class="col-md-4">
+                <label for="search" class="form-label">Recherche par nom</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="search" name="search" value="{{ search|default('') }}" placeholder="Nom ou prénom d'utilisateur">
+                  <button type="submit" class="btn btn-gradient-primary" name="action" value="search">
+                    <i class="mdi mdi-magnify me-1"></i> Rechercher
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="rating" class="form-label">Filtrer par note</label>
+                <select class="form-select" id="rating" name="rating">
+                  <option value="">Toutes les notes</option>
+                  {% for i in 1..5 %}
+                    <option value="{{ i }}" {% if rating is defined and rating == i|string %}selected{% endif %}>{{ i }} étoile{% if i > 1 %}s{% endif %}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-gradient-success w-100" name="action" value="filter">
+                  <i class="mdi mdi-filter me-1"></i> Filtrer
+                </button>
+              </div>
+
+              <div class="col-md-3">
+                <label for="date_from" class="form-label">Date de début</label>
+                <input type="date" class="form-control" id="date_from" name="date_from" value="{{ date_from|default('') }}">
+              </div>
+              <div class="col-md-3">
+                <label for="date_to" class="form-label">Date de fin</label>
+                <input type="date" class="form-control" id="date_to" name="date_to" value="{{ date_to|default('') }}">
+              </div>
+              <div class="col-md-3">
+                <label for="sort_field" class="form-label">Trier par</label>
+                <select class="form-select" id="sort_field" name="sort_field">
+                  <option value="createdAt" {% if sort_field is defined and sort_field == 'createdAt' %}selected{% endif %}>Date</option>
+                  <option value="rating" {% if sort_field is defined and sort_field == 'rating' %}selected{% endif %}>Note</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="sort_order" class="form-label">Ordre</label>
+                <select class="form-select" id="sort_order" name="sort_order">
+                  <option value="DESC" {% if sort_order is defined and sort_order == 'DESC' %}selected{% endif %}>Décroissant</option>
+                  <option value="ASC" {% if sort_order is defined and sort_order == 'ASC' %}selected{% endif %}>Croissant</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste des avis -->
     <div class="row">
       <div class="col-12 mb-4">
-        <h4 class="card-title">Tous les avis ({{ avis|length }})</h4>
+        <h4 class="card-title">Tous les avis ({{ avis is defined ? avis|length : 0 }})</h4>
       </div>
-      
-      {% if avis is empty %}
+
+      {% if avis is not defined or avis is empty %}
         <div class="col-12">
           <div class="card">
             <div class="card-body text-center py-5">
               <h4 class="text-muted">Aucun avis trouvé</h4>
-              <p>Aucun avis n'a été ajouté pour le moment.</p>
+              <p>Aucun avis correspondant à vos critères de recherche n'a été trouvé.</p>
             </div>
           </div>
         </div>
@@ -60,7 +120,7 @@
                 </div>
                 <div class="badge badge-gradient-primary">#{{ avi.id }}</div>
               </div>
-              
+
               <div class="d-flex align-items-center mb-3">
                 <div class="me-3">
                   <div class="profile-pic bg-gradient-info text-white d-flex align-items-center justify-content-center">
@@ -69,9 +129,9 @@
                 </div>
                 <h5 class="card-title mb-0">{{ avi.user ? avi.user.nom ~ ' ' ~ avi.user.prenom : 'Anonyme' }}</h5>
               </div>
-              
+
               <p class="card-text review-content">{{ avi.comment|length > 150 ? avi.comment|slice(0, 150) ~ '...' : avi.comment }}</p>
-              
+
               <div class="d-flex justify-content-end">
                 <form method="post" action="{{ path('admin_avis_delete', {'id': avi.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
                   <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
@@ -96,9 +156,9 @@
     border-radius: 50%;
     font-size: 20px;
   }
-  
+
   .review-content {
     min-height: 80px;
   }
 </style>
-{% endblock %} 
+{% endblock %}

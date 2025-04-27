@@ -61,4 +61,60 @@ class AvisRepository extends ServiceEntityRepository
     }
 
     // ajoutez ici vos méthodes personnalisées si besoin
+
+    /**
+     * Recherche des avis en fonction de critères
+     *
+     * @param array $criteria Les critères de recherche
+     * @return Avis[] Les avis correspondants
+     */
+    public function searchAvis(array $criteria = []): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->leftJoin('a.user', 'u')
+            ->addSelect('u');
+
+        // Recherche par contenu
+        if (!empty($criteria['search'])) {
+            $search = $criteria['search'];
+            $qb->andWhere('a.comment LIKE :search OR u.nom LIKE :search OR u.prenom LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Filtre par note
+        if (!empty($criteria['rating'])) {
+            $qb->andWhere('a.rating = :rating')
+               ->setParameter('rating', $criteria['rating']);
+        }
+
+        // Filtre par utilisateur
+        if (!empty($criteria['user_id'])) {
+            $qb->andWhere('a.user = :user_id')
+               ->setParameter('user_id', $criteria['user_id']);
+        }
+
+        // Filtre par date (période)
+        if (!empty($criteria['date_from'])) {
+            $qb->andWhere('a.createdAt >= :date_from')
+               ->setParameter('date_from', new \DateTimeImmutable($criteria['date_from']));
+        }
+
+        if (!empty($criteria['date_to'])) {
+            $qb->andWhere('a.createdAt <= :date_to')
+               ->setParameter('date_to', new \DateTimeImmutable($criteria['date_to']));
+        }
+
+        // Tri
+        $sortField = $criteria['sort_field'] ?? 'createdAt';
+        $sortOrder = $criteria['sort_order'] ?? 'DESC';
+
+        // Vérifier que le champ de tri est valide
+        if (!property_exists(Avis::class, $sortField)) {
+            $sortField = 'createdAt';
+        }
+
+        $qb->orderBy('a.' . $sortField, $sortOrder);
+
+        return $qb->getQuery()->getResult();
+    }
 }

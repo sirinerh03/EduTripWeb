@@ -12,27 +12,27 @@
             margin-bottom: 50px;
             border-radius: 0 0 50px 50px;
         }
-        
+
         .form-card {
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: none;
         }
-        
+
         .card-header {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             padding: 25px;
             border-bottom: none;
         }
-        
+
         .form-label {
             font-weight: 600;
             font-size: 1.05rem;
             margin-bottom: 10px;
             color: #444;
         }
-        
+
         .btn-submit {
             border-radius: 50px;
             font-weight: 600;
@@ -44,13 +44,13 @@
             border: none;
             transition: all 0.3s ease;
         }
-        
+
         .btn-submit:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
             background: linear-gradient(45deg, #0f8a81, #32d871);
         }
-        
+
         .btn-back {
             border-radius: 50px;
             font-weight: 500;
@@ -60,13 +60,13 @@
             background: transparent;
             transition: all 0.3s ease;
         }
-        
+
         .btn-back:hover {
             background: #f8f9fa;
             border-color: #bbb;
             color: #333;
         }
-        
+
         textarea.form-control {
             border-radius: 15px;
             padding: 15px;
@@ -74,18 +74,18 @@
             box-shadow: none;
             transition: all 0.3s ease;
         }
-        
+
         textarea.form-control:focus {
             border-color: #6a11cb;
             box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.15);
         }
-        
+
         textarea.form-control.is-invalid {
             border-color: #dc3545;
             background-image: none;
             padding-right: 15px;
         }
-        
+
         .rating-container {
             background: #f8f9fa;
             padding: 30px;
@@ -93,30 +93,30 @@
             margin-bottom: 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
+
         .rating-container.is-invalid {
             border: 1px solid #dc3545;
             background-color: rgba(220, 53, 69, 0.05);
         }
-        
+
         .rating-title {
             font-weight: 600;
             margin-bottom: 20px;
             color: #444;
             text-align: center;
         }
-        
+
         /* Rating stars */
         .simple-rating {
             display: flex;
             justify-content: center;
             margin: 20px 0;
         }
-        
+
         .simple-rating input[type="radio"] {
             display: none;
         }
-        
+
         .simple-rating label {
             cursor: pointer;
             font-size: 2.5rem;
@@ -124,13 +124,20 @@
             color: #ccc;
             transition: all 0.2s ease;
         }
-        
+
+        /* Correction du système de notation pour qu'il fonctionne correctement */
+        .simple-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
+
         .simple-rating label:hover,
         .simple-rating label:hover ~ label,
         .simple-rating input[type="radio"]:checked ~ label {
             color: #FFD700;
         }
-        
+
         .rating-descriptions {
             display: flex;
             justify-content: space-between;
@@ -138,15 +145,15 @@
             color: #777;
             font-size: 0.9rem;
         }
-        
+
         .rating-descriptions span:first-child {
             margin-right: auto;
         }
-        
+
         .rating-descriptions span:last-child {
             margin-left: auto;
         }
-        
+
         .selected-rating {
             margin-top: 15px;
             text-align: center;
@@ -154,7 +161,7 @@
             height: 24px;
             transition: all 0.3s ease;
         }
-        
+
         .validation-error {
             color: #dc3545;
             text-align: center;
@@ -164,29 +171,29 @@
             background-color: rgba(220, 53, 69, 0.1);
             border-radius: 4px;
         }
-        
+
         .invalid-feedback {
             color: #dc3545;
             font-size: 0.85rem;
             margin-top: 5px;
             display: block;
         }
-        
+
         .character-counter {
             font-size: 0.8rem;
             color: #6c757d;
             margin-top: 0.5rem;
             text-align: right;
         }
-        
+
         .character-counter.warning {
             color: #ffc107;
         }
-        
+
         .character-counter.danger {
             color: #dc3545;
         }
-        
+
         .alert-error {
             background-color: #f8d7da;
             color: #721c24;
@@ -203,6 +210,13 @@
     <div class="container">
         <h1 class="display-4 fw-bold mb-0 text-center">Partagez votre expérience</h1>
         <p class="lead opacity-75 text-center mb-0">Votre avis nous aide à améliorer nos services</p>
+        {% if app.user %}
+        <div class="text-center mt-3">
+            <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -215,7 +229,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
-            
+
             <div class="form-card card">
                 <div class="card-header">
                     <h2 class="card-title mb-0 text-center">Nouveau témoignage</h2>
@@ -229,39 +243,41 @@
                             </div>
                         </div>
                     {% endif %}
-                    
+
                     {{ form_start(form, {'attr': {'class': 'needs-validation', 'id': 'review-form', 'novalidate': 'novalidate'}}) }}
                         <div style="display: none;">
                             {{ form_widget(form.rating) }}
+                            <!-- Champ caché pour le débogage -->
+                            <input type="hidden" id="debug_rating" name="debug_rating" value="">
                         </div>
-                        
+
                         <div class="rating-container mb-4 {% if form.rating.vars.errors|length > 0 %}is-invalid{% endif %}" id="rating-container">
                             <h3 class="rating-title">Comment évaluez-vous votre expérience ?</h3>
-                            
+
                             <div class="simple-rating">
-                                <input type="radio" id="star5" name="custom_rating" value="5" {% if form.rating.vars.value == 5 %}checked{% endif %} />
-                                <label for="star5"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star4" name="custom_rating" value="4" {% if form.rating.vars.value == 4 %}checked{% endif %} />
-                                <label for="star4"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star3" name="custom_rating" value="3" {% if form.rating.vars.value == 3 %}checked{% endif %} />
-                                <label for="star3"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star2" name="custom_rating" value="2" {% if form.rating.vars.value == 2 %}checked{% endif %} />
-                                <label for="star2"><i class="fas fa-star"></i></label>
-                                
                                 <input type="radio" id="star1" name="custom_rating" value="1" {% if form.rating.vars.value == 1 %}checked{% endif %} />
                                 <label for="star1"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star2" name="custom_rating" value="2" {% if form.rating.vars.value == 2 %}checked{% endif %} />
+                                <label for="star2"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star3" name="custom_rating" value="3" {% if form.rating.vars.value == 3 %}checked{% endif %} />
+                                <label for="star3"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star4" name="custom_rating" value="4" {% if form.rating.vars.value == 4 %}checked{% endif %} />
+                                <label for="star4"><i class="fas fa-star"></i></label>
+
+                                <input type="radio" id="star5" name="custom_rating" value="5" {% if form.rating.vars.value == 5 %}checked{% endif %} />
+                                <label for="star5"><i class="fas fa-star"></i></label>
                             </div>
-                            
+
                             <div class="rating-descriptions">
                                 <span>Très déçu</span>
                                 <span>Très satisfait</span>
                             </div>
-                            
+
                             <div class="selected-rating" id="selected-rating"></div>
-                            
+
                             {% if form.rating.vars.errors|length > 0 %}
                                 <div class="validation-error">
                                     {% for error in form.rating.vars.errors %}
@@ -279,7 +295,7 @@
                             {{ form_label(form.comment, 'Partagez vos impressions', {'label_attr': {'class': 'form-label'}}) }}
                             <div class="position-relative">
                                 {{ form_widget(form.comment, {'attr': {'class': 'form-control' ~ (form.comment.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Décrivez votre expérience en détail...', 'rows': 7, 'minlength': 10, 'maxlength': 1000, 'id': 'comment-field'}}) }}
-                                
+
                                 {% if form.comment.vars.errors|length > 0 %}
                                     <div class="invalid-feedback">
                                         {% for error in form.comment.vars.errors %}
@@ -291,7 +307,7 @@
                                         Le commentaire doit contenir entre 10 et 1000 caractères
                                     </div>
                                 {% endif %}
-                                
+
                                 <div class="character-counter" id="char-counter">0 / 1000 caractères</div>
                             </div>
                             <small class="form-text text-muted mt-2">
@@ -325,7 +341,7 @@
         const commentField = document.getElementById('comment-field');
         const commentError = document.getElementById('comment-error');
         const charCounter = document.getElementById('char-counter');
-        
+
         const ratingTexts = {
             1: 'Très déçu 😞',
             2: 'Déçu 😕',
@@ -333,10 +349,10 @@
             4: 'Satisfait 🙂',
             5: 'Très satisfait 😄'
         };
-        
+
         // Initialiser le compteur de caractères
         updateCharCounter();
-        
+
         // Check if a rating is already selected
         let currentValue = null;
         customRatingInputs.forEach(input => {
@@ -345,12 +361,12 @@
                 showRatingText(currentValue);
             }
         });
-        
+
         // Add event listeners to custom rating inputs
         customRatingInputs.forEach(input => {
             input.addEventListener('change', function() {
                 const value = parseInt(this.value);
-                
+
                 // Update the form's actual inputs
                 formRatingInputs.forEach(formInput => {
                     if (parseInt(formInput.value) === value) {
@@ -359,13 +375,19 @@
                         formInput.checked = false;
                     }
                 });
-                
+
+                // Afficher la valeur sélectionnée dans la console pour débogage
+                console.log('Valeur sélectionnée: ' + value);
+
+                // Mettre à jour le champ de débogage
+                document.getElementById('debug_rating').value = value;
+
                 showRatingText(value);
                 hideError(ratingError);
                 ratingContainer.classList.remove('is-invalid');
             });
         });
-        
+
         // Fonction pour afficher le texte de la note
         function showRatingText(value) {
             if (value > 0) {
@@ -375,17 +397,17 @@
                 selectedRating.textContent = '';
             }
         }
-        
+
         // Événement pour mettre à jour le compteur de caractères
         commentField.addEventListener('input', function() {
             updateCharCounter();
             validateCommentField();
         });
-        
+
         function updateCharCounter() {
             const currentLength = commentField.value.length;
             charCounter.textContent = currentLength + ' / 1000 caractères';
-            
+
             if (currentLength >= 900 && currentLength < 1000) {
                 charCounter.className = 'character-counter warning';
             } else if (currentLength >= 1000) {
@@ -394,10 +416,10 @@
                 charCounter.className = 'character-counter';
             }
         }
-        
+
         function validateCommentField() {
             const currentLength = commentField.value.length;
-            
+
             if (currentLength < 10) {
                 commentField.classList.add('is-invalid');
                 if (commentError) {
@@ -412,32 +434,54 @@
                 return true;
             }
         }
-        
+
         function hideError(element) {
             if (element) {
                 element.style.display = 'none';
             }
         }
-        
+
         function showError(element, message) {
             if (element) {
                 element.textContent = message;
                 element.style.display = 'block';
             }
         }
-        
+
         // Vérifier la validation avant soumission
         reviewForm.addEventListener('submit', function(e) {
             let isValid = true;
-            
+
             // Vérifier si une note a été sélectionnée
             let hasRating = false;
+            let selectedRatingValue = null;
+
             formRatingInputs.forEach(input => {
                 if (input.checked) {
                     hasRating = true;
+                    selectedRatingValue = parseInt(input.value);
                 }
             });
-            
+
+            // Vérifier également les boutons radio personnalisés
+            customRatingInputs.forEach(input => {
+                if (input.checked) {
+                    const customValue = parseInt(input.value);
+                    console.log('Valeur personnalisée sélectionnée: ' + customValue);
+
+                    // Synchroniser avec les inputs du formulaire
+                    formRatingInputs.forEach(formInput => {
+                        if (parseInt(formInput.value) === customValue) {
+                            formInput.checked = true;
+                            hasRating = true;
+                            selectedRatingValue = customValue;
+                        }
+                    });
+                }
+            });
+
+            console.log('Soumission du formulaire avec la note: ' + selectedRatingValue);
+
             if (!hasRating) {
                 isValid = false;
                 if (ratingError) {
@@ -445,12 +489,12 @@
                 }
                 ratingContainer.classList.add('is-invalid');
             }
-            
+
             // Vérifier le commentaire
             if (!validateCommentField()) {
                 isValid = false;
             }
-            
+
             if (!isValid) {
                 e.preventDefault();
                 // Faire défiler jusqu'à la première erreur

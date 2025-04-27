@@ -15,7 +15,7 @@
             --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
-        
+
         .hero-section {
             background: var(--primary-gradient);
             color: white;
@@ -26,7 +26,7 @@
             overflow: hidden;
             box-shadow: var(--box-shadow);
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -38,7 +38,7 @@
             border-radius: 50%;
             z-index: 0;
         }
-        
+
         .hero-section::after {
             content: '';
             position: absolute;
@@ -50,12 +50,12 @@
             border-radius: 50%;
             z-index: 0;
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-title {
             font-size: 3.5rem;
             font-weight: 800;
@@ -63,14 +63,14 @@
             letter-spacing: -1px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .hero-subtitle {
             font-size: 1.25rem;
             opacity: 0.9;
             max-width: 600px;
             line-height: 1.6;
         }
-        
+
         .review-card {
             transition: var(--transition);
             border-radius: var(--border-radius-md);
@@ -79,64 +79,77 @@
             border: none;
             margin-bottom: 30px;
         }
-        
+
         .review-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
         .card-header {
             background: var(--secondary-gradient);
             padding: 25px;
             border-bottom: none;
             position: relative;
         }
-        
+
         .star-rating {
             color: #FFC107;
             font-size: 1.2rem;
             display: flex;
         }
-        
+
         .star-rating .fa-star {
             margin-right: 2px;
         }
-        
+
         .star-rating .empty-star {
             color: #e0e0e0;
         }
-        
+
         .action-btn {
             border-radius: 50px;
             padding: 8px 20px;
             font-weight: 500;
             transition: var(--transition);
         }
-        
+
         .action-btn:hover {
             transform: translateY(-2px);
         }
-        
+
         .btn-outline-primary {
             border-color: #6a11cb;
             color: #6a11cb;
         }
-        
+
         .btn-outline-primary:hover {
             background: var(--primary-gradient);
             border-color: transparent;
         }
-        
+
         .btn-outline-danger {
             border-color: #ff5959;
             color: #ff5959;
         }
-        
+
         .btn-outline-danger:hover {
             background: linear-gradient(45deg, #ff5959, #ff7676);
             border-color: transparent;
         }
-        
+
+        .btn-success {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #0f8a81, #32d871);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         .new-review-btn {
             border-radius: 50px;
             font-weight: 600;
@@ -149,22 +162,22 @@
             transition: var(--transition);
             color: white;
         }
-        
+
         .new-review-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             background: linear-gradient(45deg, #0f8a81, #32d871);
             color: white;
         }
-        
+
         .new-review-btn i {
             transition: var(--transition);
         }
-        
+
         .new-review-btn:hover i {
             transform: rotate(90deg);
         }
-        
+
         .no-reviews {
             background: var(--secondary-gradient);
             padding: 60px;
@@ -172,7 +185,7 @@
             text-align: center;
             box-shadow: var(--box-shadow);
         }
-        
+
         .user-avatar {
             width: 55px;
             height: 55px;
@@ -188,7 +201,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border: 3px solid white;
         }
-        
+
         .review-date {
             font-size: 0.85rem;
             opacity: 0.7;
@@ -197,7 +210,7 @@
             border-radius: 20px;
             margin-left: 10px;
         }
-        
+
         .review-content {
             min-height: 120px;
             padding: 30px;
@@ -206,12 +219,12 @@
             color: #444;
             border-bottom: 1px solid #f0f0f0;
         }
-        
+
         .review-footer {
             padding: 20px 30px;
             background: #fbfbfb;
         }
-        
+
         .alert {
             border-radius: var(--border-radius-md);
             padding: 20px;
@@ -220,19 +233,19 @@
             position: relative;
             border: none;
         }
-        
+
         .alert-success {
             background: linear-gradient(to right, rgba(17, 153, 142, 0.1), rgba(56, 239, 125, 0.1));
             border-left: 5px solid #38ef7d;
             color: #11998e;
         }
-        
+
         .alert-danger {
             background: linear-gradient(to right, rgba(255, 89, 89, 0.1), rgba(255, 118, 118, 0.1));
             border-left: 5px solid #ff5959;
             color: #e74c3c;
         }
-        
+
         .rating-badge {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
@@ -243,17 +256,17 @@
             margin-left: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
+
         @media (max-width: 767px) {
             .hero-title {
                 font-size: 2.5rem;
             }
-            
+
             .hero-section {
                 padding: 60px 0;
                 margin-bottom: 40px;
             }
-            
+
             .new-review-btn {
                 width: 100%;
                 margin-top: 20px;
@@ -274,6 +287,13 @@
                 <a href="{{ path('app_avis_new') }}" class="btn new-review-btn">
                     <i class="fas fa-plus-circle me-2"></i>Ajouter votre avis
                 </a>
+                {% if app.user %}
+                <div class="mt-2">
+                    <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+                    </a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -327,19 +347,28 @@
                         <div class="review-content">
                             <p class="mb-0">{{ avi.comment }}</p>
                         </div>
-                        
+
                         {% if app.user and app.user == avi.user %}
                             <div class="review-footer">
-                                <div class="d-flex justify-content-end">
-                                    <a href="{{ path('app_avis_edit', {'id': avi.id}) }}" class="btn btn-outline-primary action-btn me-2">
-                                        <i class="fas fa-edit me-1"></i>Modifier
-                                    </a>
-                                    <form method="post" action="{{ path('app_avis_delete', {'id': avi.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
-                                        <button class="btn btn-outline-danger action-btn">
-                                            <i class="fas fa-trash-alt me-1"></i>Supprimer
-                                        </button>
-                                    </form>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if avi.spinReward and avi.rewardClaimed %}
+                                        <a href="{{ path('app_reward_pdf', {'id': avi.spinReward.id}) }}" class="btn btn-success action-btn">
+                                            <i class="fas fa-file-pdf me-1"></i>Télécharger ma réduction ({{ avi.spinReward.percentage }}%)
+                                        </a>
+                                    {% else %}
+                                        <div></div>
+                                    {% endif %}
+                                    <div>
+                                        <a href="{{ path('app_avis_edit', {'id': avi.id}) }}" class="btn btn-outline-primary action-btn me-2">
+                                            <i class="fas fa-edit me-1"></i>Modifier
+                                        </a>
+                                        <form method="post" action="{{ path('app_avis_delete', {'id': avi.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
+                                            <button class="btn btn-outline-danger action-btn">
+                                                <i class="fas fa-trash-alt me-1"></i>Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         {% endif %}

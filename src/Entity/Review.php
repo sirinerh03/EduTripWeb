@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ReviewRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,9 +44,13 @@ class Review
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'review', targetEntity: Reward::class, orphanRemoval: true)]
+    private Collection $rewards;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->rewards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,4 +101,34 @@ class Review
         $this->createdAt = $createdAt;
         return $this;
     }
-} 
+
+    /**
+     * @return Collection<int, Reward>
+     */
+    public function getRewards(): Collection
+    {
+        return $this->rewards;
+    }
+
+    public function addReward(Reward $reward): static
+    {
+        if (!$this->rewards->contains($reward)) {
+            $this->rewards->add($reward);
+            $reward->setReview($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReward(Reward $reward): static
+    {
+        if ($this->rewards->removeElement($reward)) {
+            // set the owning side to null (unless already changed)
+            if ($reward->getReview() === $this) {
+                $reward->setReview(null);
+            }
+        }
+
+        return $this;
+    }
+}

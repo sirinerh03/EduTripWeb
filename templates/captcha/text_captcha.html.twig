@@ -1,0 +1,12 @@
+<div class="captcha-container" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; width: 200px; text-align: center; position: relative; overflow: hidden;">
+    <div style="position: relative; z-index: 2;">
+        {% for char in captcha_code|split('') %}
+            <span style="display: inline-block; font-family: monospace; font-size: 24px; font-weight: bold; color: #333; margin: 0 2px; transform: rotate({{ random(-15, 15) }}deg) translateY({{ random(-5, 5) }}px); text-shadow: 1px 1px 1px #999;">{{ char }}</span>
+        {% endfor %}
+    </div>
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+        {% for i in 1..5 %}
+            <div style="position: absolute; top: {{ random(0, 100) }}%; left: {{ random(0, 100) }}%; width: {{ random(50, 200) }}px; height: 1px; background-color: #999; transform: rotate({{ random(0, 360) }}deg);"></div>
+        {% endfor %}
+    </div>
+</div>

@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Form\ProfileType;
+use App\Form\LoginFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class SecurityController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         // If user is already logged in, redirect based on role
         if ($this->getUser()) {
@@ -37,12 +38,12 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'error' => $error,
+            'error' => $error
         ]);
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ValidatorInterface $validator, \App\Service\EmailValidatorService $emailValidator): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -56,14 +57,14 @@ class SecurityController extends AbstractController
                     'registrationForm' => $form->createView(),
                 ]);
             }
-            
+
             // Vérifier que le numéro de téléphone contient exactement 8 chiffres
             $tel = $form->get('tel')->getData();
             $telConstraint = new Regex([
                 'pattern' => '/^[0-9]{8}$/',
                 'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
             ]);
-            
+
             $telErrors = $validator->validate($tel, $telConstraint);
             if (count($telErrors) > 0) {
                 $this->addFlash('error', $telErrors[0]->getMessage());
@@ -71,7 +72,7 @@ class SecurityController extends AbstractController
                     'registrationForm' => $form->createView(),
                 ]);
             }
-            
+
             // Vérifier que le prénom et le nom ne contiennent que des lettres
             $prenom = $form->get('prenom')->getData();
             $nom = $form->get('nom')->getData();
@@ -79,19 +80,30 @@ class SecurityController extends AbstractController
                 'pattern' => '/^[a-zA-ZÀ-ÿ\s\-]+$/',
                 'message' => 'Le prénom et le nom ne doivent contenir que des lettres.',
             ]);
-            
+
             $prenomErrors = $validator->validate($prenom, $nameConstraint);
             $nomErrors = $validator->validate($nom, $nameConstraint);
-            
+
             if (count($prenomErrors) > 0) {
                 $this->addFlash('error', 'Le prénom ne doit contenir que des lettres.');
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
                 ]);
             }
-            
+
             if (count($nomErrors) > 0) {
                 $this->addFlash('error', 'Le nom ne doit contenir que des lettres.');
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
+            // Vérifier si l'email est valide avec notre service de validation avancé
+            $email = $form->get('mail')->getData();
+            [$isValidEmail, $emailErrorMessage] = $emailValidator->validateEmail($email);
+
+            if (!$isValidEmail) {
+                $this->addFlash('error', $emailErrorMessage);
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
                 ]);
@@ -109,6 +121,7 @@ class SecurityController extends AbstractController
                 // Définir le rôle et le statut
                 $user->setRole($form->get('role')->getData());
                 $user->setStatus('active');
+                $user->setIsVerified(true); // L'email est déjà vérifié par notre service
 
                 // Vérifier si l'email est déjà utilisé
                 $existingUser = $entityManager->getRepository(User::class)->findOneBy(['mail' => $user->getMail()]);
@@ -122,8 +135,9 @@ class SecurityController extends AbstractController
                 try {
                     $entityManager->persist($user);
                     $entityManager->flush();
-                    $this->addFlash('success', 'Votre compte a été créé avec succès !');
-                    return $this->redirectToRoute('app_dashboard');
+
+                    $this->addFlash('success', 'Votre compte a été créé avec succès ! Votre adresse email a été validée.');
+                    return $this->redirectToRoute('app_login');
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Une erreur est survenue lors de la création de votre compte : ' . $e->getMessage());
                 }
@@ -149,20 +163,20 @@ class SecurityController extends AbstractController
             'user' => $this->getUser(),
         ]);
     }
-    
+
     #[Route('/profile/edit', name: 'app_profile_edit')]
     public function editProfile(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-        
+
         if (!$user) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
             return $this->redirectToRoute('app_login');
         }
-        
+
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifier si un nouveau mot de passe a été fourni
             $plainPassword = $form->get('plainPassword')->getData();
@@ -174,7 +188,7 @@ class SecurityController extends AbstractController
                     )
                 );
             }
-            
+
             try {
                 $entityManager->flush();
                 $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
@@ -183,10 +197,10 @@ class SecurityController extends AbstractController
                 $this->addFlash('error', 'Une erreur est survenue lors de la mise à jour de votre profil : ' . $e->getMessage());
             }
         }
-        
+
         return $this->render('security/edit_profile.html.twig', [
             'profileForm' => $form->createView(),
             'user' => $user
         ]);
     }
-} 
+}

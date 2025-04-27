@@ -37,23 +37,92 @@ class AdminController extends AbstractController
             'recentReviews' => $recentReviews,
         ]);
     }
-    
+
     #[Route('/dashboard', name: 'base_admin')]
     public function dashboard(): Response
     {
         return $this->redirectToRoute('admin_dashboard');
     }
-    
+
     #[Route('/avis', name: 'admin_avis_list')]
-    public function avisList(AvisRepository $avisRepository): Response
+    public function avisList(Request $request, AvisRepository $avisRepository, UserRepository $userRepository): Response
     {
-        $allAvis = $avisRepository->findBy([], ['createdAt' => 'DESC']);
-        
-        return $this->render('admin/avis/list.html.twig', [
-            'avis' => $allAvis,
-        ]);
+        try {
+            // Récupérer les paramètres de recherche et filtrage avec des valeurs par défaut
+            $search = $request->query->get('search', '');
+            $rating = $request->query->get('rating', '');
+            $userId = $request->query->get('user_id', '');
+            $dateFrom = $request->query->get('date_from', '');
+            $dateTo = $request->query->get('date_to', '');
+            $sortField = $request->query->get('sort_field', 'createdAt');
+            $sortOrder = $request->query->get('sort_order', 'DESC');
+
+            // Construire les critères de recherche
+            $criteria = [
+                'sort_field' => $sortField,
+                'sort_order' => $sortOrder
+            ];
+
+            if (!empty($search)) {
+                $criteria['search'] = $search;
+            }
+
+            if (!empty($rating)) {
+                $criteria['rating'] = $rating;
+            }
+
+            if (!empty($userId)) {
+                $criteria['user_id'] = $userId;
+            }
+
+            if (!empty($dateFrom)) {
+                $criteria['date_from'] = $dateFrom;
+            }
+
+            if (!empty($dateTo)) {
+                $criteria['date_to'] = $dateTo;
+            }
+
+            // Récupérer les avis filtrés
+            $allAvis = $avisRepository->searchAvis($criteria);
+
+            // Récupérer tous les utilisateurs pour le filtre
+            $users = $userRepository->findAll();
+
+            // Vérifier que $allAvis est bien un tableau
+            if (!is_array($allAvis)) {
+                $allAvis = [];
+            }
+
+            return $this->render('admin/avis/list.html.twig', [
+                'avis' => $allAvis,
+                'users' => $users,
+                'search' => $search,
+                'rating' => $rating,
+                'user_id' => $userId,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'sort_field' => $sortField,
+                'sort_order' => $sortOrder
+            ]);
+        } catch (\Exception $e) {
+            // En cas d'erreur, afficher un message et retourner une liste vide
+            $this->addFlash('error', 'Une erreur est survenue lors de la récupération des avis: ' . $e->getMessage());
+
+            return $this->render('admin/avis/list.html.twig', [
+                'avis' => [],
+                'users' => $userRepository->findAll(),
+                'search' => '',
+                'rating' => '',
+                'user_id' => '',
+                'date_from' => '',
+                'date_to' => '',
+                'sort_field' => 'createdAt',
+                'sort_order' => 'DESC'
+            ]);
+        }
     }
-    
+
     #[Route('/avis/{id}/delete', name: 'admin_avis_delete')]
     public function deleteAvis(Request $request, Avis $avis, EntityManagerInterface $entityManager): Response
     {
@@ -62,10 +131,10 @@ class AdminController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'L\'avis a été supprimé avec succès.');
         }
-        
+
         return $this->redirectToRoute('admin_avis_list');
     }
-    
+
     #[Route('/user/{id}/delete', name: 'admin_user_delete')]
     public function deleteUser(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
@@ -74,20 +143,20 @@ class AdminController extends AbstractController
             $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte administrateur.');
             return $this->redirectToRoute('admin_dashboard');
         }
-        
+
         $entityManager->remove($user);
         $entityManager->flush();
         $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
-        
+
         return $this->redirectToRoute('admin_dashboard');
     }
-    
+
     #[Route('/user/{id}/edit', name: 'admin_user_edit', methods: ['GET', 'POST'])]
     public function editUser(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Store original role if user is admin
         $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
-        
+
         // Create the form
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -98,15 +167,15 @@ class AdminController extends AbstractController
                 $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);
             }
-            
+
             // Ensure admin users keep their admin role
             if ($isAdmin) {
                 $user->setRoles(['ROLE_ADMIN']);
             }
-            
+
             $entityManager->flush();
             $this->addFlash('success', 'L\'utilisateur a été modifié avec succès.');
-            
+
             return $this->redirectToRoute('admin_dashboard');
         }
 
@@ -115,14 +184,60 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/users', name: 'admin_users_list')]
-    public function usersList(UserRepository $userRepository): Response
+    public function usersList(Request $request, UserRepository $userRepository): Response
     {
-        $allUsers = $userRepository->findBy([], ['id' => 'DESC']);
-        
+        // Récupérer les paramètres de recherche et filtrage
+        $search = $request->query->get('search');
+        $role = $request->query->get('role');
+        $status = $request->query->get('status');
+        $action = $request->query->get('action');
+        $sortField = $request->query->get('sort_field', 'id');
+        $sortOrder = $request->query->get('sort_order', 'DESC');
+
+        // Construire les critères de recherche
+        $criteria = [
+            'sort_field' => $sortField,
+            'sort_order' => $sortOrder
+        ];
+
+        // Si l'action est "search", on ne prend en compte que le champ de recherche
+        if ($action === 'search' && $search) {
+            $criteria['search'] = $search;
+        }
+        // Si l'action est "filter", on ne prend en compte que les filtres
+        elseif ($action === 'filter') {
+            if ($role) {
+                $criteria['role'] = $role;
+            }
+            if ($status) {
+                $criteria['status'] = $status;
+            }
+        }
+        // Si aucune action spécifiée, on prend tout en compte (comportement par défaut)
+        else {
+            if ($search) {
+                $criteria['search'] = $search;
+            }
+            if ($role) {
+                $criteria['role'] = $role;
+            }
+            if ($status) {
+                $criteria['status'] = $status;
+            }
+        }
+
+        // Récupérer les utilisateurs filtrés
+        $allUsers = $userRepository->searchUsers($criteria);
+
         return $this->render('admin/user/list.html.twig', [
             'users' => $allUsers,
+            'search' => $search,
+            'role' => $role,
+            'status' => $status,
+            'sort_field' => $sortField,
+            'sort_order' => $sortOrder
         ]);
     }
-} 
+}
