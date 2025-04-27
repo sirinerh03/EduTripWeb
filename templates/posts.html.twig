@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Posts{% endblock %}
+{% block title %}{{ 'post.title'|trans }}{% endblock %}
 
 
 
@@ -412,21 +412,23 @@
 }
 
     </style>
-
-
-<div class="container-xl py-5">
-   <!-- Nouveau container principal -->
+    <div class="container-xl py-5">
+        <div class="language-switcher">
+            <a href="{{ path('app_switch_language', {_locale: 'en'}) }}">English</a> | 
+            <a href="{{ path('app_switch_language', {_locale: 'fr'}) }}">Français</a>
+        </div>
+        
         <div class="text-center mb-5">
-            <h1 class="display-5 fw-bold">Liste des Posts</h1>
+            <h1 class="display-5 fw-bold">{{ 'post.list_title'|trans }}</h1>
             <li class="nav-item">
-    <a class="nav-link" href="{{ path('app_favorites') }}">
-        <i class="fas fa-star me-1"></i> Mes Favoris
-    </a>
-</li>
+                <a class="nav-link" href="{{ path('app_favorites') }}">
+                    <i class="fas fa-star me-1"></i> {{ 'post.favorites'|trans }}
+                </a>
+            </li>
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div></div> <!-- Espaceur -->
-                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-animated"">
-                    <i class="fas fa-plus me-2"></i> Nouveau Post
+                <div></div>
+                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-animated">
+                    <i class="fas fa-plus me-2"></i> {{ 'post.new_post'|trans }}
                 </a>
             </div>
         </div>
@@ -434,332 +436,386 @@
         {% for message in app.flashes('success') %}
             <div class="alert alert-success alert-dismissible fade show">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'post.close'|trans }}"></button>
             </div>
         {% endfor %}
         
         {% for message in app.flashes('error') %}
             <div class="alert alert-danger alert-dismissible fade show">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'post.close'|trans }}"></button>
             </div>
         {% endfor %}
 
-{% if posts is defined and posts|length > 0 %}
-    <form id="searchForm" method="get" class="mb-4">
-        <div class="search-wrapper">
-            <input type="text" 
-                   id="searchInput" 
-                   class="form-control custom-search" 
-                   placeholder="Rechercher un post..."
-                   aria-label="Rechercher des posts">
-            <button type="button" 
-                    class="search-btn" 
-                    id="searchButton"
-                    aria-label="Lancer la recherche">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </form>
-
-
-            
-                {% for post in posts %}
-                <div class="post-card"> 
-<div class="post-header-container">
-    <div class="d-flex justify-content-between align-items-center"> <!-- Nouveau conteneur flex -->
-        <div class="d-flex align-items-center"> <!-- Partie gauche avec infos utilisateur -->
-            {% if post.utilisateur %}
-                <div class="me-3">
-                    <i class="fas fa-user-circle fa-2x text-primary"></i>
+        {% if posts is defined and posts|length > 0 %}
+            <form id="searchForm" method="get" class="mb-4">
+                <div class="search-wrapper">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="form-control custom-search" 
+                           placeholder="{{ 'post.search_placeholder'|trans }}"
+                           aria-label="{{ 'post.search_placeholder'|trans }}">
+                    <button type="button" 
+                            class="search-btn" 
+                            id="searchButton"
+                            aria-label="{{ 'post.search'|trans }}">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
-                <div>
-                    <h5 class="mb-0 text-primary">
-                        {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
-                    </h5>
-                    <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
-                       {% if post.categorie %}
-                            <span class="badge bg-secondary ms-2">{{ post.categorie }}</span>
-                        {% endif %}
-                </div>
-
-            {% else %}
-                <h5 class="mb-0 text-danger">Utilisateur inconnu</h5>
-            {% endif %}
-        </div>
-
-        <!-- Partie droite avec les boutons -->
-        <div class="d-flex gap-2">
-            <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" 
-               class="btn btn-sm btn-outline-warning"
-               title="Modifier">
-                <i class="fas fa-edit"></i>
-            </a>
-            <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
-                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
-                <button class="btn btn-sm btn-outline-danger" title="Supprimer">
-                    <i class="fas fa-trash"></i>
-                </button>
             </form>
-        </div>
-    </div>
-</div>
-<button class="favorite-btn" 
-        onclick="toggleFavorite({{ post.idPost }}, this)"
-        title="Gérer les favoris">
-    <i class="far fa-star"></i> {# Toujours vide par défaut #}
-</button>
 
-
-                            <div class="p-4">
-                                <p class="card-text mb-4">{{ post.contenu }}</p>
-                                
-
-                                
-                                {% if post.image %}
-                                    <div class="text-center">
-                                        <div class="image-frame"> <!-- Nouveau frame pour l'image -->
-                                            <img src="{{ asset('images/' ~ post.image) }}" 
-                                                 class="post-image img-fluid"
-                                                 style="max-height: 400px; object-fit: contain;">
-                                        </div>
+            {% for post in posts %}
+                <div class="post-card"> 
+                    <div class="post-header-container">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                {% if post.utilisateur %}
+                                    <div class="me-3">
+                                        <i class="fas fa-user-circle fa-2x text-primary"></i>
                                     </div>
+                                    <div>
+                                        <h5 class="mb-0 text-primary">
+                                            {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                                        </h5>
+                                        <small class="text-muted">{{ 'post.posted_on'|trans({'%date%': post.dateCreation|date('d/m/Y H:i')}) }}</small>
+                                        {% if post.categorie %}
+                                            <span class="badge bg-secondary ms-2">{{ post.categorie }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <h5 class="mb-0 text-danger">{{ 'post.unknown_user'|trans }}</h5>
                                 {% endif %}
                             </div>
-                            
-                            <div class="vote-container d-flex align-items-center gap-2">
-                                <form class="d-inline vote-form" action="{{ path('post_like', {'id': post.idPost}) }}" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.idPost) }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center">
-                                        <img src="{{ asset('images/like.png') }}" alt="Like" class="me-1" style="width: 18px; height: 18px;">
-                                        <span class="vote-count">{{ post.likes ?? 0 }}</span>
+
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" 
+                                   class="btn btn-sm btn-outline-warning"
+                                   title="{{ 'post.modify'|trans }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
+                                      onsubmit="return confirm('{{ 'post.confirm_delete'|trans }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
+                                    <button class="btn btn-sm btn-outline-danger" title="{{ 'post.delete'|trans }}">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
-                                
-                                <form class="d-inline vote-form" action="{{ path('post_dislike', {'id': post.idPost}) }}" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('dislike' ~ post.idPost) }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center">
-                                        <img src="{{ asset('images/dislike.png') }}" alt="Dislike" class="me-1" style="width: 18px; height: 18px;">
-                                        <span class="vote-count">{{ post.dislikes ?? 0 }}</span>
-                                    </button>
-                                </form>
-                                
-                                <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="toggleCommentaires({{ post.idPost }})">
-                                    <i class="far fa-comment me-1"></i> Commentaires
-                                </button>
                             </div>
-                            
-                            <div id="commentaires-{{ post.idPost }}" class="comment-section" style="display: none;">
-                                                            <div class="comment-input-container"> <!-- Nouveau container pour l'input -->
-                                    <form onsubmit="ajouterCommentaire(event, {{ post.idPost }})">
-                                      <div class="input-group">
-    <textarea class="form-control" 
-              id="contenu-commentaire-{{ post.idPost }}" 
-              rows="2" 
-              placeholder="Écrire un commentaire..." 
-              required></textarea>
-    <button type="submit" class="btn btn-primary">
-        <i class="fas fa-paper-plane"></i>
-    </button>
-</div>
-
-
-                                    </form>
-                                </div>
-                                
-                                
-                                {% if post.commentaires|length > 0 %}
-                                    <div class="mt-3">
-                                        {% for commentaire in post.commentaires %}
-                                            <div class="card mb-2">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex">
-                                                        <div class="flex-grow-1">
-                                                            <strong>{{ commentaire.utilisateur.prenom }}</strong>
-                                                            <p class="mb-0">{{ commentaire.contenu }}</p>
-                                                        </div>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-sm" data-bs-toggle="dropdown">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="{{ path('commentaire_edit', {'id': commentaire.idCommentaire}) }}">Modifier</a></li>
-                                                                <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire({{ commentaire.idCommentaire }})">Supprimer</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-             
                         </div>
                     </div>
-                {% endfor %}
-            </div>
+                    
+                    <button class="favorite-btn" 
+                            onclick="toggleFavorite({{ post.idPost }}, this)"
+                            title="{{ 'post.manage_favorites'|trans }}">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <div class="p-4">
+                        <p class="card-text mb-4">{{ post.contenu }}</p>
+                        
+                        {% if post.image %}
+                            <div class="text-center">
+                                <div class="image-frame">
+                                    <img src="{{ asset('images/' ~ post.image) }}" 
+                                         class="post-image img-fluid"
+                                         style="max-height: 400px; object-fit: contain;"
+                                         alt="{{ 'post.image_alt'|trans }}">
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="vote-container d-flex align-items-center gap-2">
+                        <form class="d-inline vote-form" action="{{ path('post_like', {'id': post.idPost}) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.idPost) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center">
+                                <img src="{{ asset('images/like.png') }}" alt="{{ 'post.like'|trans }}" class="me-1" style="width: 18px; height: 18px;">
+                                <span class="vote-count">{{ post.likes ?? 0 }}</span>
+                            </button>
+                        </form>
+                        
+                        <form class="d-inline vote-form" action="{{ path('post_dislike', {'id': post.idPost}) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('dislike' ~ post.idPost) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center">
+                                <img src="{{ asset('images/dislike.png') }}" alt="{{ 'post.dislike'|trans }}" class="me-1" style="width: 18px; height: 18px;">
+                                <span class="vote-count">{{ post.dislikes ?? 0 }}</span>
+                            </button>
+                        </form>
+                        
+                        <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="toggleCommentaires({{ post.idPost }})">
+                            <i class="far fa-comment me-1"></i> {{ 'post.comments'|trans }}
+                        </button>
+                    </div>
+                    
+                    <div id="commentaires-{{ post.idPost }}" class="comment-section" style="display: none;">
+                        <div class="comment-input-container">
+                            <form onsubmit="ajouterCommentaire(event, {{ post.idPost }})">
+                                <div class="input-group">
+                                    <textarea class="form-control" 
+                                              id="contenu-commentaire-{{ post.idPost }}" 
+                                              rows="2" 
+                                              placeholder="{{ 'post.write_comment'|trans }}" 
+                                              required></textarea>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> {{ 'post.post_comment'|trans }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        {% if post.commentaires|length > 0 %}
+                            <div class="mt-3">
+                                {% for commentaire in post.commentaires %}
+                                    <div class="card mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
+                                                    <strong>{{ commentaire.utilisateur.prenom }}</strong>
+                                                    <p class="mb-0">{{ commentaire.contenu }}</p>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-h"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="{{ path('commentaire_edit', {'id': commentaire.idCommentaire}) }}">{{ 'post.modify'|trans }}</a></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire({{ commentaire.idCommentaire }})">{{ 'post.delete'|trans }}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         {% else %}
             <div class="text-center py-5">
                 <div class="card">
                     <div class="card-body py-5">
                         <i class="far fa-newspaper fa-3x text-muted mb-3"></i>
-                        <h3 class="text-muted">Aucun post trouvé</h3>
-                        <p class="text-muted">Soyez le premier à créer un post !</p>
+                        <h3 class="text-muted">{{ 'post.no_posts'|trans }}</h3>
+                        <p class="text-muted">{{ 'post.be_first'|trans }}</p>
                         <a href="{{ path('app_new_post') }}" class="btn btn-primary mt-3">
-                            <i class="fas fa-plus me-2"></i> Créer un post
+                            <i class="fas fa-plus me-2"></i> {{ 'post.create_post'|trans }}
                         </a>
                     </div>
                 </div>
             </div>
         {% endif %}
     </div>
-</div>
 
-<!-- Vos scripts JavaScript restent inchangés -->
-<script>
-    function toggleCommentaires(postId) {
-        var commentairesDiv = document.getElementById('commentaires-' + postId);
-        if (commentairesDiv.style.display === 'none' || commentairesDiv.style.display === '') {
-            commentairesDiv.style.display = 'block';
-        } else {
-            commentairesDiv.style.display = 'none';
-        }
-    }
+    <script>
+    // Fonction pour ajouter un commentaire
 async function ajouterCommentaire(event, postId) {
-        event.preventDefault();
-        const textarea = document.getElementById(`contenu-commentaire-${postId}`);
-        const contenu = textarea.value.trim();
-        
-        if (!contenu) {
-            alert('Veuillez écrire un commentaire');
+    event.preventDefault();
+    const locale = '{{ app.request.locale }}';
+    const textarea = document.getElementById(`contenu-commentaire-${postId}`);
+    const contenu = textarea.value.trim();
+    
+    if (!contenu) {
+        alert('{{ "post.comment_empty"|trans }}');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/${locale}/commentaire/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                postId: postId,
+                contenu: contenu,
+                _token: '{{ csrf_token('comment') }}'
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (data.filtered_text) {
+                if (confirm(`${data.error}\n{{ "post.use_corrected_version"|trans }}\n\n${data.filtered_text}`)) {
+                    textarea.value = data.filtered_text;
+                }
+            } else {
+                alert(data.error);
+            }
             return;
         }
 
+        // Ajout dynamique du commentaire
+        ajouterCommentaireDOM(data.commentaire);
+        textarea.value = '';
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('{{ "post.error_occurred"|trans }}');
+    }
+}
+
+// Fonction pour basculer les favoris
+async function toggleFavorite(postId, button) {
+    const locale = '{{ app.request.locale }}';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    try {
+        const response = await fetch(`/${locale}/post/${postId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || '{{ "post.unknown_error"|trans }}');
+        }
+
+        if (data.success) {
+            const icon = button.querySelector('i');
+            if (data.isFavorite) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = '{{ "post.remove_favorite"|trans }}';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = '{{ "post.add_favorite"|trans }}';
+            }
+            
+            // Animation
+            button.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 300);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+    }
+}
+
+// Fonction pour la recherche
+document.getElementById('searchForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const locale = '{{ app.request.locale }}';
+    const searchTerm = document.getElementById('searchInput').value;
+    window.location.href = `/${locale}/posts?search=${encodeURIComponent(searchTerm)}`;
+});
+
+// Fonction pour les votes (like/dislike)
+document.querySelectorAll('.vote-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const locale = '{{ app.request.locale }}';
+        const formData = new FormData(this);
+        const button = this.querySelector('button');
+        const countElement = this.querySelector('.vote-count');
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                countElement.textContent = data.count;
+                button.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 200);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+// Fonction pour supprimer un commentaire
+async function supprimerCommentaire(id) {
+    if (confirm('{{ "post.confirm_delete_comment"|trans }}')) {
+        const locale = '{{ app.request.locale }}';
+        
         try {
-            const response = await fetch('{{ path('ajouter_commentaire') }}', {
+            const response = await fetch(`/${locale}/commentaire/${id}/delete`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: new URLSearchParams({
-                    postId: postId,
-                    contenu: contenu
-                })
+                }
             });
 
             const data = await response.json();
 
-            if (!response.ok) {
-                if (data.filtered_text) {
-                    if (confirm(`${data.error}\nSouhaitez-vous utiliser cette version corrigée?\n\n${data.filtered_text}`)) {
-                        textarea.value = data.filtered_text;
-                    }
-                } else {
-                    alert(data.error);
-                }
-                return;
+            if (data.success) {
+                document.getElementById(`comment-${id}`)?.remove();
+            } else {
+                alert('{{ "post.delete_error"|trans }}');
             }
-
-            // Ajout dynamique du commentaire
-            ajouterCommentaireDOM(data.commentaire);
-            textarea.value = '';
-            
         } catch (error) {
-            console.error('Erreur:', error);
-            alert('Une erreur est survenue');
+            console.error('Error:', error);
+            alert('{{ "post.error_occurred"|trans }}');
         }
     }
+}
 
-    // Nouvelle fonction pour l'ajout dynamique
-    function ajouterCommentaireDOM(commentData) {
-        const commentsContainer = document.querySelector(`#commentaires-${commentData.postId} .mt-3`);
-        
-        if (!commentsContainer) {
-            location.reload();
-            return;
-        }
+// Fonction helper pour ajouter un commentaire au DOM
+function ajouterCommentaireDOM(commentData) {
+    const commentsContainer = document.querySelector(`#commentaires-${commentData.postId} .mt-3`);
+    
+    if (!commentsContainer) {
+        location.reload();
+        return;
+    }
 
-        const commentHtml = `
-            <div class="card mb-2" id="comment-${commentData.id}">
-                <div class="card-body p-3">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <strong>${commentData.username}</strong>
-                            <p class="mb-0">${commentData.contenu}</p>
-                            <small class="text-muted">${commentData.date}</small>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/commentaire/${commentData.id}/edit">Modifier</a></li>
-                                <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire(${commentData.id})">Supprimer</a></li>
-                            </ul>
-                        </div>
+    const commentHtml = `
+        <div class="card mb-2" id="comment-${commentData.id}">
+            <div class="card-body p-3">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <strong>${commentData.username}</strong>
+                        <p class="mb-0">${commentData.contenu}</p>
+                        <small class="text-muted">${new Date(commentData.date).toLocaleString()}</small>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/${'{{ app.request.locale }}'}/commentaire/${commentData.id}/edit">{{ "post.modify"|trans }}</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire(${commentData.id})">{{ "post.delete"|trans }}</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        `;
-        
-        commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
+        </div>
+    `;
+    
+    commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
+}
+
+// Fonction pour basculer l'affichage des commentaires
+function toggleCommentaires(postId) {
+    const commentairesDiv = document.getElementById(`commentaires-${postId}`);
+    if (commentairesDiv.style.display === 'none' || commentairesDiv.style.display === '') {
+        commentairesDiv.style.display = 'block';
+    } else {
+        commentairesDiv.style.display = 'none';
     }
+}
 
-
-    function supprimerCommentaire(id) {
-        if (confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
-            fetch(`/commentaire/${id}/delete`, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert("Erreur lors de la suppression");
-                }
-            });
-        }
-    }
-
-    document.querySelectorAll('.vote-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const button = this.querySelector('button');
-            const countElement = this.querySelector('.vote-count');
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    countElement.textContent = data.count;
-                    button.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        button.style.transform = 'scale(1)';
-                    }, 200);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-            
-        });
-    });
-    document.getElementById('searchInput').addEventListener('input', function () {
+// Initialisation de la recherche en temps réel
+document.getElementById('searchInput')?.addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
     const postCards = document.querySelectorAll('.post-card');
 
@@ -768,49 +824,5 @@ async function ajouterCommentaire(event, postId) {
         card.style.display = text.includes(searchTerm) ? '' : 'none';
     });
 });
-function toggleFavorite(postId, button) {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-    fetch(`/post/${postId}/favorite`, {  // هنا نحط ال-backticks `
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': csrfToken
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw err; });
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            const icon = button.querySelector('i');
-            if (data.isFavorite) {
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                button.title = 'Retirer des favoris';
-            } else {
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                button.title = 'Ajouter aux favoris';
-            }
-            // Animation
-            button.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                button.style.transform = 'scale(1)';
-            }, 300);
-        } else {
-            throw new Error(data.error || 'Erreur inconnue');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert(error.message || 'Erreur lors de la mise à jour des favoris');
-    });
-}
-
 </script>
 {% endblock %}

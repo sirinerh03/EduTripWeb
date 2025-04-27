@@ -8,6 +8,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\Post;
 use App\Entity\Favoris;
 use App\Form\PostType;
+use Symfony\Component\Routing\RouterInterface;
 use App\Form\CommentaireType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -131,7 +132,7 @@ $post->setUtilisateur($utilisateur);
         return $this->redirectToRoute('app_posts');
     }
 
-    #[Route('/posts', name: 'app_posts')]
+    #[Route('/posts', name: 'app_posts', requirements: ['_locale' => 'en|fr'])]
 public function posts(Request $request, EntityManagerInterface $entityManager): Response
 {
     $postRepository = $entityManager->getRepository(Post::class);
@@ -393,4 +394,5 @@ public function favorites(EntityManagerInterface $em): Response
         'posts' => $posts
     ]);
 }
+
 }

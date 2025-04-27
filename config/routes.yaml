@@ -3,3 +3,11 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+app:
+    resource: '../src/Controller/PostController.php'
+    type: annotation
+    prefix: '/{_locale}'
+    requirements:
+        _locale: 'en|fr'
+    defaults:
+        _locale: 'fr'
