@@ -316,60 +316,81 @@ public function posts(Request $request, EntityManagerInterface $entityManager): 
         ]);
     }
     #[Route('/post/{id}/favorite', name: 'post_favorite', methods: ['POST'])]
-    public function toggleFavorite(Post $post, EntityManagerInterface $em): JsonResponse
+    public function toggleFavorite(Request $request, Post $post = null, EntityManagerInterface $em): JsonResponse
     {
-        $etudiant = $em->getRepository(Utilisateur::class)->find(1);
+        if (!$post) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Post introuvable'
+            ], 404);
+        }
+    
+        $user = $em->getRepository(Utilisateur::class)->find(1);
         
-        $favoris = $em->getRepository(Favoris::class)
-            ->findOneBy([
-                'post' => $post,
-                'utilisateur' => $etudiant
-            ]);
+        if (!$user) {
+            return $this->json([
+                'success' => false,
+                'error' => 'Utilisateur avec ID 1 introuvable'
+            ], 404);
+        }
+    
+        $favoris = $em->getRepository(Favoris::class)->findOneBy([
+            'post' => $post,
+            'utilisateur' => $user
+        ]);
     
         if ($favoris) {
             $em->remove($favoris);
+            $isFavorite = false;
+        } else {
+            $favoris = new Favoris();
+            $favoris->setPost($post);
+            $favoris->setUtilisateur($user);
+            $em->persist($favoris);
+            $isFavorite = true;
+        }
+    
+        try {
             $em->flush();
             
             return $this->json([
                 'success' => true,
-                'isFavorite' => false,
-                'message' => 'Retiré des favoris'
+                'isFavorite' => $isFavorite,
+                'favoritesCount' => $em->getRepository(Favoris::class)->count(['post' => $post])
             ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
         }
-        
-        return $this->json([
-            'success' => false,
-            'message' => 'Non trouvé dans les favoris'
-        ], 404);
     }
+    
     
     #[Route('/mes-favoris', name: 'app_favorites')]
-    public function favorites(EntityManagerInterface $em): Response
-    {
-        // Récupérer l'étudiant avec ID 1
-        $etudiant = $em->getRepository(Utilisateur::class)->find(1);
-        
-        if (!$etudiant) {
-            $this->addFlash('error', 'Étudiant introuvable');
-            return $this->redirectToRoute('app_posts');
-        }
+public function favorites(EntityManagerInterface $em): Response
+{
+    // Récupérer l'utilisateur avec ID 1
+    $user = $em->getRepository(Utilisateur::class)->find(1);
     
-        // Récupérer les favoris avec jointure
-        $favoris = $em->getRepository(Favoris::class)
-            ->createQueryBuilder('f')
-            ->join('f.post', 'p')
-            ->where('f.utilisateur = :etudiant')
-            ->setParameter('etudiant', $etudiant)
-            ->orderBy('f.id_favoris', 'DESC')
-            ->getQuery()
-            ->getResult();
-    
-        // Extraire les posts
-        $posts = array_map(function($f) { return $f->getPost(); }, $favoris);
-    
-        return $this->render('post/favorites.html.twig', [
-            'posts' => $posts,
-            'etudiant_id' => 1 // Pour référence dans le template
-        ]);
+    if (!$user) {
+        $this->addFlash('error', 'Utilisateur introuvable');
+        return $this->redirectToRoute('app_posts');
     }
+    
+    $favoris = $em->getRepository(Favoris::class)
+        ->createQueryBuilder('f')
+        ->join('f.post', 'p')
+        ->where('f.utilisateur = :user')
+        ->setParameter('user', $user)
+        ->orderBy('f.id_favoris', 'DESC')
+        ->getQuery()
+        ->getResult();
+    
+    $posts = array_map(function($f) { return $f->getPost(); }, $favoris);
+    
+    return $this->render('post/favorites.html.twig', [
+        'posts' => $posts
+    ]);
+}
 }

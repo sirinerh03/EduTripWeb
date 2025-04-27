@@ -1,74 +1,150 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Posts Favoris{% endblock %}
+{% block title %}Mes Favoris{% endblock %}
 
-{% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Mes Posts Favoris</h1>
-    
+{% block content %}
+<style>
+    .post-image {
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .post-image:hover {
+        transform: scale(1.05);
+    }
+
+    .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .favorite-btn {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .favorite-btn:hover {
+        background-color: #e0a800;
+        transform: scale(1.1);
+    }
+
+    .image-frame {
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 16px;
+        margin-bottom: 15px;
+    }
+     h1.mb-4 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color:rgb(80, 220, 230);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    h1.mb-4 i {
+        font-size: 2.8rem;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<div class="container py-4">
+    <h1 class="mb-4">
+        <i class="fas fa-star text-warning"></i> Mes Favoris 
+    </h1>
+
     {% if posts is empty %}
         <div class="alert alert-info">
-            Vous n'avez aucun post favori pour le moment.
+            Aucun post favori pour cet étudiant
         </div>
     {% else %}
         <div class="row">
             {% for post in posts %}
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        {% if post.image %}
-                            <img src="{{ asset('uploads/posts/' ~ post.image) }}" class="card-img-top" alt="Image du post">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ post.categorie }}</h5>
-                            <p class="card-text">{{ post.contenu }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">
-                                    Posté le {{ post.dateCreation|date('d/m/Y H:i') }}
-                                </small>
-                                <div>
-                                    <button class="btn btn-sm btn-outline-danger favorite-btn active"
-                                            data-post-id="{{ post.id_post }}"
-                                            onclick="toggleFavorite({{ post.id_post }}, this)">
-                                        <i class="fas fa-star"></i>
-                                    </button>
-                                    <span class="badge bg-primary ms-2">
-                                        {{ post.likes ?? 0 }} <i class="fas fa-thumbs-up"></i>
-                                    </span>
-                                </div>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                   {% if post.image %}
+                        <div class="text-center">
+                            <div class="image-frame">
+                                <img src="{{ asset('images/' ~ post.image) }}" 
+                                     class="post-image img-fluid"
+                                     alt="Post image">
                             </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ post.categorie }}</h5>
+                        <p class="card-text flex-grow-1">{{ post.contenu|slice(0, 100) }}...</p>
+                        
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                {{ post.dateCreation|date('d/m/Y') }}
+                            </small>
+                            
+                            <button class="favorite-btn"
+                                    data-post-id="{{ post.idPost }}"
+                                    title="Retirer des favoris">
+                                <i class="fas fa-star"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
     {% endif %}
-</div>
-{% endblock %}
 
-{% block javascripts %}
-{{ parent() }}
+</div>
+
 <script>
-// Reprendre la même fonction JavaScript que pour la page des posts
-function toggleFavorite(postId, button) {
-    fetch(`/post/${postId}/favorite`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            if (!data.isFavorite) {
-                // Si le post est retiré des favoris, actualiser la page
+// Gestion du retrait des favoris
+document.querySelectorAll('.favorite-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const postId = this.dataset.postId;
+        
+        fetch(`/post/${postId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && !data.isFavorite) {
+                // Actualiser la page après suppression
                 window.location.reload();
             }
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
+        })
+        .catch(error => console.error('Error:', error));
     });
-}
+});
 </script>
 {% endblock %}

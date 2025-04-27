@@ -769,16 +769,19 @@ async function ajouterCommentaire(event, postId) {
     });
 });
 function toggleFavorite(postId, button) {
-    fetch(`/post/${postId}/favorite`, {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(`/post/${postId}/favorite`, {  // هنا نحط ال-backticks `
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
         }
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            return response.json().then(err => { throw err; });
         }
         return response.json();
     })
@@ -794,18 +797,20 @@ function toggleFavorite(postId, button) {
                 icon.classList.add('far');
                 button.title = 'Ajouter aux favoris';
             }
-            
-            // Mettre à jour le compteur
-            const counter = button.nextElementSibling;
-            if (counter && counter.classList.contains('favorites-count')) {
-                counter.textContent = data.favoritesCount;
-            }
+            // Animation
+            button.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 300);
+        } else {
+            throw new Error(data.error || 'Erreur inconnue');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Une erreur est survenue lors de la mise à jour des favoris');
+        alert(error.message || 'Erreur lors de la mise à jour des favoris');
     });
 }
+
 </script>
 {% endblock %}
