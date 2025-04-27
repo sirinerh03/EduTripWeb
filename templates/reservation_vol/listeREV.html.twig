@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver un vol{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #e0f7fa, #ffffff);
+        font-family: 'Segoe UI', sans-serif;
+        color: #004d40;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    h1 {
+        color: #00bfa5;
+        font-weight: bold;
+    }
+
+    .ticket {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin: 30px 0;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border-left: 6px solid #00bfa5;
+    }
+
+    .ticket-header {
+        padding: 20px;
+        background: #00bfa5;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ticket-header h5 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .ticket-body {
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        border-top: 2px dashed #ccc;
+        border-bottom: 2px dashed #ccc;
+    }
+
+    .ticket-body .info {
+        flex: 1 1 45%;
+        margin-bottom: 10px;
+    }
+
+    .ticket-body .info span {
+        display: block;
+        font-weight: bold;
+        color: #00796b;
+        margin-bottom: 3px;
+    }
+
+    .ticket-footer {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+    }
+
+    .btn-reserver {
+        background-color: #00bfa5;
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 8px 16px;
+        border-radius: 20px;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-reserver:hover {
+        background-color: #008e76;
+    }
+
+    .no-vols {
+        background-color: #e0f2f1;
+        border: 1px dashed #00bfa5;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        color: #00695c;
+        margin-top: 50px;
+    }
+
+    .animated-plane {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        background-image: url('https://cdn-icons-png.flaticon.com/512/7888/7888729.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fly 20s linear infinite;
+        opacity: 0.2;
+        z-index: 0;
+    }
+
+    @keyframes fly {
+        0% {
+            top: 100%;
+            left: -10%;
+            transform: rotate(45deg);
+        }
+        50% {
+            top: 50%;
+            left: 50%;
+            transform: rotate(10deg);
+        }
+        100% {
+            top: -10%;
+            left: 110%;
+            transform: rotate(-10deg);
+        }
+    }
+</style>
+
+<!-- Avions animés -->
+<div class="animated-plane" style="animation-delay: 0s;"></div>
+<div class="animated-plane" style="animation-delay: 5s; animation-duration: 25s;"></div>
+<div class="animated-plane" style="animation-delay: 10s; animation-duration: 22s;"></div>
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">🎫 Liste des billets disponibles</h1>
+
+    <form method="get" action="{{ path('app_reservation_vol') }}" class="mb-4">
+        <div class="d-flex justify-content-between">
+            <div class="form-group">
+                <label for="aeroportDepart">Départ</label>
+                <input type="text" name="aeroportDepart" id="aeroportDepart" class="form-control" placeholder="Départ" value="{{ app.request.query.get('aeroportDepart') }}">
+            </div>
+            <div class="form-group">
+                <label for="aeroportArrivee">Arrivée</label>
+                <input type="text" name="aeroportArrivee" id="aeroportArrivee" class="form-control" placeholder="Arrivée" value="{{ app.request.query.get('aeroportArrivee') }}">
+            </div>
+            <div class="form-group">
+                <label for="dateDepart">Date de départ</label>
+                <input type="date" name="dateDepart" id="dateDepart" class="form-control" value="{{ app.request.query.get('dateDepart') }}">
+            </div>
+            <button type="submit" class="btn btn-primary align-self-end">Rechercher</button>
+        </div>
+    </form>
+
+    {% if vols is not empty %}
+        {% for vol in vols %}
+            <div class="ticket">
+                <div class="ticket-header">
+                    <h5>✈️ {{ vol.aeroportDepart }} → {{ vol.aeroportArrivee }}</h5>
+                    <span>#{{ vol.numVol }}</span>
+                </div>
+                <div class="ticket-body">
+                    <div class="info">
+                        <span>🕐 Départ</span>
+                        {{ vol.dateDepart ? vol.dateDepart|date('d/m/Y H:i') : 'Non défini' }}
+                    </div>
+                    <div class="info">
+                        <span>🕓 Arrivée</span>
+                        {{ vol.dateArrivee ? vol.dateArrivee|date('d/m/Y H:i') : 'Non défini' }}
+                    </div>
+                    <div class="info">
+                        <span>🪑 Places</span>
+                        {{ vol.placesDispo }}
+                    </div>
+                    <div class="info">
+                        <span>💰 Prix</span>
+                        {{ vol.prixVol }} TND
+                    </div>
+                </div>
+                <div class="ticket-footer">
+                    <small>Généré par VolFinder™</small>
+               <a href="{{ path('ticket_new', {idVol: vol.getIdvol()}) }}" class="btn-reserver">Réserver</a>                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-vols">
+            Aucun vol trouvé pour le moment.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

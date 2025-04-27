@@ -1,0 +1,121 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Détails de la réservation{% endblock %}
+
+{% block Content %}
+<div class="reservation-details-container">
+    <h2 class="page-title">Détails de la réservation</h2>
+
+    <table class="table table-bordered detail-table">
+        <tbody>
+            <tr>
+                <th>Identifiant</th>
+                <td>{{ reservation_hebergement.idReservationh }}</td>
+            </tr>
+            <tr>
+                <th>Date de début</th>
+                <td>{{ reservation_hebergement.dateD ? reservation_hebergement.dateD|date('Y-m-d') : 'Non spécifiée' }}</td>
+            </tr>
+            <tr>
+                <th>Date de fin</th>
+                <td>{{ reservation_hebergement.dateF ? reservation_hebergement.dateF|date('Y-m-d') : 'Non spécifiée' }}</td>
+            </tr>
+            <tr>
+                <th>Commentaire</th>
+                <td>{{ reservation_hebergement.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <a href="{{ path('app_reservation_hebergement_index') }}" class="btn-action">⬅ Retour à la liste</a>
+        <a href="{{ path('app_reservation_hebergement_edit', {'id_reservationh': reservation_hebergement.idReservationh}) }}" class="btn-action">✏ Modifier</a>
+        <div class="delete-form">
+            {{ include('reservation_hebergement/_delete_form.html.twig') }}
+        </div>
+    </div>
+</div>
+
+<div style="height: 60px;"></div> {# Espace pour le footer #}
+
+<style>
+    .reservation-details-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #06BBCC;
+        font-size: 28px;
+    }
+
+    .detail-table th {
+        background-color: #f0f8fa;
+        width: 200px;
+        font-weight: bold;
+    }
+
+    .detail-table td {
+        background-color: #fff;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-action {
+        background-color: #06BBCC;
+        color: white;
+        padding: 10px 20px;
+        font-weight: bold;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-action:hover {
+        background-color: #0498a8;
+    }
+
+    .delete-form form button {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-form form button:hover {
+        background-color: #a71d2a;
+    }
+
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        background: white;
+        border-top: 1px solid #ddd;
+        z-index: 10;
+    }
+</style>
+{% endblock %}

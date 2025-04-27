@@ -1,0 +1,8 @@
+<h1>Confirmation de réservation #{{ reservation.id }}</h1>
+<p>Bonjour {{ reservation.prenom }},</p>
+<p>Votre réservation pour le vol {{ reservation.vol.numVol }} est confirmée.</p>
+<ul>
+    <li>Départ : {{ reservation.vol.aeroportDepart }}</li>
+    <li>Arrivée : {{ reservation.vol.aeroportArrivee }}</li>
+    <li>Prix : {{ reservation.prix }} €</li>
+</ul>

@@ -1,0 +1,205 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Gestion des vols{% endblock %}
+
+{% block Content %}
+<style>
+    .vol-ticket {
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        background-color: #fff;
+        box-shadow: 0 1px 15px 1px rgba(39, 39, 62, .1);
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .vol-ticket:hover {
+        transform: translateY(-3px);
+    }
+
+    .vol-selected {
+        background-color: #f8f5ff !important;
+        border-color: #7c4dff !important;
+    }
+
+    .divider {
+        border-top: 1px solid #f0f0f0;
+        margin: 12px 0;
+    }
+
+    .btn-outline-secondary {
+        border-color: #7c4dff;
+        color: #7c4dff;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #7c4dff;
+        color: white;
+    }
+
+    .page-title {
+        color: #4b4b4b;
+        font-weight: 500;
+    }
+
+    .btn-outline-success {
+        border-color: #7c4dff;
+        color: #7c4dff;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #7c4dff;
+        color: white;
+    }
+
+    .bi {
+        vertical-align: middle;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                <i class="mdi mdi-airplane"></i>
+            </span> 
+            Gestion des vols
+        </h3>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="text-end mb-4">
+                        <a href="{{ path('vol_new') }}" class="btn btn-gradient-primary btn-rounded">
+                            <i class="mdi mdi-plus-circle-outline me-2"></i> Nouveau vol
+                        </a>
+                    </div>
+
+                    {# === Vols depuis la base de données === #}
+                    <h4 class="text-primary mb-3"> liste des vils disponible </h4>
+                    {% if vols is not empty %}
+                        <div class="row" id="vols-container">
+                            {% for vol in vols %}
+                                <div class="col-md-6 mb-4 vol-item {% if loop.index > 4 %}d-none{% endif %}">
+                                    <div class="vol-ticket p-4" data-vol-id="{{ vol.getIdVol()}}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="text-primary mb-0">
+                                                <i class="mdi mdi-airplane-takeoff"></i> 
+                                                {{ vol.aeroportDepart|default('N/A') }} → {{ vol.aeroportArrivee|default('N/A') }}
+                                            </h5>
+                                            <span class="badge badge-gradient-info">#{{ vol.numVol|default('N/A') }}</span>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><i class="mdi mdi-clock-outline me-2"></i> Départ : {{ vol.dateDepart|date('d/m/Y H:i') }}</p>
+                                                <p><i class="mdi mdi-clock-check-outline me-2"></i> Arrivée : {{ vol.dateArrivee|date('d/m/Y H:i') }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><i class="mdi mdi-seat-recline-extra me-2"></i> Places : {{ vol.placesDispo|default(0) }}</p>
+                                                <p><i class="mdi mdi-cash-multiple me-2"></i> Prix : {{ vol.prixVol|default(0)|number_format(2, ',', ' ') }} TND</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <a href="{{ path('vol_edit', {'id': vol.getIdVol()}) }}" class="btn btn-sm btn-outline-secondary me-2">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </a>
+                                            <form method="post" action="{{ path('vol_delete', {'id': vol.getIdVol()}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce vol ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vol.getIdVol()) }}">
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="mdi mdi-delete"></i> 
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if vols|length > 4 %}
+                            <div class="text-center mt-3">
+                                <button id="toggleVolsBtn" class="btn btn-outline-secondary">
+                                    Voir plus
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info text-center">Aucun vol trouvé dans la base de données</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Gestion de l'affichage "Voir plus"
+        const toggleBtn = document.getElementById("toggleVolsBtn");
+        if (toggleBtn) {
+            let expanded = false;
+            toggleBtn.addEventListener("click", function () {
+                expanded = !expanded;
+                document.querySelectorAll('.vol-item').forEach((item, index) => {
+                    if (index >= 4) item.classList.toggle("d-none", !expanded);
+                });
+                toggleBtn.textContent = expanded ? "Voir moins" : "Voir plus";
+                toggleBtn.blur(); // Enlève le focus après clic
+            });
+        }
+
+        // Sélection des tickets
+        document.querySelectorAll('.vol-ticket').forEach(ticket => {
+            ticket.addEventListener('click', function(e) {
+                // Empêche la sélection si on clique sur un lien ou un bouton
+                if (!e.target.closest('a, button')) {
+                    this.classList.toggle('vol-selected');
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .content-wrapper {
+        padding-bottom: 30px;
+    }
+    
+    .badge-outline-primary {
+        border: 1px solid #7c4dff;
+        color: #7c4dff;
+        background-color: transparent;
+    }
+    
+    .format-datetime {
+        white-space: nowrap;
+    }
+</style>
+{# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+</div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
