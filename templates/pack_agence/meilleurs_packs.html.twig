@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meilleurs Packs{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-4">Nos Meilleurs Packs</h1>
+    <div class="row justify-content-center">
+        {% for pack in meilleursPacks %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg rounded" style="border-left: 5px solid #4CAF50;">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">{{ pack.nomPk }}</h5>
+                        <p class="card-text">
+                            <strong>Prix:</strong> {{ pack.prix }} TND <br>
+                            <strong>Durée:</strong> {{ pack.duree }} jours
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ path('app_pack_agence_show', { 'id_pack': pack.idPack }) }}" class="btn btn-success">Voir Détails</a>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button class="btn btn-primary w-100 py-2">Saisissez cette opportunité !</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

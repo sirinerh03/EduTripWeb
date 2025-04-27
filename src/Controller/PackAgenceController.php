@@ -189,6 +189,20 @@ final class PackAgenceController extends AbstractController
             ]);
         }
     }
+   
+    #[Route('/pack/agence/meilleurs', name: 'app_meilleurs_packs')]
+    public function meilleursPacks(Request $request, Pack_agenceRepository $packAgenceRepository): Response
+    {
+        // Récupérer les 3 packs ayant les prix les plus élevés
+        $meilleursPacks = $packAgenceRepository->findBy([], ['prix' => 'DESC'], 3);
+    
+        return $this->render('pack_agence/meilleurs_packs.html.twig', [
+            'meilleursPacks' => $meilleursPacks,
+        ]);
+    }
+    
+    
+
     
 
 }

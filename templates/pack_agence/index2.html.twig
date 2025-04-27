@@ -47,6 +47,13 @@
 <div class="container">
     <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
 
+    {# Bouton vers les 3 meilleurs packs #}
+    <div class="mb-4">
+        <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning">
+            <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
+        </a>
+    </div>
+
     {# Carte de filtres #}
     <div class="filter-card">
         <form id="filter-form" class="row g-3">
