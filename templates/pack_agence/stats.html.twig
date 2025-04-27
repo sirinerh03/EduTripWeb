@@ -1,38 +1,39 @@
-{# templates/pack_agence/stats.html.twig #}
-
 {% extends 'admin/homeadmin.html.twig' %}
 
-{% block title %}Statistiques des Packs d'Agence{% endblock %}
+{% block title %}Statistiques des Packs{% endblock %}
 
-{% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">Statistiques des Packs d'Agence</h1>
+{% block Content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Statistiques des Packs d'Agence</h1>
 
-        <div id="chart_div"></div>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
 
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart', 'bar']});
-            google.charts.setOnLoadCallback(drawStuff);
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
 
-            function drawStuff() {
-                var data = new google.visualization.arrayToDataTable({{ chartData|raw }});
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable({{ chartData|raw }});
 
-                var options = {
-                    title: 'Nombre de Packs par Année',
-                    chartArea: {width: '50%'},
-                    hAxis: {
-                        title: 'Année',
-                        minValue: 0
-                    },
-                    vAxis: {
-                        title: 'Nombre de Packs'
-                    }
-                };
+            var options = {
+                title: 'Nombre de Packs par Durée',
+                hAxis: { title: 'Durée (jours)' },
+                vAxis: { title: 'Nombre de Packs' },
+                colors: ['#4285F4'],
+                legend: { position: 'none' },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                }
+            };
 
-                var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
-            }
-        </script>
-    </div>
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            window.addEventListener('resize', () => chart.draw(data, options));
+        }
+    </script>
+</div>
 {% endblock %}

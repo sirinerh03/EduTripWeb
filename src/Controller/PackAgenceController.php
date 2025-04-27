@@ -111,13 +111,21 @@ final class PackAgenceController extends AbstractController
         ]);
     }
 
-    #[Route('/pack/agence/{id}', name: 'app_pack_agence_show')]
-    public function show(Pack_agence $packAgence): Response
+    #[Route('/pack/agence/{id_pack}', name: 'app_pack_agence_show', requirements: ['id_pack' => '\d+'])]
+    public function show(int $id_pack, Pack_agenceRepository $packAgenceRepository): Response
     {
+        $packAgence = $packAgenceRepository->find($id_pack);
+    
+        // Vérifier si le pack existe
+        if (!$packAgence) {
+            throw $this->createNotFoundException('Pack d\'agence non trouvé');
+        }
+    
         return $this->render('pack_agence/show.html.twig', [
             'packAgence' => $packAgence,
         ]);
     }
+    
 
     #[Route('/pack/agence/{id}/edit', name: 'app_pack_agence_edit')]
     public function edit(Request $request, Pack_agence $packAgence, EntityManagerInterface $entityManager): Response
@@ -149,28 +157,39 @@ final class PackAgenceController extends AbstractController
         return $this->redirectToRoute('app_pack_agence');
     }
 
-    
+    #[Route('/pack/agence/stats', name: 'app_pack_agence_stats', methods: ['GET'])]
+public function stats(Pack_agenceRepository $packAgenceRepository, EntityManagerInterface $entityManager): Response
+{
+    try {
+        // Utiliser l'EntityManager pour la connexion
+        $connection = $entityManager->getConnection();
 
-    #[Route('/pack/agence/stats', name: 'app_pack_agence_stats')]
-    public function stats(Pack_agenceRepository $packAgenceRepository): Response
-    {
-        // Récupérer le nombre de packs créés chaque année
-        $query = $packAgenceRepository->createQueryBuilder('p')
-            ->select('YEAR(p.dateAjout) as year, COUNT(p.idPack) as packCount')
-            ->groupBy('year')
-            ->orderBy('year', 'ASC')
-            ->getQuery();
+        // Requête SQL pour compter les packs par durée
+        $sql = 'SELECT duree, COUNT(id_pack) AS packCount
+                FROM pack_agence
+                GROUP BY duree
+                ORDER BY duree ASC';
 
-        $stats = $query->getResult();
+        $stmt = $connection->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        $stats = $resultSet->fetchAllAssociative();
 
-        // Format des données pour Google Charts
-        $chartData = [['Année', 'Nombre de packs']];
+        // Préparer les données pour Google Charts
+        $chartData = [['Durée', 'Nombre de packs']];
         foreach ($stats as $stat) {
-            $chartData[] = [$stat['year'], $stat['packCount']];
+            $chartData[] = [(string) $stat['duree'], (int) $stat['packCount']];
         }
 
         return $this->render('pack_agence/stats.html.twig', [
             'chartData' => json_encode($chartData),
         ]);
+        
+    } catch (\Exception $e) {
+        // En cas d'erreur
+        return $this->render('pack_agence/stats.html.twig', [
+            'chartData' => json_encode([['Erreur', 'Erreur lors du chargement des données']]),
+        ]);
     }
+}
+
 }

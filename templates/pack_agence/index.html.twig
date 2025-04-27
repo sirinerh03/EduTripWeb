@@ -19,11 +19,11 @@
         {% endif %}
 
         <div class="mb-4 text-right">
-            <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
-            <a href="{{ path('app_pack_agence_stats') }}" class="btn btn-secondary btn-sm">
-        <i class="fas fa-chart-bar"></i> Stats
+    <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
+    <a href="{{ path('app_pack_agence_stats') }}" class="btn btn-info btn-sm">
+        <i class="fas fa-chart-bar"></i> Statistiques
     </a>
-        </div>
+</div>
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
@@ -44,8 +44,8 @@
                             <td>{{ pack.duree }}</td>
                             <td>{{ pack.DateAjout|date('d/m/Y') }}</td>
                             <td>
-                                <a href="{{ path('app_pack_agence_show', {'id': pack.idPack}) }}" class="btn btn-info btn-sm">Voir</a>
-                                <a href="{{ path('app_pack_agence_edit', {'id': pack.idPack}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                               <a href="{{ path('app_pack_agence_show', {'id_pack': pack.idPack}) }}" class="btn btn-info btn-sm">Voir</a>
+                               <a href="{{ path('app_pack_agence_edit', {'id': pack.idPack}) }}" class="btn btn-warning btn-sm">Modifier</a>
                                 <form action="{{ path('app_pack_agence_delete', {'id': pack.idPack}) }}" method="post" style="display:inline;">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pack.idPack) }}">
                                     <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
