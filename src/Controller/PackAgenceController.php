@@ -158,38 +158,37 @@ final class PackAgenceController extends AbstractController
     }
 
     #[Route('/pack/agence/stats', name: 'app_pack_agence_stats', methods: ['GET'])]
-public function stats(Pack_agenceRepository $packAgenceRepository, EntityManagerInterface $entityManager): Response
-{
-    try {
-        // Utiliser l'EntityManager pour la connexion
-        $connection = $entityManager->getConnection();
-
-        // Requête SQL pour compter les packs par durée
-        $sql = 'SELECT duree, COUNT(id_pack) AS packCount
-                FROM pack_agence
-                GROUP BY duree
-                ORDER BY duree ASC';
-
-        $stmt = $connection->prepare($sql);
-        $resultSet = $stmt->executeQuery();
-        $stats = $resultSet->fetchAllAssociative();
-
-        // Préparer les données pour Google Charts
-        $chartData = [['Durée', 'Nombre de packs']];
-        foreach ($stats as $stat) {
-            $chartData[] = [(string) $stat['duree'], (int) $stat['packCount']];
+    public function stats(Pack_agenceRepository $packAgenceRepository, EntityManagerInterface $entityManager): Response
+    {
+        try {
+            $connection = $entityManager->getConnection();
+    
+            // Nouvelle requête : groupement par DATE d'ajout
+            $sql = 'SELECT DATE_FORMAT(date_ajout, "%Y-%m-%d") AS ajoutDate, COUNT(id_pack) AS packCount
+                    FROM pack_agence
+                    GROUP BY ajoutDate
+                    ORDER BY ajoutDate ASC';
+    
+            $stmt = $connection->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+            $stats = $resultSet->fetchAllAssociative();
+    
+            // Préparer les données pour Google Charts
+            $chartData = [['Date d\'ajout', 'Nombre de packs']];
+            foreach ($stats as $stat) {
+                $chartData[] = [$stat['ajoutDate'], (int) $stat['packCount']];
+            }
+    
+            return $this->render('pack_agence/stats.html.twig', [
+                'chartData' => json_encode($chartData),
+            ]);
+    
+        } catch (\Exception $e) {
+            return $this->render('pack_agence/stats.html.twig', [
+                'chartData' => json_encode([['Erreur', 'Erreur lors du chargement des données']]),
+            ]);
         }
-
-        return $this->render('pack_agence/stats.html.twig', [
-            'chartData' => json_encode($chartData),
-        ]);
-        
-    } catch (\Exception $e) {
-        // En cas d'erreur
-        return $this->render('pack_agence/stats.html.twig', [
-            'chartData' => json_encode([['Erreur', 'Erreur lors du chargement des données']]),
-        ]);
     }
-}
+    
 
 }

@@ -19,11 +19,19 @@
         {% endif %}
 
         <div class="mb-4 text-right">
-    <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
-    <a href="{{ path('app_pack_agence_stats') }}" class="btn btn-info btn-sm">
-        <i class="fas fa-chart-bar"></i> Statistiques
+    <a href="{{ path('app_pack_agence_new') }}" 
+       class="btn btn-primary btn-sm d-inline-flex align-items-center justify-content-center" 
+       style="width: 170px; height: 40px;">
+        <i class="fas fa-plus mr-2"></i> Nouveau Pack
+    </a>
+
+    <a href="{{ path('app_pack_agence_stats') }}" 
+       class="btn btn-info btn-sm d-inline-flex align-items-center justify-content-center" 
+       style="width: 170px; height: 40px;">
+        <i class="fas fa-chart-bar mr-2"></i> Statistiques
     </a>
 </div>
+
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
