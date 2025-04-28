@@ -1,11 +1,11 @@
-{# templates/pack_agence/calendar.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Calendrier des Packs{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {# Le fichier CSS du FullCalendarBundle est déjà inclus automatiquement #}
+    {# Ajout du CSS de FullCalendar #}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -19,21 +19,21 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {# Le bundle FullCalendar se charge automatiquement de l'intégration du JS nécessaire #}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: 'dayGridMonth', // Choix de la vue initiale
                 locale: 'fr',
-                events: {{ events|json_encode|raw }},
+                events: {{ events|json_encode|raw }}, // Injection des événements dans le calendrier
                 eventClick: function(info) {
                     alert('Pack: ' + info.event.title);
                 }
             });
 
-            calendar.render();
+            calendar.render(); // Rendre le calendrier
         });
     </script>
 {% endblock %}

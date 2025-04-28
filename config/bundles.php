@@ -16,5 +16,6 @@ return [
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
-    AncaRebeca\FullCalendarBundle\FullCalendarBundle::class => ['all' => true],
+    //FMLabs\FullCalendarBundle\FMLabsFullCalendarBundle::class => ['all' => true],
+
 ];
