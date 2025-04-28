@@ -1,0 +1,39 @@
+{# templates/pack_agence/calendar.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des Packs{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Le fichier CSS du FullCalendarBundle est déjà inclus automatiquement #}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Calendrier des Packs</h1>
+
+        {# Affichage du calendrier #}
+        <div id="calendar"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Le bundle FullCalendar se charge automatiquement de l'intégration du JS nécessaire #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                events: {{ events|json_encode|raw }},
+                eventClick: function(info) {
+                    alert('Pack: ' + info.event.title);
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}

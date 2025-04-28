@@ -1,0 +1,6 @@
+ancarebeca_full_calendar:
+    theme: true
+    locale: 'fr'
+    defaultView: 'dayGridMonth'
+    events:
+        - { route: 'calendar_events' }

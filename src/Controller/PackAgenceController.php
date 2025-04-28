@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Rest\Client;
+use AncaRebeca\FullCalendarBundle\FullCalendarBundle;
+
+
+
+
 
 final class PackAgenceController extends AbstractController
 {
@@ -198,6 +203,30 @@ final class PackAgenceController extends AbstractController
     
         return $this->render('pack_agence/meilleurs_packs.html.twig', [
             'meilleursPacks' => $meilleursPacks,
+        ]);
+    }
+    #[Route('/pack/agence/calendar', name: 'calendar')]
+    public function calendar(Pack_agenceRepository $packAgenceRepository): Response
+    {
+        // Récupération des packs
+        $packs = $packAgenceRepository->findAll();
+
+        // Préparation des événements au format FullCalendar
+        $events = [];
+        foreach ($packs as $pack) {
+            $events[] = [
+                'id' => $pack->getIdPack(),
+                'title' => $pack->getNomPk(),
+                'start' => $pack->getDateAjout()->format('Y-m-d'),
+                'backgroundColor' => '#3788d8',
+                'borderColor' => '#3788d8',
+                'textColor' => '#ffffff',
+            ];
+        }
+
+        // Envoi des événements à la vue
+        return $this->render('pack_agence/calendar.html.twig', [
+            'events' => $events,
         ]);
     }
     
