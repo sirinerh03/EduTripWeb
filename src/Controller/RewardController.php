@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\SpinReward;
 use App\Repository\SpinRewardRepository;
+use App\Service\DompdfService;
 use App\Service\PdfService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ class RewardController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function generateRewardPdf(
         SpinReward $reward,
-        PdfService $pdfService,
+        DompdfService $dompdfService,
         SpinRewardRepository $spinRewardRepository
     ): Response
     {
@@ -48,8 +49,8 @@ class RewardController extends AbstractController
             return $this->redirectToRoute('app_avis_index');
         }
 
-        // Générer le PDF
-        return $pdfService->generatePdf(
+        // Générer le PDF avec le nouveau service DompdfService
+        return $dompdfService->generatePdf(
             'pdf/reward.html.twig',
             [
                 'reward' => $reward,

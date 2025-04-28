@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reward;
 use App\Repository\RewardRepository;
+use App\Service\DompdfService;
 use App\Service\PdfService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class PdfController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function generateRewardPdf(
         Reward $reward,
-        PdfService $pdfService
+        DompdfService $dompdfService
     ): Response
     {
         // Vérifier que l'utilisateur est bien l'auteur de l'avis
@@ -24,8 +25,8 @@ class PdfController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à accéder à cette récompense');
         }
 
-        // Générer le PDF
-        return $pdfService->generatePdf(
+        // Générer le PDF avec le nouveau service DompdfService
+        return $dompdfService->generatePdf(
             'pdf/reward.html.twig',
             [
                 'reward' => $reward,

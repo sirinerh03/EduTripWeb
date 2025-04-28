@@ -23,11 +23,6 @@ class AdminAvisController extends AbstractController
             // Récupérer les paramètres de recherche et filtrage avec des valeurs par défaut
             $search = $request->query->get('search', '');
             $rating = $request->query->get('rating', '');
-            $userId = $request->query->get('user_id', '');
-            $dateFrom = $request->query->get('date_from', '');
-            $dateTo = $request->query->get('date_to', '');
-            $sortField = $request->query->get('sort_field', 'createdAt');
-            $sortOrder = $request->query->get('sort_order', 'DESC');
 
             // Créer une requête personnalisée pour la recherche et le filtrage
             $queryBuilder = $entityManager->createQueryBuilder();
@@ -41,27 +36,15 @@ class AdminAvisController extends AbstractController
                     ->setParameter('search', '%' . $search . '%');
             }
 
+
+
+            // Filtrage par note
             if (!empty($rating)) {
                 $queryBuilder->andWhere('a.rating = :rating')
-                    ->setParameter('rating', $rating);
+                    ->setParameter('rating', (int)$rating);
             }
 
-            if (!empty($userId)) {
-                $queryBuilder->andWhere('a.user = :userId')
-                    ->setParameter('userId', $userId);
-            }
-
-            // Suppression des filtres de date
-
-            // Appliquer le tri
-            if ($sortField === 'createdAt') {
-                $queryBuilder->orderBy('a.createdAt', $sortOrder);
-            } elseif ($sortField === 'rating') {
-                $queryBuilder->orderBy('a.rating', $sortOrder);
-            } elseif ($sortField === 'user') {
-                $queryBuilder->orderBy('u.nom', $sortOrder)
-                    ->addOrderBy('u.prenom', $sortOrder);
-            }
+            // Pas de tri
 
             // Exécuter la requête
             $allAvis = $queryBuilder->getQuery()->getResult();
@@ -73,12 +56,7 @@ class AdminAvisController extends AbstractController
                 'all_avis' => $allAvis,
                 'users' => $users,
                 'search' => $search,
-                'rating' => $rating,
-                'user_id' => $userId,
-                'date_from' => $dateFrom,
-                'date_to' => $dateTo,
-                'sort_field' => $sortField,
-                'sort_order' => $sortOrder
+                'rating' => $rating
             ]);
         } catch (\Exception $e) {
             // En cas d'erreur, afficher un message et retourner une liste vide
@@ -88,12 +66,7 @@ class AdminAvisController extends AbstractController
                 'all_avis' => [],
                 'users' => $userRepository->findAll(),
                 'search' => '',
-                'rating' => '',
-                'user_id' => '',
-                'date_from' => '',
-                'date_to' => '',
-                'sort_field' => 'createdAt',
-                'sort_order' => 'DESC'
+                'rating' => ''
             ]);
         }
     }

@@ -26,12 +26,15 @@ class RecaptchaType extends AbstractType
             'constraints' => [
                 new Recaptcha(),
             ],
+            'error_bubbling' => true,
+            'invalid_message' => 'La vérification reCAPTCHA a échoué. Veuillez réessayer.',
         ]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['site_key'] = $this->recaptchaService->getSiteKey();
+        $view->vars['attr']['class'] = 'g-recaptcha-response';
     }
 
     public function getParent()

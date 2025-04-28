@@ -78,14 +78,11 @@
                                     <label for="_remember_me" class="form-check-label">Se souvenir de moi</label>
                                 </div>
 
-                                {# Affichage du Captcha #}
+                                {# Affichage du reCAPTCHA #}
                                 <div class="mb-3">
-                                    <label for="captcha" class="form-label">Veuillez saisir le code ci-dessous</label>
-                                    <div class="mb-2 border rounded p-2">
-                                        {{ render(controller('App\\Controller\\CaptchaController::generate')) }}
-                                    </div>
-                                    <input type="text" name="captcha" id="captcha" class="form-control" required>
+                                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
                                 </div>
+                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
                                 <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
                                     <button class="btn btn-primary btn-lg px-5" type="submit">Se connecter</button>

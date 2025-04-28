@@ -80,6 +80,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'confirmation_token', type: 'string', length: 255, nullable: true)]
     private ?string $confirmationToken = null;
 
+    // ✅ Date de création du token de confirmation
+    #[ORM\Column(name: 'confirmation_token_created_at', type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $confirmationTokenCreatedAt = null;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
@@ -222,6 +226,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setConfirmationToken(?string $confirmationToken): static
     {
         $this->confirmationToken = $confirmationToken;
+
+        if ($confirmationToken !== null) {
+            $this->confirmationTokenCreatedAt = new \DateTime();
+        } else {
+            $this->confirmationTokenCreatedAt = null;
+        }
+
+        return $this;
+    }
+
+    public function getConfirmationTokenCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->confirmationTokenCreatedAt;
+    }
+
+    public function setConfirmationTokenCreatedAt(?\DateTimeInterface $confirmationTokenCreatedAt): static
+    {
+        $this->confirmationTokenCreatedAt = $confirmationTokenCreatedAt;
 
         return $this;
     }

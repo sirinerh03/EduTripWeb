@@ -38,44 +38,46 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Recherche et filtrage</h4>
-            <form method="get" action="{{ path('admin_avis_index') }}" class="row g-3">
-              <div class="col-md-4">
-                <label for="search" class="form-label">Recherche par nom</label>
-                <input type="text" class="form-control" id="search" name="search" value="{{ search|default('') }}" placeholder="Nom ou prénom d'utilisateur">
-              </div>
-              <div class="col-md-4">
-                <label for="rating" class="form-label">Filtrer par note</label>
-                <select class="form-select" id="rating" name="rating">
-                  <option value="">Toutes les notes</option>
-                  {% for i in 1..5 %}
-                    <option value="{{ i }}" {% if rating is defined and rating == i %}selected{% endif %}>{{ i }} étoile{% if i > 1 %}s{% endif %}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-gradient-primary w-100">
-                  <i class="mdi mdi-magnify me-1"></i> Rechercher
-                </button>
-              </div>
-              <!-- Champ utilisateur caché -->
+            <h4 class="card-title">Recherche Et Filtrage</h4>
 
-              <!-- Les champs de date ont été supprimés -->
-              <div class="col-md-6">
-                <label for="sort_field" class="form-label">Trier par</label>
-                <div class="d-flex">
-                  <select class="form-select me-2" id="sort_field" name="sort_field">
-                    <option value="createdAt" {% if sort_field is defined and sort_field == 'createdAt' %}selected{% endif %}>Date</option>
-                    <option value="rating" {% if sort_field is defined and sort_field == 'rating' %}selected{% endif %}>Note</option>
-                    <option value="user" {% if sort_field is defined and sort_field == 'user' %}selected{% endif %}>Utilisateur</option>
-                  </select>
-                  <select class="form-select" id="sort_order" name="sort_order">
-                    <option value="DESC" {% if sort_order is defined and sort_order == 'DESC' %}selected{% endif %}>Décroissant</option>
-                    <option value="ASC" {% if sort_order is defined and sort_order == 'ASC' %}selected{% endif %}>Croissant</option>
-                  </select>
+            <!-- Recherche par nom -->
+            <div class="mb-4">
+              <h5>Recherche par nom</h5>
+              <form method="get" action="{{ path('admin_avis_index') }}" class="row g-3">
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="search" name="search" value="{{ search|default('') }}" placeholder="Nom ou prénom d'utilisateur">
+                  <input type="hidden" name="rating" value="{{ rating|default('') }}">
                 </div>
-              </div>
-            </form>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-gradient-primary w-100">
+                    <i class="mdi mdi-magnify me-1"></i> Rechercher
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Filtrage par note -->
+            <div class="mb-4">
+              <h5>Filtrer par note</h5>
+              <form method="get" action="{{ path('admin_avis_index') }}" class="row g-3">
+                <div class="col-md-8">
+                  <select class="form-select" id="rating" name="rating">
+                    <option value="">Toutes les notes</option>
+                    {% for i in 1..5 %}
+                      <option value="{{ i }}" {% if rating is defined and rating == i %}selected{% endif %}>{{ i }} étoile{% if i > 1 %}s{% endif %}</option>
+                    {% endfor %}
+                  </select>
+                  <input type="hidden" name="search" value="{{ search|default('') }}">
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-gradient-success w-100">
+                    <i class="mdi mdi-filter me-1"></i> Filtrer
+                  </button>
+                </div>
+              </form>
+            </div>
+
+
           </div>
         </div>
       </div>

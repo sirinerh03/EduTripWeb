@@ -135,6 +135,10 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('captcha', RecaptchaType::class, [
+                'label' => false,
+                'mapped' => false,
+            ])
         ;
     }
 

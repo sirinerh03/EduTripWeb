@@ -1,5 +1,18 @@
 {# templates/form/recaptcha_widget.html.twig #}
 {% block recaptcha_widget %}
-    <div class="g-recaptcha mb-3" data-sitekey="{{ site_key }}"></div>
+    <div class="mb-3">
+        <div class="g-recaptcha" data-sitekey="{{ site_key }}" data-callback="onRecaptchaSuccess"></div>
+        <input type="hidden" id="{{ id }}" name="{{ full_name }}" value="" {{ block('widget_attributes') }}>
+        {% if errors|length > 0 %}
+            <div class="invalid-feedback d-block">
+                {{ errors[0].message }}
+            </div>
+        {% endif %}
+    </div>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onRecaptchaSuccess(token) {
+            document.getElementById('{{ id }}').value = token;
+        }
+    </script>
 {% endblock %}

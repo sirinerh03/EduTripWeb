@@ -7,10 +7,13 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Form\ProfileType;
 use App\Form\LoginFormType;
+use App\Service\ApiEmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -22,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class SecurityController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
-    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, \App\Service\RecaptchaService $recaptchaService): Response
     {
         // If user is already logged in, redirect based on role
         if ($this->getUser()) {
@@ -38,18 +41,27 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'error' => $error
+            'error' => $error,
+            'recaptcha_site_key' => $recaptchaService->getSiteKey()
         ]);
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ValidatorInterface $validator, \App\Service\EmailValidatorService $emailValidator): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ValidatorInterface $validator, \App\Service\EmailValidatorService $emailValidator, \App\Service\RecaptchaService $recaptchaService, ApiEmailVerifier $emailVerifier): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            // Vérifier le reCAPTCHA
+            $recaptchaResponse = $form->get('captcha')->getData();
+            if (!$recaptchaService->verify($recaptchaResponse, $request->getClientIp())) {
+                $this->addFlash('error', 'La vérification reCAPTCHA a échoué. Veuillez réessayer.');
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
             // Vérifier que les mots de passe correspondent
             if ($form->get('password')->getData() !== $form->get('confirmPassword')->getData()) {
                 $this->addFlash('error', 'Les mots de passe ne correspondent pas.');
@@ -100,6 +112,7 @@ class SecurityController extends AbstractController
 
             // Vérifier si l'email est valide avec notre service de validation avancé
             $email = $form->get('mail')->getData();
+            // Assurons-nous que l'email n'est pas null avant de le valider
             [$isValidEmail, $emailErrorMessage] = $emailValidator->validateEmail($email);
 
             if (!$isValidEmail) {
@@ -121,7 +134,7 @@ class SecurityController extends AbstractController
                 // Définir le rôle et le statut
                 $user->setRole($form->get('role')->getData());
                 $user->setStatus('active');
-                $user->setIsVerified(true); // L'email est déjà vérifié par notre service
+                $user->setIsVerified(false); // L'email doit être vérifié
 
                 // Vérifier si l'email est déjà utilisé
                 $existingUser = $entityManager->getRepository(User::class)->findOneBy(['mail' => $user->getMail()]);
@@ -136,7 +149,18 @@ class SecurityController extends AbstractController
                     $entityManager->persist($user);
                     $entityManager->flush();
 
-                    $this->addFlash('success', 'Votre compte a été créé avec succès ! Votre adresse email a été validée.');
+                    // Envoyer l'email de vérification
+                    $emailVerifier->sendEmailConfirmation(
+                        'app_verify_email',
+                        $user,
+                        (new TemplatedEmail())
+                            ->from(new Address('noreply@edutrip.com', 'EduTrip'))
+                            ->to($user->getMail())
+                            ->subject('Confirmation de votre adresse email')
+                            ->htmlTemplate('registration/confirmation_email.html.twig')
+                    );
+
+                    $this->addFlash('success', 'Votre compte a été créé avec succès ! Veuillez vérifier votre email pour activer votre compte.');
                     return $this->redirectToRoute('app_login');
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Une erreur est survenue lors de la création de votre compte : ' . $e->getMessage());

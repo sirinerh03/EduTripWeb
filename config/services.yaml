@@ -9,6 +9,8 @@ parameters:
     # Clés Google reCAPTCHA (clés de test)
     recaptcha.site_key: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
     recaptcha.secret_key: '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+    # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
+    abstract_api.email_validation_key: 'YOUR_API_KEY'
 
 # ------------------------------------------------------------------
 # SERVICES

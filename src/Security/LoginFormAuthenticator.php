@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
-use App\Service\CaptchaService;
+use App\Service\RecaptchaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,13 +28,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     private $entityManager;
     private $urlGenerator;
-    private $captchaService;
+    private $recaptchaService;
+    private $emailValidator;
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CaptchaService $captchaService)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $urlGenerator,
+        RecaptchaService $recaptchaService,
+        \App\Service\EmailValidatorService $emailValidator
+    ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
-        $this->captchaService = $captchaService;
+        $this->recaptchaService = $recaptchaService;
+        $this->emailValidator = $emailValidator;
     }
 
     public function authenticate(Request $request): Passport
@@ -45,24 +51,23 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $csrfToken = $request->request->get('_csrf_token', '');
 
         // Vérifier si l'email est valide avec notre service de validation avancé
-        $emailValidator = new \App\Service\EmailValidatorService();
-        [$isValidEmail, $emailErrorMessage] = $emailValidator->validateEmail($mail);
+        [$isValidEmail, $emailErrorMessage] = $this->emailValidator->validateEmail($mail);
 
         if (!$isValidEmail) {
             throw new CustomUserMessageAuthenticationException($emailErrorMessage);
         }
 
-        // Vérifier le captcha
-        $captchaCode = $request->request->get('captcha', '');
+        // Vérifier le reCAPTCHA
+        $recaptchaResponse = $request->request->get('g-recaptcha-response', '');
 
-        // Vérifier que le code captcha n'est pas vide
-        if (empty($captchaCode)) {
-            throw new CustomUserMessageAuthenticationException('Veuillez saisir le code captcha.');
+        // Vérifier que la réponse reCAPTCHA n'est pas vide
+        if (empty($recaptchaResponse)) {
+            throw new CustomUserMessageAuthenticationException('Veuillez valider le captcha.');
         }
 
-        // Vérifier que le code captcha est correct
-        if (!$this->captchaService->validateCaptchaCode($captchaCode)) {
-            throw new CustomUserMessageAuthenticationException('Le code captcha est incorrect.');
+        // Vérifier que la réponse reCAPTCHA est valide
+        if (!$this->recaptchaService->verify($recaptchaResponse, $request->getClientIp())) {
+            throw new CustomUserMessageAuthenticationException('La vérification reCAPTCHA a échoué. Veuillez réessayer.');
         }
 
         $request->getSession()->set(Security::LAST_USERNAME, $mail);
