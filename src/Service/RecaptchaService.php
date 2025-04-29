@@ -41,15 +41,28 @@ class RecaptchaService
         }
 
         try {
-            $response = $this->httpClient->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-                'body' => [
-                    'secret' => $this->secretKey,
-                    'response' => $recaptchaResponse,
-                    'remoteip' => $remoteIp,
-                ]
-            ]);
+            // Utiliser cURL directement pour éviter les problèmes avec HttpClient
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                'secret' => $this->secretKey,
+                'response' => $recaptchaResponse,
+                'remoteip' => $remoteIp,
+            ]));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-            $data = $response->toArray();
+            if ($response === false) {
+                $this->logger->error('reCAPTCHA cURL error');
+                return false;
+            }
+
+            $data = json_decode($response, true);
+
+            // Log pour le débogage
+            $this->logger->info('reCAPTCHA response: ' . $response);
 
             if (isset($data['error-codes']) && !empty($data['error-codes'])) {
                 $this->logger->warning('reCAPTCHA verification failed with errors: ' . json_encode($data['error-codes']));

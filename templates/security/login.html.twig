@@ -2,6 +2,32 @@
 
 {% block title %}Connexion - EduTrip{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+    }
+
+    .separator .line {
+        flex-grow: 1;
+        height: 1px;
+        background-color: #dee2e6;
+    }
+
+    .btn-outline-danger {
+        transition: all 0.3s;
+    }
+
+    .btn-outline-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
 {% block Navbar %}
     <a href="{{ path('app_home') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduTrip</h2>
@@ -60,7 +86,9 @@
                                 </div>
                             {% endif %}
 
-                            <form action="{{ path('app_login') }}" method="post">
+
+
+                            <form action="{{ path('app_login') }}" method="post" data-turbo="false">
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                                 <div class="form-floating mb-3">
@@ -84,7 +112,19 @@
                                 </div>
                                 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-                                <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
+                                <div class="d-flex align-items-center justify-content-center mt-4 mb-3">
+                                    <a href="{{ path('app_auth_google') }}" class="btn btn-outline-danger btn-lg px-5 mb-3" data-turbo="false">
+                                        <i class="fab fa-google me-2"></i> Se connecter avec Google
+                                    </a>
+                                </div>
+
+                                <div class="separator mb-3">
+                                    <div class="line"></div>
+                                    <span class="mx-3 text-muted">OU</span>
+                                    <div class="line"></div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-center mb-0">
                                     <button class="btn btn-primary btn-lg px-5" type="submit">Se connecter</button>
                                 </div>
                             </form>

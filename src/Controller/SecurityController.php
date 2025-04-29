@@ -54,14 +54,9 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            // Vérifier le reCAPTCHA
-            $recaptchaResponse = $form->get('captcha')->getData();
-            if (!$recaptchaService->verify($recaptchaResponse, $request->getClientIp())) {
-                $this->addFlash('error', 'La vérification reCAPTCHA a échoué. Veuillez réessayer.');
-                return $this->render('security/register.html.twig', [
-                    'registrationForm' => $form->createView(),
-                ]);
-            }
+            // La validation du reCAPTCHA est gérée par le RecaptchaValidator
+            // Nous n'avons pas besoin de vérifier manuellement ici car le formulaire
+            // ne sera pas valide si le reCAPTCHA n'est pas validé
             // Vérifier que les mots de passe correspondent
             if ($form->get('password')->getData() !== $form->get('confirmPassword')->getData()) {
                 $this->addFlash('error', 'Les mots de passe ne correspondent pas.');

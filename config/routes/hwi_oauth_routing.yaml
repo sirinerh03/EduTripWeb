@@ -1,0 +1,41 @@
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.php"
+    prefix:   /connect
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.php"
+    prefix:   /connect
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.php"
+    prefix:   /oauth-login
+
+# Routes pour les services OAuth spécifiques
+google_login:
+    path: /connect/google
+    controller: HWI\Bundle\OAuthBundle\Controller\RedirectToServiceController::redirectToServiceAction
+    defaults:
+        service: google
+
+google_check:
+    path: /connect/google/check
+    controller: HWI\Bundle\OAuthBundle\Controller\Connect\ConnectController::connectServiceAction
+    defaults:
+        service: google
+
+facebook_login:
+    path: /connect/facebook
+    controller: HWI\Bundle\OAuthBundle\Controller\RedirectToServiceController::redirectToServiceAction
+    defaults:
+        service: facebook
+
+facebook_check:
+    path: /connect/facebook/check
+    controller: HWI\Bundle\OAuthBundle\Controller\Connect\ConnectController::connectServiceAction
+    defaults:
+        service: facebook
+
+# Route générique pour la vérification OAuth
+oauth_check:
+    path: /connect/check
+    controller: HWI\Bundle\OAuthBundle\Controller\Connect\ConnectController::connectCheckAction

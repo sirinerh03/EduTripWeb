@@ -15,8 +15,22 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+
             custom_authenticator: App\Security\RecaptchaAuthenticator
             entry_point: App\Security\RecaptchaAuthenticator
+
+            # Configuration OAuth
+            oauth:
+                resource_owners:
+                    google: "/connect/google"
+                    facebook: "/connect/facebook"
+                login_path: /login
+                use_forward: false
+                failure_path: /login
+                default_target_path: app_dashboard
+                oauth_user_provider:
+                    service: App\Security\OAuthUserProvider
+
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 semaine
@@ -35,6 +49,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/login/google/callback, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/agency, roles: ROLE_AGENCY }

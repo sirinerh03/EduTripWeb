@@ -4,6 +4,10 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+# Import des routes OAuth
+hwi_oauth_routes:
+    resource: "./routes/hwi_oauth_routing.yaml"
+
 app_home:
     path: /
     controller: App\Controller\HomeController::index

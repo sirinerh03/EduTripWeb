@@ -28,8 +28,8 @@ class RecaptchaValidator extends ConstraintValidator
         $request = $this->requestStack->getCurrentRequest();
 
         // Récupérer la réponse reCAPTCHA
-        // Essayer d'abord de récupérer depuis le formulaire, puis depuis la requête directe
-        $recaptchaResponse = $value ?: $request->request->get('g-recaptcha-response');
+        // Essayer d'abord de récupérer depuis la requête directe, puis depuis le formulaire
+        $recaptchaResponse = $request->request->get('g-recaptcha-response') ?: $value;
 
         if (empty($recaptchaResponse)) {
             $this->context->buildViolation('Veuillez valider le captcha.')
