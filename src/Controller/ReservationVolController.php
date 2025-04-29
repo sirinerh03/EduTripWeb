@@ -23,9 +23,10 @@ use App\Service\EmailService;
 class ReservationVolController extends AbstractController
 {  private WeatherService $weatherService;
 
-    public function __construct(WeatherService $weatherService)
+    public function __construct(WeatherService $weatherService, EmailService $emailService )
     {
         $this->weatherService = $weatherService;
+        $this->emailService = $emailService;
     }
     #[Route('/reservationvol', name: 'app_reservation_vol')]
     public function index(VolRepository $volRepository): Response
@@ -167,7 +168,7 @@ class ReservationVolController extends AbstractController
                         'product_data' => [
                             'name' => 'Réservation Vol #' . $reservation->getId(),
                         ],
-                        'unit_amount' => $reservation->getPrix() * 100, // ❗ attention: *100 pour convertir en centimes
+                        'unit_amount' => $reservation->getPrix() * 100, 
                     ],
                     'quantity' => 1,
                 ]
@@ -190,22 +191,15 @@ class ReservationVolController extends AbstractController
     }
 
 
-/*
-    private $emailService;
-    private $weatherService;
 
-    public function __construct(EmailService $emailService ,  WeatherService $weatherService)
-    {
-        $this->emailService = $emailService;
-        $this->weatherService = $weatherService;
-    }
+    
 
     // Dans la méthode success
     #[Route('/payment/success/{id}', name: 'payment_success')]
     public function success(
         int $id,
         ReservationVolRepository $reservationVolRepository,
-        EntityManagerInterface $em // Injecte EntityManager ici
+        EntityManagerInterface $em
     ): Response {
         $reservation = $reservationVolRepository->find($id);
 
@@ -215,21 +209,25 @@ class ReservationVolController extends AbstractController
         }
 
         try {
-            // 👉 1. Modifier l'état
+            // 👉 1. Mettre à jour l’état de la réservation
             $reservation->setEtat('payée');
-            $em->flush(); // Très important !
+            $em->flush();
 
-            // 👉 2. Envoyer Email
-            $userEmail = $reservation->getEmail();
+            // 👉 2. Préparer le contenu de l’e-mail
             $body = $this->renderView('emails/reservation_confirmation.html.twig', [
                 'reservation' => $reservation
             ]);
 
-            $this->emailService->sendConfirmationEmail($userEmail, 'Confirmation de réservation', $body);
+            // 👉 3. Envoyer l’e-mail
+            $this->emailService->sendConfirmationEmail(
+                $reservation->getEmail(),
+                'Confirmation de réservation',
+                $body
+            );
 
             $this->addFlash('success', 'Paiement réussi et email envoyé !');
         } catch (\Exception $e) {
-            $this->addFlash('warning', 'Erreur: ' . $e->getMessage());
+            $this->addFlash('warning', 'Erreur : ' . $e->getMessage());
         }
 
         return $this->redirectToRoute('app_reservation_vol');
@@ -238,11 +236,10 @@ class ReservationVolController extends AbstractController
 
 
 
-
     
 
    
-*/
+
 #[Route('/weather', name: 'app_weather')]
 public function weather(Request $request, WeatherService $weatherService): Response
 {   
