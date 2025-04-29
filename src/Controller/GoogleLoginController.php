@@ -32,7 +32,7 @@ class GoogleLoginController extends AbstractController
     public function redirectToGoogle(): Response
     {
         // Paramètres OAuth
-        $clientId = '251927211336-sdh8ptc5mqfstd9eto41mnd6ba3q9hbp.apps.googleusercontent.com';
+        $clientId = $_ENV['GOOGLE_ID'];
         $redirectUri = 'http://localhost/EduTripWeb/EduTripWeb/public/login/google/callback';
         $scope = 'email profile';
 
@@ -57,18 +57,18 @@ class GoogleLoginController extends AbstractController
     {
         // Récupérer le code d'autorisation de Google
         $code = $request->query->get('code');
-        
+
         if (!$code) {
             $this->addFlash('error', 'Aucun code d\'autorisation reçu de Google.');
             return $this->redirectToRoute('app_login');
         }
-        
+
         try {
             // Paramètres pour l'échange du code
-            $clientId = '251927211336-sdh8ptc5mqfstd9eto41mnd6ba3q9hbp.apps.googleusercontent.com';
-            $clientSecret = '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';
+            $clientId = $_ENV['GOOGLE_ID'];
+            $clientSecret = $_ENV['GOOGLE_SECRET'];
             $redirectUri = 'http://localhost/EduTripWeb/EduTripWeb/public/login/google/callback';
-            
+
             // Échanger le code contre un token d'accès
             $tokenResponse = $this->httpClient->request('POST', 'https://oauth2.googleapis.com/token', [
                 'headers' => [
@@ -82,42 +82,42 @@ class GoogleLoginController extends AbstractController
                     'grant_type' => 'authorization_code'
                 ])
             ]);
-            
+
             if ($tokenResponse->getStatusCode() !== 200) {
                 $this->addFlash('error', 'Erreur lors de l\'échange du code: ' . $tokenResponse->getContent(false));
                 return $this->redirectToRoute('app_login');
             }
-            
+
             $tokenData = $tokenResponse->toArray();
-            
+
             if (!isset($tokenData['access_token'])) {
                 $this->addFlash('error', 'Token d\'accès non reçu.');
                 return $this->redirectToRoute('app_login');
             }
-            
+
             // Récupérer les informations de l'utilisateur
             $userInfoResponse = $this->httpClient->request('GET', 'https://www.googleapis.com/oauth2/v3/userinfo', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $tokenData['access_token']
                 ]
             ]);
-            
+
             if ($userInfoResponse->getStatusCode() !== 200) {
                 $this->addFlash('error', 'Erreur lors de la récupération des informations utilisateur.');
                 return $this->redirectToRoute('app_login');
             }
-            
+
             $userInfo = $userInfoResponse->toArray();
-            
+
             // Vérifier si l'email est présent
             if (!isset($userInfo['email'])) {
                 $this->addFlash('error', 'Email non reçu de Google.');
                 return $this->redirectToRoute('app_login');
             }
-            
+
             // Rechercher l'utilisateur dans la base de données
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['mail' => $userInfo['email']]);
-            
+
             // Si l'utilisateur n'existe pas, le créer
             if (!$user) {
                 $user = new User();
@@ -129,23 +129,23 @@ class GoogleLoginController extends AbstractController
                 $user->setStatus('active');
                 $user->setIsVerified(true); // L'utilisateur est vérifié car authentifié par OAuth
                 $user->setTel('00000000'); // Valeur par défaut
-                
+
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
             }
-            
+
             // Connecter l'utilisateur manuellement
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->tokenStorage->setToken($token);
             $request->getSession()->set('_security_main', serialize($token));
-            
+
             // Rediriger vers la page d'accueil ou le tableau de bord
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
                 return $this->redirectToRoute('admin_dashboard');
             }
-            
+
             return $this->redirectToRoute('app_dashboard');
-            
+
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur s\'est produite: ' . $e->getMessage());
             return $this->redirectToRoute('app_login');
