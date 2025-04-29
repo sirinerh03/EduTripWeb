@@ -1,39 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Calendrier des Packs{% endblock %}
-
 {% block stylesheets %}
     {{ parent() }}
-    {# Ajout du CSS de FullCalendar #}
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+    {# Charger le CSS de FullCalendar #}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />    <style>
+        /* Personnalisation du calendrier */
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .fc-header-toolbar {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .fc-daygrid-day-number {
+            color: #4CAF50;  /* Changer la couleur des numéros de jours */
+        }
+
+        .fc-daygrid-event {
+            background-color: #ff5722;  /* Personnaliser la couleur des événements */
+        }
+
+        .fc-toolbar-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Calendrier des Packs</h1>
-
-        {# Affichage du calendrier #}
-        <div id="calendar"></div>
-    </div>
+    <div id="calendar"></div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+    {# Chargement des scripts FullCalendar #}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // Choix de la vue initiale
+                initialView: 'dayGridMonth',
                 locale: 'fr',
-                events: {{ events|json_encode|raw }}, // Injection des événements dans le calendrier
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: {{ events|json_encode|raw }},  {# Passer les événements du contrôleur vers le calendrier #}
+
+                // Gestion du clic sur un événement
                 eventClick: function(info) {
-                    alert('Pack: ' + info.event.title);
+                    // Obtenez l'ID de l'événement
+                    var eventId = info.event.id;
+
+                    // Affichage des détails de l'événement (par exemple, dans une alerte)
+                    alert('ID de l\'événement : ' + eventId + '\n' +
+                          'Nom du pack : ' + info.event.title + '\n' +
+                          'Date : ' + info.event.start.toLocaleString());
                 }
             });
 
-            calendar.render(); // Rendre le calendrier
+            calendar.render();
         });
     </script>
 {% endblock %}

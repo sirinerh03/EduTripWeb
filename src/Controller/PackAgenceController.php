@@ -11,6 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Rest\Client;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use CalendarBundle\CalendarBundle; // Correct namespace
+
+
+
+
+
 
 
 
@@ -205,33 +212,27 @@ final class PackAgenceController extends AbstractController
             'meilleursPacks' => $meilleursPacks,
         ]);
     }
-    #[Route('/pack/agence/calendar', name: 'calendar')]
-    public function calendar(Pack_agenceRepository $packAgenceRepository): Response
+    
+    #[Route('/calendar', name: 'calendar')]
+    public function showCalendar(Pack_agenceRepository $packAgenceRepository): Response
     {
         // Récupération des packs
         $packs = $packAgenceRepository->findAll();
-
-        // Préparation des événements au format FullCalendar
         $events = [];
+    
+        // Préparation des événements pour FullCalendar
         foreach ($packs as $pack) {
             $events[] = [
-                'id' => $pack->getIdPack(),
-                'title' => $pack->getNomPk(),
-                'start' => $pack->getDateAjout()->format('Y-m-d'),
-                'backgroundColor' => '#3788d8',
-                'borderColor' => '#3788d8',
-                'textColor' => '#ffffff',
+                'title' => $pack->getNomPk(),  // Nom du pack
+                'start' => $pack->getDateAjout()->format('Y-m-d'),  // Date d'ajout au format 'Y-m-d'
+                'id' => $pack->getIdPack(),  // Utiliser getId() pour récupérer l'ID de l'entité
+                'allDay' => true,
             ];
         }
-
-        // Envoi des événements à la vue
+    
         return $this->render('pack_agence/calendar.html.twig', [
-            'events' => $events,
+            'events' => $events,  // Passer les événements à la vue
         ]);
     }
     
-    
-
-    
-
 }
