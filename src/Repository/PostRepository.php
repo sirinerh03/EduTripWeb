@@ -40,4 +40,49 @@ class PostRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findWithSearch(?string $term)
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.utilisateur', 'u')
+            ->addSelect('u')
+            ->where('p.contenu LIKE :term OR u.nom LIKE :term OR u.prenom LIKE :term')
+            ->setParameter('term', '%'.$term.'%')
+            ->orderBy('p.date_creation', 'DESC')
+            ->getQuery();
+    }
+    
+    public function findWithFilter(string $categorie)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.categorie = :cat')
+            ->setParameter('cat', $categorie)
+            ->orderBy('p.date_creation', 'DESC')
+            ->getQuery();
+    }
+    
+    public function findAllPosts()
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.date_creation', 'DESC')
+            ->getQuery();
+    }
+    
+    public function findAllCategories(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('DISTINCT p.categorie');
+    
+        return array_map(fn($row) => $row['categorie'], $qb->getQuery()->getArrayResult());
+    }
+
+// src/Repository/PostRepository.php
+public function getPostPlusLike(): ?Post
+{
+    return $this->createQueryBuilder('p')
+        ->orderBy('p.likes', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+}
+
 }

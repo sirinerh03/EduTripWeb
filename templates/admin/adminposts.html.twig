@@ -9,13 +9,16 @@
                     <i class="mdi mdi-post"></i>
                 </span> Liste des Posts
             </h3>
-            <nav aria-label="breadcrumb">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">
-                        <span></span>Tous les posts <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                    </li>
-                </ul>
-            </nav>
+   <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a href="{{ path('admin_posts', {}) }}">
+    Tous les posts <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+</a>
+
+        </li>
+    </ul>
+</nav>
         </div>
 
         <div class="container">
@@ -28,6 +31,27 @@
 
             {% if pagination is defined %}
                 <div class="row">
+                <!-- Formulaire de recherche -->
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Rechercher un mot-clé..." value="{{ searchTerm }}">
+        <button class="btn btn-primary" type="submit">Rechercher</button>
+    </div>
+</form>
+
+<!-- Formulaire de filtrage par catégorie -->
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <select name="categorie" class="form-select">
+            <option value="all">Toutes les catégories</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}" {% if selectedCategorie == cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-secondary" type="submit">Filtrer</button>
+    </div>
+</form>
+
                     {% for post in pagination %}
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100">

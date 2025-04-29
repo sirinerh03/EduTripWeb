@@ -29,9 +29,7 @@ services:
     App\Command\GenerateRepositoriesCommand:
         tags: ['console.command']
 
-    App\Service\BadWordsChecker:
-         arguments:
-            $apiKey: '%env(RAPIDAPI_KEY)%'
+   
 
     App\:
         resource: '../src/'

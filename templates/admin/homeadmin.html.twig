@@ -373,18 +373,23 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-success card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="{{asset('admin/assets/images/dashboard/circle.svg')}}" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-end"></i>
-                    </h4>
-                    <h2 class="mb-5">95,5741</h2>
-                    <h6 class="card-text">Increased by 5%</h6>
-                  </div>
-                </div>
-              </div>
+            <div class="col-md-4 stretch-card grid-margin">
+    <div class="card bg-gradient-success card-img-holder text-white">
+        <div class="card-body">
+            <img src="{{ asset('admin/assets/images/dashboard/circle.svg') }}" class="card-img-absolute" alt="circle-image" />
+            <h5 class="card-header">Post le plus liké</h5>
+            <div class="card-body">
+                {% if postMostLiked is defined and postMostLiked %}
+                    <h5 class="card-title">{{ postMostLiked.contenu }}</h5>
+                    <p class="card-text">Le post le plus liké a <strong>{{ postMostLiked.likes }}</strong> likes.</p>
+                {% else %}
+                    <h5 class="card-title">Aucun post trouvé</h5>
+                    <p class="card-text">Aucun like pour le moment.</p>
+                {% endif %}
             </div>
+        </div>
+    </div>
+</div>    
             <div class="row">
               <div class="col-md-7 grid-margin stretch-card">
                 <div class="card">
@@ -517,3 +522,17 @@
      {% endblock %}
   </body>
 </html>
+<script>
+  document.getElementById('globalSearchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let query = document.getElementById('globalSearchInput').value.toLowerCase();
+
+    // Tu peux faire ici une redirection vers une page de résultats globale
+    // ou utiliser AJAX pour rechercher dans plusieurs sections
+
+    // Par exemple : rediriger vers une page centralisée de recherche :
+    if (query.trim() !== "") {
+      window.location.href = `/recherche?q=${encodeURIComponent(query)}`;
+    }
+  });
+</script>

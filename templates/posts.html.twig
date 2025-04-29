@@ -768,16 +768,16 @@ async function supprimerCommentaire(id) {
         }
     }
 }
-
-// Fonction helper pour ajouter un commentaire au DOM
 function ajouterCommentaireDOM(commentData) {
     const commentsContainer = document.querySelector(`#commentaires-${commentData.postId} .mt-3`);
-    
+
     if (!commentsContainer) {
         location.reload();
         return;
     }
 
+    const editUrl = `/${commentData.locale}/commentaire/${commentData.id}/edit`;
+    
     const commentHtml = `
         <div class="card mb-2" id="comment-${commentData.id}">
             <div class="card-body p-3">
@@ -792,17 +792,19 @@ function ajouterCommentaireDOM(commentData) {
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/${'{{ app.request.locale }}'}/commentaire/${commentData.id}/edit">{{ "post.modify"|trans }}</a></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire(${commentData.id})">{{ "post.delete"|trans }}</a></li>
+                            <li><a class="dropdown-item" href="${editUrl}">Modifier</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire(${commentData.id})">Supprimer</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     `;
-    
-    commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
+
+    commentsContainer.insertAdjacentHTML('beforeend', commentHtml);
 }
+
+ 
 
 // Fonction pour basculer l'affichage des commentaires
 function toggleCommentaires(postId) {

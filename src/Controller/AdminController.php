@@ -22,25 +22,44 @@ use Symfony\Component\Security\Core\Security;
 class AdminController extends AbstractController
 {
     
-   // Ajoute les bonnes annotations pour que le routing fonctionne
-#[Route('/admin_posts', name: 'admin_posts')]
-public function index(PostRepository $postRepository, Request $request, PaginatorInterface $paginator): Response
-{
-    // Créer une requête pour récupérer les posts
-    $queryBuilder = $postRepository->createQueryBuilder('p')->orderBy('p.date_creation', 'DESC');
-
-    // Pagination
-    $pagination = $paginator->paginate(
-        $queryBuilder,                  // La requête
-        $request->query->getInt('page', 1),  // Numéro de la page (par défaut la page 1)
-        6                                // Nombre de posts par page
-    );
-
-    // Passe la variable pagination à la vue
-    return $this->render('admin/adminposts.html.twig', [
-        'pagination' => $pagination,  // Assure-toi que 'pagination' est passé à la vue
-    ]);
-}
+    #[Route('/admin_posts', name: 'admin_posts')]
+    public function index(Request $request, PostRepository $postRepository, PaginatorInterface $paginator): Response
+    {
+        $searchTerm = $request->query->get('q');
+        $selectedCategorie = $request->query->get('categorie');
+    
+        // Recherche seule
+        if ($searchTerm) {
+            $query = $postRepository->findWithSearch($searchTerm);
+        }
+        // Filtrage seul
+        elseif ($selectedCategorie && $selectedCategorie !== 'all') {
+            $query = $postRepository->findWithFilter($selectedCategorie);
+        }
+        // Aucun filtre
+        else {
+            $query = $postRepository->findAllPosts();
+        }
+    
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+    
+        $categories = $postRepository->findAllCategories(); // méthode pour les <select>
+    
+        return $this->render('admin/adminposts.html.twig', [
+            'pagination' => $pagination,
+            'searchTerm' => $searchTerm,
+            'selectedCategorie' => $selectedCategorie,
+            'categories' => $categories,
+        ]);
+    }
+    
+    
+    
+   
 
     #[Route('/admin/post/{id}', name: 'app_post_detail')]
 public function detail(Post $post): Response
