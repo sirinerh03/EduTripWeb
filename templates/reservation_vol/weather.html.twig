@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Météo pour {{ city }}{% endblock %}
+
+{% block body %}
+    <style>
+        /* Ton CSS actuel ici... */
+    </style>
+
+    <div class="container">
+        <div class="weather-card">
+            {# --- Zone de recherche --- #}
+            <form id="search-form" class="mb-4">
+                <input type="text" id="city-input" name="city" placeholder="Entrez votre ville" class="form-control mb-2">
+                <button type="submit" class="btn btn-success">Rechercher</button>
+            </form>
+
+            {# --- Affichage de la météo --- #}
+            <div id="weather-info">
+                {% if weather %}
+                    <h1>Météo à {{ city|capitalize }}</h1>
+                    <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png" alt="{{ weather.weather[0].description }}" class="weather-icon">
+                    <div class="temperature">{{ weather.main.temp }}°C</div>
+                    <h5 class="card-title">{{ weather.weather[0].description|capitalize }}</h5>
+                    <div class="details">
+                        <p><strong>Ressentie :</strong> {{ weather.main.feels_like }}°C</p>
+                        <p><strong>Humidité :</strong> {{ weather.main.humidity }}%</p>
+                        <p><strong>Vent :</strong> {{ weather.wind.speed }} m/s</p>
+                    </div>
+                {% else %}
+                    <p class="alert alert-warning mt-4 text-center">Désolé, informations météo non disponibles.</p>
+                {% endif %}
+            </div>
+
+            <a href="{{ path('app_reservation_vol') }}" class="btn btn-primary mt-4">Retour</a>
+        </div>
+    </div>
+
+    {# --- Script AJAX pour recharger la météo sans recharger la page --- #}
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const city = document.getElementById('city-input').value.trim();
+
+            if (!city) {
+                alert('Veuillez entrer une ville.');
+                return;
+            }
+
+            fetch('/weather?city=' + encodeURIComponent(city), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Important pour détecter AJAX côté serveur
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('weather-info').innerHTML = '<p class="alert alert-danger">Erreur : ' + data.error + '</p>';
+                } else {
+                    document.getElementById('weather-info').innerHTML = `
+                        <h1>Météo à ${city.charAt(0).toUpperCase() + city.slice(1)}</h1>
+                        <img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].description}" class="weather-icon">
+                        <div class="temperature">${data.main.temp}°C</div>
+                        <h5 class="card-title">${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</h5>
+                        <div class="details">
+                            <p><strong>Ressentie :</strong> ${data.main.feels_like}°C</p>
+                            <p><strong>Humidité :</strong> ${data.main.humidity}%</p>
+                            <p><strong>Vent :</strong> ${data.wind.speed} m/s</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                document.getElementById('weather-info').innerHTML = '<p class="alert alert-danger">Erreur lors de la récupération de la météo.</p>';
+            });
+        });
+    </script>
+{% endblock %}

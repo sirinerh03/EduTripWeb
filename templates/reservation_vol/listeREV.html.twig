@@ -134,8 +134,18 @@
 <div class="animated-plane" style="animation-delay: 10s; animation-duration: 22s;"></div>
 
 <div class="container mt-5">
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <a href="{{ path('app_weather', {'city':'Tunis'}) }}"" title="Voir la météo" style="background-color: #00bcd4; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+        <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Météo" style="width: 24px; height: 24px;">
+    </a>
+
+    
     <h1 class="mb-4 text-center">🎫 Liste des billets disponibles</h1>
 
+    <div style="width: 50px;"></div> {# Espace vide pour équilibrer à droite #}
+
+</div>
     <form method="get" action="{{ path('app_reservation_vol') }}" class="mb-4">
         <div class="d-flex justify-content-between">
             <div class="form-group">
