@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b09b3a21-98a4-4f36-9cc9-2f2dddd5b2e5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/.env.dev" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/.env.test" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/controllers.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/controllers/hello_controller.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/about.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/carousel-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/carousel-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/cat-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/cat-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/cat-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/cat-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/course-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/course-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/course-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/img1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/img2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/img3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/team-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/team-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/team-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/team-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/testimonial-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/testimonial-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/testimonial-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/img/testimonial-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/js/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/animate/animate.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/animate/animate.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/easing/easing.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/easing/easing.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/ajax-loader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.carousel.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.carousel.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.theme.default.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.theme.default.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.theme.green.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.theme.green.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/asset/owl.video.play.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/owl.carousel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/owlcarousel/owl.carousel.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/waypoints/links.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/waypoints/waypoints.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/wow/wow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/lib/wow/wow.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_accordion.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_alert.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_badge.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_breadcrumb.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_button-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_card.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_carousel.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_close.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_containers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_dropdown.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_forms.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_functions.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_grid.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_helpers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_images.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_list-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_mixins.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_modal.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_nav.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_navbar.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_offcanvas.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_pagination.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_popover.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_progress.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_reboot.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_root.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_spinners.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_tables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_toasts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_tooltip.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_transitions.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_type.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_utilities.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/bootstrap-grid.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/bootstrap-reboot.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/bootstrap-utilities.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/bootstrap.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_floating-labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_form-check.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_form-control.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_form-range.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_form-select.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_form-text.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_input-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/forms/_validation.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_clearfix.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_colored-links.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_position.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_ratio.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_stretched-link.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_text-truncation.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/helpers/_visually-hidden.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_alert.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_border-radius.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_box-shadow.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_breakpoints.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_buttons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_caret.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_clearfix.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_color-scheme.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_container.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_deprecate.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_forms.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_gradients.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_grid.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_image.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_list-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_lists.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_pagination.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_reset-text.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_resize.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_table-variants.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_text-truncate.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_transition.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_utilities.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/mixins/_visually-hidden.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/utilities/_api.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/scss/bootstrap/scss/vendor/_rfs.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/assets/styles/app.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/bin/console" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/bin/phpunit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/compose.override.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/compose.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/composer.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/composer.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/bundles.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/asset_mapper.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/cache.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/debug.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/doctrine.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/doctrine_migrations.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/framework.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/mailer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/messenger.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/monolog.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/notifier.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/routing.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/security.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/translation.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/twig.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/validator.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/packages/web_profiler.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/preload.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/routes.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/routes/framework.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/routes/security.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/routes/web_profiler.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/config/services.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/importmap.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/migrations/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/phpunit.xml.dist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/public/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/src/Controller/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/src/Controller/HomeController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/src/Entity/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/src/Kernel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/src/Repository/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/symfony.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/templates/base.html.twig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/templates/home.html.twig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/tests/bootstrap.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EduTripWeb-main/translations/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/validator.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/validator.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/AvisController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AvisController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Avis.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Avis.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/AvisType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/AvisType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/UserType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/UserType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/AvisRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/AvisRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/avis/_form.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/avis/_form.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/avis/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/avis/edit.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/avis/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/avis/index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/avis/new.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/avis/new.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/avis/show.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/avis/show.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/security/login.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/security/login.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/security/profile.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/security/profile.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/security/register.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/security/register.html.twig" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/EduTripWeb-main/composer.json" />
+    </option>
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\tools\php84\php.exe">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/asset-mapper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stimulus-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-link" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-messenger" />
+      <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/vendor/symfony/messenger" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/notifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/ux-turbo" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/asset-mapper" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/clock" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/debug-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/doctrine-messenger" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/flex" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/doctrine-migrations-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/migrations" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/messenger" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/maker-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/notifier" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/monolog-bridge" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/password-hasher" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/runtime" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/stimulus-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/ux-turbo" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/web-link" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/EduTripWeb-main/vendor/composer" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2wECd91LwKvvxnfRtGYH6aiZkHV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "gestionuseretavis",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/hamma/Desktop/EduTripWeb",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hamma\Desktop\EduTripWeb\templates" />
+      <recent name="C:\Users\hamma\Desktop\EduTripWeb\templates\website" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="EduTripWeb-main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner configuration_file="$PROJECT_DIR$/EduTripWeb-main/phpunit.xml.dist" scope="XML" use_alternative_configuration_file="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml.dist" scope="XML" use_alternative_configuration_file="true" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b09b3a21-98a4-4f36-9cc9-2f2dddd5b2e5" name="Changes" comment="" />
+      <created>1745597431159</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745597431159</updated>
+      <workItem from="1745597432352" duration="1269000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
