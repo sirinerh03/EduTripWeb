@@ -236,7 +236,17 @@ class ReservationVolController extends AbstractController
 
 
 
+    #[Route('/test-mail', name: 'test_mail')]
+    public function testMail(EmailService $emailService): Response
+    {
+        $emailService->sendConfirmationEmail(
+            'edutrip.edutrip@gmail.com',
+            'Test Email',
+            '<p>Ceci est un test de mail.</p>'
+        );
     
+        return new Response('Email envoyé (si tout est bien configuré)');
+    }    
 
    
 

@@ -16,7 +16,7 @@ class EmailService
     public function sendConfirmationEmail(string $to, string $subject, string $body): void
     {
         $email = (new Email())
-            ->from('ton.email@gmail.com')
+            ->from('edutrip.edutrip@gmail.com')
             ->to($to)
             ->subject($subject)
             ->html($body);

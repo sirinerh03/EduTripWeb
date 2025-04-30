@@ -75,4 +75,39 @@ final class VolsController extends AbstractController
 
         return $this->redirectToRoute('app_vols');
     }
+
+
+
+
+
+    #[Route('/admin/listreservations', name: 'admin_listreservations')]
+public function afficherReservations(\App\Repository\ReservationVolRepository $reservationVolRepository): Response
+{
+    $reservations = $reservationVolRepository->findAll();
+
+    return $this->render('admin/vols/listreservations.html.twig', [
+        'reservations' => $reservations,
+    ]);
+}
+
+
+#[Route('/admin/reservations/pdf', name: 'admin_reservations_pdf')]
+    public function downloadPdf(Pdf $knpSnappyPdf): Response
+    {
+        $reservations = $this->getDoctrine()->getRepository(ReservationVol::class)->findAll();
+
+        $html = $this->renderView('admin/reservations_pdf.html.twig', [
+            'reservations' => $reservations,
+        ]);
+
+        return new Response(
+            $knpSnappyPdf->getOutputFromHtml($html),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="liste_reservations.pdf"',
+            ]
+        );
+    }
+
 }

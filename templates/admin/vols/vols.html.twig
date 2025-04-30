@@ -82,8 +82,14 @@
                         </a>
                     </div>
 
-                    <!-- Vols enregistrés -->
-                    <h4 class="text-primary mb-3">Vols enregistrés</h4>
+                   <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ path('admin_listreservations') }}" class="btn btn-outline-primary">
+        <i class="mdi mdi-account-multiple-outline me-1"></i> Les réservations
+    </a>
+    <h4 class="text-primary mb-0 text-center flex-grow-1" style="margin-left: -40px;">Liste des vols :</h4>
+    <div style="width: 150px;"></div> <!-- Espace vide pour équilibrer -->
+</div>
+
                     {% if vols is not empty %}
                         <div class="row">
                             {% for vol in vols %}
