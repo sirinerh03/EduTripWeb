@@ -29,9 +29,17 @@ class ReservationVolController extends AbstractController
         $this->emailService = $emailService;
     }
     #[Route('/reservationvol', name: 'app_reservation_vol')]
-    public function index(VolRepository $volRepository): Response
+    public function index(Request $request, VolRepository $volRepository): Response
     {
-        $vols = $volRepository->findAll();
+        // Récupération des paramètres de recherche
+        $depart = $request->query->get('depart');
+        $arrivee = $request->query->get('arrivee');
+        $date = $request->query->get('date');
+
+        // Appeler la méthode du repository avec les filtres
+        $vols = $volRepository->findByFilters($depart, $arrivee, $date ? new \DateTime($date) : null);
+
+        // Passer les résultats à la vue
         return $this->render('reservation_vol/listeREV.html.twig', [
             'vols' => $vols,
         ]);

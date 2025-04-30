@@ -20,26 +20,27 @@ use App\Entity\ReservationVol;
 final class VolsController extends AbstractController
 {
     #[Route('/admin/vols', name: 'app_vols')]
-    public function index(VolRepository $volRepository, AviationStackService $aviationStackService): Response
+    public function index(Request $request, VolRepository $volRepository, AviationStackService $aviationStackService): Response
     {
-       $departure = $request->query->get('departure');
-       $arrival = $request->query->get('arrival');
-       $date = $request->query->get('date') ? new \DateTime($request->query->get('date')) : null;
-    // Filtrage
+        $departure = $request->query->get('departure');
+        $arrival = $request->query->get('arrival');
+        $date = $request->query->get('date') ? new \DateTime($request->query->get('date')) : null;
+
+        // Vols en base de données
         $vols = $volRepository->findByFilters($departure, $arrival, $date);
 
-        $vols = $volRepository->findAll(); // correspond à ce que Twig attend
-        $apiVols = $aviationStackService->getFlights(); // données API séparées
+        // Vols en direct depuis l’API
+        $apiVols = $aviationStackService->getFlights();
+
         return $this->render('admin/vols/vols.html.twig', [
             'vols' => $vols,
             'apiVols' => $apiVols,
             'currentFilters' => [
-            'departure' => $departure,
-            'arrival' => $arrival,
-            'date' => $date ? $date->format('Y-m-d') : null
-        ]
-    ]);
-        
+                'departure' => $departure,
+                'arrival'   => $arrival,
+                'date'      => $date,
+            ],
+        ]);
     }
     #[Route('/vols/new', name: 'vol_new')]
     public function ajouterVol(Request $request, EntityManagerInterface $entityManager): Response

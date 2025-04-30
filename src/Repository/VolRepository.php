@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\Vol;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Vol>
- */
 class VolRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,54 +12,32 @@ class VolRepository extends ServiceEntityRepository
         parent::__construct($registry, Vol::class);
     }
 
-    // src/Repository/VolRepository.php
+    public function findByFilters(?string $departure = null, ?string $arrival = null, ?\DateTimeInterface $date = null): array
+    {
+        $qb = $this->createQueryBuilder('v');
 
-public function findByFilters(?string $departure = null, ?string $arrival = null, ?\DateTimeInterface $date = null)
-{
-    $qb = $this->createQueryBuilder('v');
-    
-    if ($departure) {
-        $qb->andWhere('v.aeroportDepart LIKE :departure')
-           ->setParameter('departure', '%'.$departure.'%');
-    }
-    
-    if ($arrival) {
-        $qb->andWhere('v.aeroportArrivee LIKE :arrival')
-           ->setParameter('arrival', '%'.$arrival.'%');
-    }
-    
-    if ($date) {
-        $qb->andWhere('v.dateDepart >= :startDate')
-           ->andWhere('v.dateDepart < :endDate')
-           ->setParameter('startDate', $date->format('Y-m-d 00:00:00'))
-           ->setParameter('endDate', $date->modify('+1 day')->format('Y-m-d 00:00:00'));
-    }
-    
-    return $qb->getQuery()->getResult();
-}
+        if ($departure) {
+            $qb->andWhere('v.aeroport_depart LIKE :departure')
+               ->setParameter('departure', '%' . $departure . '%');
+        }
 
-    //    /**
-    //     * @return Vol[] Returns an array of Vol objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        if ($arrival) {
+            $qb->andWhere('v.aeroport_arrivee LIKE :arrival')
+               ->setParameter('arrival', '%' . $arrival . '%');
+        }
 
-    //    public function findOneBySomeField($value): ?Vol
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($date) {
+            $start = (clone $date)->setTime(0, 0, 0);
+            $end = (clone $start)->modify('+1 day');
+
+            $qb->andWhere('v.date_depart >= :startDate')
+               ->andWhere('v.date_depart < :endDate')
+               ->setParameter('startDate', $start)
+               ->setParameter('endDate', $end);
+        }
+
+        return $qb->orderBy('v.date_depart', 'ASC')
+                  ->getQuery()
+                  ->getResult();
+    }
 }

@@ -126,6 +126,14 @@
             transform: rotate(-10deg);
         }
     }
+    
+    .search-form input,
+    .search-form button {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+
 </style>
 
 <!-- Avions animés -->
@@ -146,23 +154,16 @@
     <div style="width: 50px;"></div> {# Espace vide pour équilibrer à droite #}
 
 </div>
-    <form method="get" action="{{ path('app_reservation_vol') }}" class="mb-4">
-        <div class="d-flex justify-content-between">
-            <div class="form-group">
-                <label for="aeroportDepart">Départ</label>
-                <input type="text" name="aeroportDepart" id="aeroportDepart" class="form-control" placeholder="Départ" value="{{ app.request.query.get('aeroportDepart') }}">
-            </div>
-            <div class="form-group">
-                <label for="aeroportArrivee">Arrivée</label>
-                <input type="text" name="aeroportArrivee" id="aeroportArrivee" class="form-control" placeholder="Arrivée" value="{{ app.request.query.get('aeroportArrivee') }}">
-            </div>
-            <div class="form-group">
-                <label for="dateDepart">Date de départ</label>
-                <input type="date" name="dateDepart" id="dateDepart" class="form-control" value="{{ app.request.query.get('dateDepart') }}">
-            </div>
-            <button type="submit" class="btn btn-primary align-self-end">Rechercher</button>
-        </div>
-    </form>
+   <form method="get" action="{{ path('app_reservation_vol') }}" class="search-form" style="margin-bottom: 20px;">
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" name="depart" placeholder="Ville de départ" value="{{ app.request.get('depart') }}" class="form-control" />
+        <input type="text" name="arrivee" placeholder="Ville d'arrivée" value="{{ app.request.get('arrivee') }}" class="form-control" />
+        <input type="date" name="date" value="{{ app.request.get('date') }}" class="form-control" />
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+<a href="{{ path('app_reservation_vol') }}" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i> 
+        </a>    </div>
+</form>
 
     {% if vols is not empty %}
         {% for vol in vols %}
