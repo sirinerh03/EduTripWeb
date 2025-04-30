@@ -21,9 +21,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\HttpFoundation\RequestStack;
+
+
 
 class SecurityController extends AbstractController
+
 {
+
+    private TokenStorageInterface $tokenStorage;
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+    
     #[Route('/login', name: 'app_login')]
     public function login(Request $request, AuthenticationUtils $authenticationUtils, \App\Service\RecaptchaService $recaptchaService): Response
     {
@@ -222,4 +235,111 @@ class SecurityController extends AbstractController
             'user' => $user
         ]);
     }
+
+
+    
+
+
+    //cote login  controller:
+
+#[Route('/google-api', name: 'google_api')]
+public function googleApiSignUp(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $clientId = '246355943534-amsvb04oiull1bmu1blferldutq705oh.apps.googleusercontent.com';
+    $clientSecret = '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';
+    $redirectUri = 'http://127.0.0.1:8000/google-api'; 
+
+  
+    $code = $request->query->get('code');
+    if ($code) {
+    
+        $tokenResponse = file_get_contents('https://oauth2.googleapis.com/token', false, stream_context_create([
+            'http' => [
+                'method'  => 'POST',
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'content' => http_build_query([
+                    'code' => $code,
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
+                    'redirect_uri' => $redirectUri,
+                    'grant_type' => 'authorization_code',
+                ]),
+            ]
+        ]));
+
+        $data = json_decode($tokenResponse, true);
+        if (isset($data['error'])) {
+            return new Response('Error: ' . $data['error_description']);
+        }
+
+        $accessToken = $data['access_token'];
+
+       
+        $userInfoResponse = file_get_contents('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' . $accessToken);
+        $userData = json_decode($userInfoResponse, true);
+
+        $email = $userData['email'] ?? null;
+        $name = $userData['name'] ?? null;
+
+        if (!$email) {
+            return new Response("
+                <script>
+                    alert('No email returned from Google.');
+                    window.location.href = '" . $this->generateUrl('app_login') . "';
+                </script>
+            ");
+        }
+
+        // Check if user already exists
+        $user = $entityManager->getRepository(User::class)->findOneBy(['mail' => $email]);
+        
+       
+        
+
+        if (!$user) {
+           
+            // Create new user
+            $user = new User();
+            $user->setMail($email);
+            $user->setPassword('GOOGLE_ACCOUNT');
+            $user->setRole('ROLE_USER');
+            $user->setStatus('active');
+            $user->setIsVerified(true);
+            $user->setTel('21914613');
+            $user->setNom("google");
+            $user->setPrenom("google");
+         
+
+            
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+        }
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        $this->tokenStorage->setToken($token);
+
+        // After sign up -> redirect to login page
+        return new Response("
+            <script>
+                alert('Signup successful! Please login.');
+                window.location.href = '" . $this->generateUrl('app_dashboard') . "';
+            </script>
+        ");
+    }
+
+    // Else: No code yet -> redirect user to Google's login/signup page
+    $url = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
+        'client_id' => $clientId,
+        'redirect_uri' => $redirectUri,
+        'response_type' => 'code',
+        'scope' => 'email profile',
+        'access_type' => 'offline',
+        'prompt' => 'consent',
+    ]);
+
+    return new RedirectResponse($url);
+}
+
+
 }

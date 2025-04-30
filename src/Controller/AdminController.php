@@ -231,13 +231,32 @@ class AdminController extends AbstractController
         // Récupérer les utilisateurs filtrés
         $allUsers = $userRepository->searchUsers($criteria);
 
+        $countUser = 0;
+    $countAgency = 0;
+    $countAdmin = 0;
+
+    foreach ($allUsers as $user) {
+        foreach ($user->getRoles() as $r) {
+            if ($r === 'ROLE_USER') {
+                $countUser++;
+            } elseif ($r === 'ROLE_AGENCY') {
+                $countAgency++;
+            } elseif ($r === 'ROLE_ADMIN') {
+                $countAdmin++;
+            }
+        }
+    }
+
         return $this->render('admin/user/list.html.twig', [
             'users' => $allUsers,
             'search' => $search,
             'role' => $role,
             'status' => $status,
             'sort_field' => $sortField,
-            'sort_order' => $sortOrder
+            'sort_order' => $sortOrder,
+            'countUser' => $countUser,
+        'countAgency' => $countAgency,
+        'countAdmin' => $countAdmin,
         ]);
     }
 }

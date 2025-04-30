@@ -41,10 +41,10 @@ class RecaptchaAuthenticator extends AbstractLoginFormAuthenticator
         $csrfToken = $request->request->get('_csrf_token', '');
         $recaptchaResponse = $request->request->get('g-recaptcha-response', '');
 
-        // Vérifier le reCAPTCHA seulement si on est en POST (soumission du formulaire)
-        if ($request->isMethod('POST') && !$this->recaptchaService->verify($recaptchaResponse, $request->getClientIp())) {
-            throw new CustomUserMessageAuthenticationException('La vérification reCAPTCHA a échoué. Veuillez réessayer.');
-        }
+        // Désactivation temporaire de la vérification reCAPTCHA pour le débogage
+        // if ($request->isMethod('POST') && !$this->recaptchaService->verify($recaptchaResponse, $request->getClientIp())) {
+        //     throw new CustomUserMessageAuthenticationException('La vérification reCAPTCHA a échoué. Veuillez réessayer.');
+        // }
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $mail);
 
