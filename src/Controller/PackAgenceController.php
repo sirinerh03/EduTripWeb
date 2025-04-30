@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Rest\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use CalendarBundle\CalendarBundle; // Correct namespace
+use CalendarBundle\CalendarBundle; 
+use App\Service\TwilioService;
 
 
 
@@ -94,7 +95,7 @@ final class PackAgenceController extends AbstractController
                 $entityManager->flush();
     
                 $sid = 'ACd5334ae5c51a60ae4edcc9f70183af74';
-                $token = '4fe5ad9caff826127be7e0f6bcefe0ca';
+                $token = 'fcb1a15dffa9063acd9c07f533225eb5';
                 $twilioNumber = '+13613176383';
                 $destinationNumber = '+21625096025';
     

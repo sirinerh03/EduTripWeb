@@ -32,8 +32,14 @@
     </style>
 {% endblock %}
 
-{% block body %}
-    <div id="calendar"></div>
+{% block content %}
+<h2 class="text-center mb-4" style="color: #003366; font-weight: bold;">
+            📅 Calendrier des Packs
+        </h2>
+<div id="calendar"></div>
+    <div class="text-center mt-4">
+        <a href="{{ path('app_pack_agence_liste') }}" class="btn btn-primary">Retour à l'accueil</a>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

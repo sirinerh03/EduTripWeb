@@ -2,27 +2,38 @@
 
 namespace App\Service;
 
+
+
 use Twilio\Rest\Client;
 
 class TwilioService
 {
-    private $twilio;
+    private $sid;
+    private $token;
     private $from;
 
     public function __construct(string $sid, string $token, string $from)
     {
-        $this->twilio = new Client($sid, $token);
+        $this->sid = $sid;
+        $this->token = $token;
         $this->from = $from;
     }
 
-    public function sendSms(string $to, string $message): void
+    public function sendSms(string $to, string $message): bool
     {
-        $this->twilio->messages->create(
-            $to,
-            [
-                'from' => $this->from,
-                'body' => $message
-            ]
-        );
+        try {
+            $client = new Client($this->sid, $this->token);
+            $client->messages->create(
+                $to, 
+                [
+                    'from' => $this->from,
+                    'body' => $message
+                ]
+            );
+            return true;
+        } catch (\Exception $e) {
+            // Log the error or handle it appropriately
+            return false;
+        }
     }
 }

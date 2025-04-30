@@ -47,21 +47,16 @@
 <div class="container">
     <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
 
-    {# Bouton vers les 3 meilleurs packs #}
-    <div class="mb-4">
-        <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning">
-            <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
-        
-</a>
-</a>
-         <a href="{{ path('calendar') }}" class="btn btn-primary mb-3">
-    📅 Voir le Calendrier
-</a>
-    </div>
-   
-
-
-    {# Carte de filtres #}
+ {# Bouton vers les 3 meilleurs packs et le calendrier avec même largeur #}
+<div class="mb-4 d-flex gap-2">
+    <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning w-auto">
+        <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
+    </a>
+    <a href="{{ path('calendar') }}" class="btn btn-primary w-auto">
+        📅 Voir le Calendrier
+    </a>
+</div>
+  {# Carte de filtres #}
     <div class="filter-card">
         <form id="filter-form" class="row g-3">
             {# Champ Nom #}
