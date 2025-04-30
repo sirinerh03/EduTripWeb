@@ -1,0 +1,61 @@
+{# templates/error.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur{% endblock %}
+{%block content%}
+<style>
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.card-error {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.card-error:hover {
+    transform: translateY(-5px);
+}
+
+.fa-exclamation-triangle {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+</style>
+
+{% block body %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h1 class="text-danger mb-4">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </h1>
+                        <h2 class="card-title text-danger mb-4">Oups ! Une erreur est survenue</h2>
+                        
+                        <div class="alert alert-danger">
+                            {% if message is defined %}
+                                <p class="mb-0">{{ message }}</p>
+                            {% else %}
+                                <p class="mb-0">Erreur inconnue</p>
+                            {% endif %}
+                        </div>
+
+                        <a href="{{ path('app_reservation_vol') }}" class="btn btn-primary mt-4">
+                            <i class="fas fa-home mr-2"></i>Retour à l'accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

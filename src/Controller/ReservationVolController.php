@@ -258,32 +258,31 @@ class ReservationVolController extends AbstractController
 
    
 
-#[Route('/weather', name: 'app_weather')]
-public function weather(Request $request, WeatherService $weatherService): Response
-{   
-    $city = $request->query->get('city') ?? 'Paris'; // Paris par défaut
-
-    try {
-        $weatherData = $weatherService->getWeather($city);
-        
-        if ($request->isXmlHttpRequest()) {
-            return $this->json($weatherData);
+    #[Route('/weather', name: 'app_weather')]
+    public function weather(Request $request, WeatherService $weatherService): Response
+    {   
+        $city = $request->query->get('city') ?? 'Paris';
+    
+        try {
+            $weatherData = $weatherService->getWeather($city);
+            
+            if ($request->isXmlHttpRequest()) {
+                return $this->json($weatherData);
+            }
+    
+            return $this->render('reservation_vol/weather.html.twig', [
+                'city' => $city,
+                'weather' => $weatherData,
+            ]);
+    
+        } catch (\Exception $e) {
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['error' => $e->getMessage()], 400);
+            }
+            
+            return $this->render('error.html.twig', [
+                'message' => $e->getMessage()
+            ]);
         }
-
-        return $this->render('reservation_vol/weather.html.twig', [
-            'city' => $city,
-            'weather' => $weatherData,
-        ]);
-
-    } catch (\Exception $e) {
-        if ($request->isXmlHttpRequest()) {
-            return $this->json(['error' => $e->getMessage()], 400);
-        }
-        
-        return $this->render('error.html.twig', [
-            'message' => $e->getMessage()
-        ]);
     }
 }
-}
-
