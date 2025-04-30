@@ -3,9 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\HebergementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,181 +13,158 @@ class Hebergement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+
+    private ?int $id_hebergement = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le nom de l\'hébergement est obligatoire')]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'Le type d\'hébergement est obligatoire')]
-    private ?string $type = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: 'L\'adresse est obligatoire')]
-    private ?string $adresse = null;
+    #[Assert\NotBlank(message: "Le nom de l'hébergement est obligatoire.")]
+    private string $nomh;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'La ville est obligatoire')]
-    private ?string $ville = null;
+    #[Assert\NotBlank(message: "Le type d'hébergement est obligatoire.")]
+    private string $typeh;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le pays est obligatoire')]
-    private ?string $pays = null;
+    #[Assert\NotBlank(message: "L'adresse de l'hébergement est obligatoire.")]
+    private string $adressh;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Le prix par nuit est obligatoire')]
-    #[Assert\Positive(message: 'Le prix doit être positif')]
-    private ?float $prixParNuit = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    #[Assert\NotNull(message: "La capacité est obligatoire.")]
+    #[Assert\Positive(message: "La capacité doit être un nombre positif.")]
+    #[Assert\Range(
+        min: 1,
+        max: 10000,
+        notInRangeMessage: "La capacité doit être comprise entre 1 et 10000."
+    )]
+    private int $capaciteh;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'La capacité est obligatoire')]
-    #[Assert\Positive(message: 'La capacité doit être positive')]
-    private ?int $capacite = null;
+    #[Assert\NotNull(message: "Le prix est obligatoire.")]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
+    #[Assert\Range(
+        min: 1,
+        max: 10000,
+        notInRangeMessage: "Le prix doit être compris entre 1 et 10000."
+    )]
+    private float $prixh;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La disponibilité doit être spécifiée.")]
+    private string $disponibleh;
 
-    #[ORM\OneToMany(mappedBy: 'hebergement', targetEntity: Reservation::class)]
-    private Collection $reservations;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(min: 10, minMessage: "La description doit contenir au moins {{ limit }} caractères.")]
+    private string $descriptionh;
 
-    public function __construct()
-    {
-        $this->reservations = new ArrayCollection();
-        $this->createdAt = new \DateTime();
-    }
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "L'image est obligatoire.")]
+    private string $imageh;
+
+    public const AVAILABILITY_CHOICES = [
+        'Disponible' => 'Disponible',
+        'Non disponible' => 'Non disponible',
+        'Réservée' => 'Réservée'
+    ];
+
+    public const TYPE_CHOICES = [
+        'Résidences universitaires publiques' => 'Résidences universitaires publiques',
+        'Résidences étudiantes privées' => 'Résidences étudiantes privées',
+        'Appartements' => 'Appartements',
+        'Foyers' => 'Foyers',
+    ];
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id_hebergement;
     }
 
-    public function getNom(): ?string
+    public function getNomh(): string
     {
-        return $this->nom;
+        return $this->nomh;
     }
 
-    public function setNom(string $nom): static
+    public function setNomh(string $nomh): static
     {
-        $this->nom = $nom;
+        $this->nomh = $nomh;
         return $this;
     }
 
-    public function getType(): ?string
+    public function getTypeh(): string
     {
-        return $this->type;
+        return $this->typeh;
     }
 
-    public function setType(string $type): static
+    public function setTypeh(string $typeh): static
     {
-        $this->type = $type;
+        $this->typeh = $typeh;
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getAdressh(): string
     {
-        return $this->adresse;
+        return $this->adressh;
     }
 
-    public function setAdresse(string $adresse): static
+    public function setAdressh(string $adressh): static
     {
-        $this->adresse = $adresse;
+        $this->adressh = $adressh;
         return $this;
     }
 
-    public function getVille(): ?string
+    public function getCapaciteh(): int
     {
-        return $this->ville;
+        return $this->capaciteh;
     }
 
-    public function setVille(string $ville): static
+    public function setCapaciteh(int $capaciteh): static
     {
-        $this->ville = $ville;
+        $this->capaciteh = $capaciteh;
         return $this;
     }
 
-    public function getPays(): ?string
+    public function getPrixh(): float
     {
-        return $this->pays;
+        return $this->prixh;
     }
 
-    public function setPays(string $pays): static
+    public function setPrixh(float $prixh): static
     {
-        $this->pays = $pays;
+        $this->prixh = $prixh;
         return $this;
     }
 
-    public function getPrixParNuit(): ?float
+    public function getDisponibleh(): string
     {
-        return $this->prixParNuit;
+        return $this->disponibleh;
     }
 
-    public function setPrixParNuit(float $prixParNuit): static
+    public function setDisponibleh(string $disponibleh): static
     {
-        $this->prixParNuit = $prixParNuit;
+        $this->disponibleh = $disponibleh;
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescriptionh(): string
     {
-        return $this->description;
+        return $this->descriptionh;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescriptionh(string $descriptionh): static
     {
-        $this->description = $description;
+        $this->descriptionh = $descriptionh;
         return $this;
     }
 
-    public function getCapacite(): ?int
+    public function getImageh(): string
     {
-        return $this->capacite;
+        return $this->imageh;
     }
 
-    public function setCapacite(int $capacite): static
+    public function setImageh(string $imageh): static
     {
-        $this->capacite = $capacite;
+        $this->imageh = $imageh;
         return $this;
     }
+}
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): static
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setHebergement($this);
-        }
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            if ($reservation->getHebergement() === $this) {
-                $reservation->setHebergement(null);
-            }
-        }
-        return $this;
-    }
-} 

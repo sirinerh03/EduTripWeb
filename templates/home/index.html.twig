@@ -1,110 +1,15 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Accueil - EduTrip{% endblock %}
 
-{% block Navbar %}
-    <a href="{{ path('app_home') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduTrip</h2>
-    </a>
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="{{ path('app_home') }}" class="nav-item nav-link active">Accueil</a>
-            <a href="{{ path('app_universities') }}" class="nav-item nav-link">Universités</a>
-            <a href="{{ path('app_housing') }}" class="nav-item nav-link">Hébergement</a>
-            {% if app.user %}
-                <a href="{{ path('app_avis_index') }}" class="nav-item nav-link">Avis</a>
-            {% endif %}
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Agences </a>
-                <div class="dropdown-menu fade-down m-0">
-                    <a href="{{ path('app_agencies') }}" class="dropdown-item">Liste des agences</a>
-                    <a href="{{ path('app_flights') }}" class="dropdown-item">Vols</a>
-                </div>
-            </div>
-            <a href="{{ path('app_flights') }}" class="nav-item nav-link">Vols</a>
-            <a href="{{ path('app_contact') }}" class="nav-item nav-link">Contact</a>
+{% block content %}
+
         </div>
         <a href="{{ path('app_register') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Rejoignez-nous<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
-{% endblock %}
 
-{% block carousel %}
-    <div class="container-fluid p-0 mb-5">
-        <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="{{ asset('img/carousel-1.jpg') }}" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Bienvenue sur EduTrip</h5>
-                                <h1 class="display-3 text-white animated slideInDown">Votre Voyage Étudiant Commence Ici</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Découvrez les meilleures universités, logements et options de voyage pour vos études à l'étranger.</p>
-                                {% if not app.user %}
-                                    <a href="{{ path('app_register') }}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">S'inscrire</a>
-                                    <a href="{{ path('app_login') }}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Se connecter</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
 
-{% block content %}
-    <!-- Features Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Nos Services</h6>
-                <h1 class="mb-5">Découvrez Nos Services</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item bg-light rounded h-100 p-5">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle mb-4" style="width: 65px; height: 65px;">
-                            <i class="fa fa-graduation-cap text-white fs-4"></i>
-                        </div>
-                        <h4 class="mb-3">Universités</h4>
-                        <p class="mb-4">Trouvez les meilleures universités pour vos études à l'étranger</p>
-                        <a class="btn btn-primary" href="{{ path('app_universities') }}">
-                            <i class="fa fa-arrow-right ms-2"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item bg-light rounded h-100 p-5">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle mb-4" style="width: 65px; height: 65px;">
-                            <i class="fa fa-home text-white fs-4"></i>
-                        </div>
-                        <h4 class="mb-3">Hébergement</h4>
-                        <p class="mb-4">Trouvez le logement idéal pour votre séjour étudiant</p>
-                        <a class="btn btn-primary" href="{{ path('app_housing') }}">
-                            <i class="fa fa-arrow-right ms-2"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item bg-light rounded h-100 p-5">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle mb-4" style="width: 65px; height: 65px;">
-                            <i class="fa fa-plane text-white fs-4"></i>
-                        </div>
-                        <h4 class="mb-3">Vols</h4>
-                        <p class="mb-4">Réservez vos vols au meilleur prix</p>
-                        <a class="btn btn-primary" href="{{ path('app_flights') }}">
-                            <i class="fa fa-arrow-right ms-2"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Features End -->
 
     <!-- About Start -->
     <div class="container-xxl py-5">

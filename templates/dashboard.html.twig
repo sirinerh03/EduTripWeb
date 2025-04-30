@@ -2,43 +2,8 @@
 
 {% block title %}Tableau de Bord - EduTrip{% endblock %}
 
-{% block body %}
-    <!-- Dashboard Navbar Start -->
-    <div class="container-fluid bg-white shadow-sm py-2 px-3 mb-4">
-        <div class="row">
-            <div class="col-12">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <div class="container-fluid">
-                        <a class="navbar-brand fw-bold text-primary" href="{{ path('app_dashboard') }}">
-                            <i class="fas fa-user-circle me-2"></i>Mon Dashboard
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav me-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="{{ path('app_home') }}">
-                                        <i class="fas fa-home me-1"></i> Accueil
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_universities') }}">
-                                        <i class="fas fa-university me-1"></i> Universités
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_housing') }}">
-                                        <i class="fas fa-building me-1"></i> Hébergement
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_avis_index') }}">
-                                        <i class="fas fa-star me-1"></i> Avis
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="d-flex align-items-center">
+{% block content %}
+     <div class="d-flex align-items-center">
                                 <div class="dropdown me-3">
                                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fas fa-user-circle me-1"></i> {{ user.prenom }} {{ user.nom }}
@@ -62,15 +27,6 @@
                                     <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
                                 </a>
                             </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </div>
-    <!-- Dashboard Navbar End -->
-
-    <!-- Dashboard Header Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -81,10 +37,10 @@
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-8">
                         <div class="d-flex flex-wrap justify-content-center gap-3">
-                            <a href="{{ path('app_universities') }}" class="btn btn-primary btn-lg">
+                            <a href="{{ path('app_university_index') }}" class="btn btn-primary btn-lg">
                                 <i class="fas fa-university me-2"></i>Explorer les universités
                             </a>
-                            <a href="{{ path('app_housing') }}" class="btn btn-success btn-lg">
+                            <a href="{{ path('app_hebergement_carousel') }}" class="btn btn-success btn-lg">
                                 <i class="fas fa-building me-2"></i>Trouver un logement
                             </a>
                             <a href="{{ path('app_avis_new') }}" class="btn btn-info btn-lg text-white">
@@ -209,7 +165,7 @@
                                             </div>
                                             <h5 class="card-title">Universités</h5>
                                             <p class="card-text small">Recherchez et explorez les universités disponibles.</p>
-                                            <a href="{{ path('app_universities') }}" class="btn btn-primary btn-sm">
+                                            <a href="{{ path('app_university_index') }}" class="btn btn-primary btn-sm">
                                                 <i class="fa fa-arrow-right me-2"></i> Accéder
                                             </a>
                                         </div>
@@ -223,7 +179,7 @@
                                             </div>
                                             <h5 class="card-title">Hébergement</h5>
                                             <p class="card-text small">Trouvez des logements près de votre université.</p>
-                                            <a href="{{ path('app_housing') }}" class="btn btn-success btn-sm">
+                                            <a href="{{ path('app_hebergement_carousel') }}" class="btn btn-success btn-sm">
                                                 <i class="fa fa-arrow-right me-2"></i> Accéder
                                             </a>
                                         </div>
@@ -251,7 +207,7 @@
                                             </div>
                                             <h5 class="card-title">Vols</h5>
                                             <p class="card-text small">Recherchez des vols vers votre destination.</p>
-                                            <a href="{{ path('app_flights') }}" class="btn btn-warning btn-sm text-white">
+                                            <a href="{{ path('app_reservation_vol') }}" class="btn btn-warning btn-sm text-white">
                                                 <i class="fa fa-arrow-right me-2"></i> Accéder
                                             </a>
                                         </div>

@@ -1,10 +1,11 @@
-# config/services.yaml
 
-# ------------------------------------------------------------------
-# PARAMÈTRES
-# ------------------------------------------------------------------
 parameters:
-    # Chemin absolu vers le dossier d'upload des photos d'avis
+    upload_directory: '%kernel.project_dir%/public/images'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
+    diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
+    candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
+      # Chemin absolu vers le dossier d'upload des photos d'avis
     avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
     # Clés Google reCAPTCHA (clés de production)
     recaptcha.site_key: '%env(RECAPTCHA_SITE_KEY)%'
@@ -12,29 +13,42 @@ parameters:
     # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
     abstract_api.email_validation_key: 'YOUR_API_KEY'
 
+
 # ------------------------------------------------------------------
 # SERVICES
 # ------------------------------------------------------------------
 services:
-    # Configuration par défaut pour vos services
-    _defaults:
-        autowire: true      # Injection automatique des dépendances
-        autoconfigure: true # Enregistrement automatique des services (commandes, événements, etc.)
-        public: false       # Par défaut, vos services ne sont pas publics
 
-    # Enregistre vos contrôleurs comme services publics
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false 
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+        shared: false
+
+    Symfony\Component\Filesystem\Filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+        public: false
+
+    App\Command\GenerateRepositoriesCommand:
+        tags: ['console.command']
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
         public: true
 
-    # Charge toutes les classes de src/, à l'exception de quelques dossiers
+
+
+
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
 
     App\Form\:
         resource: '../src/Form'
@@ -43,3 +57,4 @@ services:
     App\Repository\:
         resource: '../src/Repository'
         tags: ['doctrine.repository_service']
+

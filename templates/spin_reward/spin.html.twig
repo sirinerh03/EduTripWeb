@@ -2,8 +2,8 @@
 
 {% block title %}Félicitations ! Vous avez gagné une réduction{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
+{% block content %}
+    
 
     <style>
         .reward-container {
@@ -165,9 +165,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
     </style>
-{% endblock %}
 
-{% block body %}
 <div class="reward-container">
     <div class="reward-card">
         <div class="reward-header">
@@ -225,10 +223,7 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
     <!-- Ajout des scripts nécessaires -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>

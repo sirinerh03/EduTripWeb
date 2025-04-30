@@ -53,8 +53,28 @@
         }
     });
 
-    
-    
+
+
+
+    $(document).ready(function(){
+        $(".header-carousel").owlCarousel({
+            items: 1,
+            autoplay: true,
+            smartSpeed: 1500,
+            dots: false,
+            loop: true,
+            nav: true,
+            navText: [
+                '<i class="bi bi-chevron-left"></i>',
+                '<i class="bi bi-chevron-right"></i>'
+            ]
+        });
+    });
+
+
+
+
+
     
     // Back to top button
     $(window).scroll(function () {

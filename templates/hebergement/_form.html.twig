@@ -1,0 +1,51 @@
+
+
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+<table>
+    <tr>
+        <td>{{ form_label(form.nomh, "Nom de l'hébergement") }}</td>
+        <td>{{ form_widget(form.nomh) }}</td>
+        <td>{{ form_errors(form.nomh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.typeh, "Type d'hébergement") }}</td>
+        <td>{{ form_widget(form.typeh) }}</td>
+        <td>{{ form_errors(form.typeh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.adressh, "Adresse") }}</td>
+        <td>{{ form_widget(form.adressh) }}</td>
+        <td>{{ form_errors(form.adressh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.capaciteh, "Capacité") }}</td>
+        <td>{{ form_widget(form.capaciteh) }}</td>
+        <td>{{ form_errors(form.capaciteh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.prixh, "Prix") }}</td>
+        <td>{{ form_widget(form.prixh) }}</td>
+        <td>{{ form_errors(form.prixh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.disponibleh, "Disponibilité") }}</td>
+        <td>{{ form_widget(form.disponibleh) }}</td>
+        <td>{{ form_errors(form.disponibleh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.imageh, "Image") }}</td>
+        <td>{{ form_widget(form.imageh) }}</td>
+        <td>{{ form_errors(form.imageh) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.descriptionh, "Description") }}</td>
+        <td>{{ form_widget(form.descriptionh) }}</td>
+        <td>{{ form_errors(form.descriptionh) }}</td>
+    </tr>
+</table>
+
+<button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+
+{{ form_end(form) }}
+
