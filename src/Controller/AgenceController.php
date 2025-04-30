@@ -31,47 +31,57 @@ final class AgenceController extends AbstractController
    
 
 
-    #[Route('/Liste', name: 'app_agence_liste', methods: ['GET'])]
-    public function simpleList(Request $request, EntityManagerInterface $entityManager): Response
+#[Route('/Liste', name: 'app_agence_liste', methods: ['GET'])]
+public function simpleList(Request $request, EntityManagerInterface $entityManager): Response
 {
-    $nom = $request->query->get('nom');
-    $description = $request->query->get('description');
-    $dateCreation = $request->query->get('date_creation');
-    
-    $queryBuilder = $entityManager->getRepository(Agence::class)->createQueryBuilder('a');
-    
-    if ($nom) {
-        $queryBuilder->andWhere('a.nom_ag LIKE :nom')
-                    ->setParameter('nom', '%'.$nom.'%');
-    }
-    
-    if ($description) {
-        $queryBuilder->andWhere('a.description_ag LIKE :description')
-                    ->setParameter('description', '%'.$description.'%');
-    }
-    
-    if ($dateCreation) {
-        $date = \DateTime::createFromFormat('Y-m-d', $dateCreation);
-        if ($date) {
-            $queryBuilder->andWhere('a.date_creation = :date')
-                        ->setParameter('date', $date);
-        }
-    }
-    
-    $agences = $queryBuilder->getQuery()->getResult();
-    
-    // Si c'est une requête AJAX, retourne uniquement le HTML du tableau
-    if ($request->isXmlHttpRequest()) {
-        return $this->render('agence/_agences_cards.html.twig', [
-            'agences' => $agences
-        ]);
-    }
-    
-    // Sinon, retourne la page complète
-    return $this->render('agence/index2.html.twig', [
-        'agences' => $agences,
-    ]);
+     // Récupération des filtres depuis la requête GET
+     $nom = $request->query->get('nom');
+     $description = $request->query->get('description');
+     $dateCreation = $request->query->get('date_creation');
+     $sort = $request->query->get('sort');
+     $direction = $request->query->get('direction', 'asc');
+
+     $queryBuilder = $agenceRepository->createQueryBuilder('a');
+
+     // Filtres
+     if ($nom) {
+         $queryBuilder->andWhere('a.nom_ag LIKE :nom')
+                      ->setParameter('nom', '%' . $nom . '%');
+     }
+
+     if ($description) {
+         $queryBuilder->andWhere('a.description LIKE :description')
+                      ->setParameter('description', '%' . $description . '%');
+     }
+
+     if ($dateCreation) {
+         $queryBuilder->andWhere('DATE(a.date_creation) = :date_creation')
+                      ->setParameter('date_creation', $dateCreation);
+     }
+
+     // Tri
+     if ($sort) {
+         $queryBuilder->orderBy($sort, strtolower($direction) === 'desc' ? 'DESC' : 'ASC');
+     } else {
+         $queryBuilder->orderBy('a.id', 'DESC');
+     }
+
+     $agences = $queryBuilder->getQuery()->getResult();
+
+     // Si la requête est AJAX, on renvoie juste le fragment HTML
+     if ($request->isXmlHttpRequest()) {
+         return $this->render('agence/_agences_cards.html.twig', [
+             'agences' => $agences,
+         ]);
+     }
+
+     // Sinon, vue complète
+     return $this->render('agence/index2.html.twig', [
+         'agences' => $agences,
+     ]);
+ 
 }
+
     
 
     #[Route('/new', name: 'app_agence_new', methods: ['GET', 'POST'])]

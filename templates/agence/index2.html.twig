@@ -4,8 +4,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        /* Animation pour le changement de contenu */
         .agences-container {
             transition: opacity 0.3s ease;
             min-height: 300px;
@@ -18,10 +18,7 @@
 
         .loading-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,12 +26,13 @@
             z-index: 10;
         }
 
-        /* Style pour les champs de recherche */
-        #filter-form input {
+        #filter-form input,
+        #filter-form select {
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        #filter-form input:focus {
+        #filter-form input:focus,
+        #filter-form select:focus {
             border-color: #86b7fe;
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
@@ -56,106 +54,112 @@
         </div>
     {% endif %}
 
-    {# Formulaire de filtrage #}
+    {# Filtres + Tri #}
     <div class="card mb-4">
         <div class="card-body">
-            <form id="filter-form" method="get" class="row g-3">
-                <div class="col-md-4">
+            <form id="filter-form" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
                     <label for="nom" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="nom" name="nom" 
-                           value="{{ app.request.query.get('nom') }}" 
+                    <input type="text" class="form-control" id="nom" name="nom"
+                           value="{{ app.request.query.get('nom') }}"
                            placeholder="Filtrer par nom">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" 
-                           value="{{ app.request.query.get('description') }}" 
+                    <input type="text" class="form-control" id="description" name="description"
+                           value="{{ app.request.query.get('description') }}"
                            placeholder="Filtrer par description">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="date_creation" class="form-label">Date de création</label>
-                    <input type="date" class="form-control" id="date_creation" name="date_creation" 
+                    <input type="date" class="form-control" id="date_creation" name="date_creation"
                            value="{{ app.request.query.get('date_creation') }}">
                 </div>
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Filtrer</button>
-                    <a href="{{ path('app_agence_liste') }}" class="btn btn-secondary">Réinitialiser</a>
+
+                <div class="w-100"></div>
+
+                <div class="col-md-3">
+                    <label for="sort" class="form-label"><i class="bi bi-arrow-down-up"></i> Trier par</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="">-- Champ --</option>
+                        <option value="a.nom_ag" {{ app.request.query.get('sort') == 'a.nom_ag' ? 'selected' : '' }}>Nom</option>
+                        <option value="a.date_creation" {{ app.request.query.get('sort') == 'a.date_creation' ? 'selected' : '' }}>Date de création</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="direction" class="form-label">&nbsp;</label>
+                    <select class="form-select" id="direction" name="direction">
+                        <option value="asc" {{ app.request.query.get('direction') == 'asc' ? 'selected' : '' }}>🔼 Croissant</option>
+                        <option value="desc" {{ app.request.query.get('direction') == 'desc' ? 'selected' : '' }}>🔽 Décroissant</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Appliquer</button>
+                </div>
+                <div class="col-md-3">
+                    <a href="{{ path('app_agence_liste') }}" class="btn btn-secondary w-100">Réinitialiser</a>
                 </div>
             </form>
         </div>
     </div>
 
-    {# Conteneur des agences #}
+    {# Contenu dynamique #}
     <div class="agences-container" id="agences-container">
         {% include 'agence/_agences_cards.html.twig' %}
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const filterForm = document.getElementById('filter-form');
     const agencesContainer = document.getElementById('agences-container');
     const loadingOverlay = document.createElement('div');
     loadingOverlay.className = 'loading-overlay';
     loadingOverlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div>';
-    
-    // Écoute la soumission du formulaire
-    filterForm.addEventListener('submit', function(e) {
+
+    filterForm.addEventListener('submit', function (e) {
         e.preventDefault();
         filterAgences();
     });
-    
-    // Écoute les changements dans les champs de filtre (déclenche la recherche après un délai)
-    const filterInputs = document.querySelectorAll('#filter-form input');
-    let searchTimeout;
-    
-    filterInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(filterAgences, 500); // Délai de 500ms
+
+    const inputs = document.querySelectorAll('#filter-form input, #filter-form select');
+    let timeout;
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(filterAgences, 500);
         });
     });
-    
+
     function filterAgences() {
-        // Affiche l'indicateur de chargement
         agencesContainer.classList.add('loading');
         agencesContainer.appendChild(loadingOverlay);
-        
-        // Récupère les données du formulaire
+
         const formData = new FormData(filterForm);
-        const searchParams = new URLSearchParams(formData).toString();
-        
-        // Envoie la requête AJAX
-        fetch('{{ path('app_agence_liste') }}?' + searchParams, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+        const params = new URLSearchParams(formData).toString();
+
+        fetch('{{ path("app_agence_liste") }}?' + params, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau');
-            }
-            return response.text();
-        })
-        .then(html => {
-            // Remplace le contenu du tableau
-            agencesContainer.innerHTML = html;
-            
-            // Met à jour l'URL sans recharger la page
-            const newUrl = window.location.pathname + '?' + searchParams;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            agencesContainer.innerHTML = '<div class="alert alert-danger text-center">Erreur lors du chargement des données</div>';
-        })
-        .finally(() => {
-            agencesContainer.classList.remove('loading');
-        });
+            .then(response => {
+                if (!response.ok) throw new Error('Erreur réseau');
+                return response.text();
+            })
+            .then(html => {
+                agencesContainer.innerHTML = html;
+                const newUrl = window.location.pathname + '?' + params;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            })
+            .catch(error => {
+                agencesContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement</div>';
+            })
+            .finally(() => {
+                agencesContainer.classList.remove('loading');
+            });
     }
-    
-    // Gère les boutons de navigation avant/arrière
-    window.addEventListener('popstate', function() {
+
+    window.addEventListener('popstate', function () {
         filterAgences();
     });
 });

@@ -15,16 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use CalendarBundle\CalendarBundle; 
 use App\Service\TwilioService;
 
-
-
-
-
-
-
-
-
-
-
 final class PackAgenceController extends AbstractController
 {
     #[Route('/pack/agence', name: 'app_pack_agence')]
@@ -45,42 +35,56 @@ final class PackAgenceController extends AbstractController
         $prixMax = $request->query->get('prix_max', 10000);
         $dureeMin = $request->query->get('duree_min', 1);
         $dureeMax = $request->query->get('duree_max', 30);
-        
+        $orderBy = $request->query->get('order_by', 'p.nom_pk');
+        $orderDir = strtolower($request->query->get('order_dir', 'asc'));
+    
+        $allowedOrderFields = ['p.nom_pk', 'p.prix', 'p.duree'];
+        $allowedOrderDirs = ['asc', 'desc'];
+    
+        if (!in_array($orderBy, $allowedOrderFields)) {
+            $orderBy = 'p.nom_pk';
+        }
+        if (!in_array($orderDir, $allowedOrderDirs)) {
+            $orderDir = 'asc';
+        }
+    
         $queryBuilder = $packAgenceRepository->createQueryBuilder('p')
             ->leftJoin('p.id_agence', 'a')
-            ->addSelect('a');
-    
-        $queryBuilder->andWhere('p.prix >= :prixMin')
-                    ->andWhere('p.prix <= :prixMax')
-                    ->setParameter('prixMin', (float)$prixMin)
-                    ->setParameter('prixMax', (float)$prixMax);
-    
-        $queryBuilder->andWhere('p.duree >= :dureeMin')
-                    ->andWhere('p.duree <= :dureeMax')
-                    ->setParameter('dureeMin', (int)$dureeMin)
-                    ->setParameter('dureeMax', (int)$dureeMax);
+            ->addSelect('a')
+            ->andWhere('p.prix >= :prixMin')
+            ->andWhere('p.prix <= :prixMax')
+            ->andWhere('p.duree >= :dureeMin')
+            ->andWhere('p.duree <= :dureeMax')
+            ->setParameter('prixMin', (float)$prixMin)
+            ->setParameter('prixMax', (float)$prixMax)
+            ->setParameter('dureeMin', (int)$dureeMin)
+            ->setParameter('dureeMax', (int)$dureeMax)
+            ->orderBy($orderBy, $orderDir);
     
         if ($nom) {
             $queryBuilder->andWhere('p.nom_pk LIKE :nom')
-                        ->setParameter('nom', '%'.$nom.'%');
+                         ->setParameter('nom', '%'.$nom.'%');
         }
-        
+    
         $packAgences = $queryBuilder->getQuery()->getResult();
-        
+    
         if ($request->isXmlHttpRequest()) {
             return $this->render('pack_agence/_pack_cards.html.twig', [
                 'packAgences' => $packAgences
             ]);
         }
-        
+    
         return $this->render('pack_agence/index2.html.twig', [
             'packAgences' => $packAgences,
             'prix_min' => $prixMin,
             'prix_max' => $prixMax,
             'duree_min' => $dureeMin,
-            'duree_max' => $dureeMax
+            'duree_max' => $dureeMax,
+            'order_by' => $orderBy,
+            'order_dir' => $orderDir
         ]);
     }
+    
 
     #[Route('/pack/agence/new', name: 'app_pack_agence_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

@@ -9,12 +9,12 @@
             min-height: 300px;
             transition: opacity 0.3s;
         }
-        
+
         .search-loading {
             opacity: 0.7;
             pointer-events: none;
         }
-        
+
         .filter-card {
             background: #f8f9fa;
             border-radius: 10px;
@@ -22,19 +22,19 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .range-input-group {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
         }
-        
+
         .range-input {
             flex: 1;
             min-width: 80px;
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 10px;
@@ -47,27 +47,24 @@
 <div class="container">
     <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
 
- {# Bouton vers les 3 meilleurs packs et le calendrier avec même largeur #}
-<div class="mb-4 d-flex gap-2">
-    <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning w-auto">
-        <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
-    </a>
-    <a href="{{ path('calendar') }}" class="btn btn-primary w-auto">
-        📅 Voir le Calendrier
-    </a>
-</div>
-  {# Carte de filtres #}
+    <div class="mb-4 d-flex gap-2">
+        <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning w-auto">
+            <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
+        </a>
+        <a href="{{ path('calendar') }}" class="btn btn-primary w-auto">
+            📅 Voir le Calendrier
+        </a>
+    </div>
+
     <div class="filter-card">
         <form id="filter-form" class="row g-3">
-            {# Champ Nom #}
             <div class="col-md-4">
                 <label for="nom" class="form-label">🔍 Nom</label>
                 <input type="text" class="form-control" id="nom" name="nom" 
                        value="{{ app.request.query.get('nom') }}" 
                        placeholder="Rechercher...">
             </div>
-            
-            {# Filtre Prix #}
+
             <div class="col-md-4">
                 <label class="form-label">💰 Prix (TND)</label>
                 <div class="range-input-group">
@@ -82,8 +79,7 @@
                            value="{{ prix_max ?? 10000 }}">
                 </div>
             </div>
-            
-            {# Filtre Durée #}
+
             <div class="col-md-4">
                 <label class="form-label">⏳ Durée (jours)</label>
                 <div class="range-input-group">
@@ -98,8 +94,22 @@
                            value="{{ duree_max ?? 30 }}">
                 </div>
             </div>
-            
-            {# Boutons d'action #}
+
+            <div class="col-md-4">
+                <label class="form-label">🔃 Trier par</label>
+                <div class="input-group">
+                    <select name="order_by" id="order_by" class="form-select">
+                        <option value="p.nom_pk" {{ order_by == 'p.nom_pk' ? 'selected' : '' }}>Nom</option>
+                        <option value="p.prix" {{ order_by == 'p.prix' ? 'selected' : '' }}>Prix</option>
+                        <option value="p.duree" {{ order_by == 'p.duree' ? 'selected' : '' }}>Durée</option>
+                    </select>
+                    <select name="order_dir" id="order_dir" class="form-select">
+                        <option value="asc" {{ order_dir == 'asc' ? 'selected' : '' }}>⬆️ Croissant</option>
+                        <option value="desc" {{ order_dir == 'desc' ? 'selected' : '' }}>⬇️ Décroissant</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">
@@ -113,7 +123,6 @@
         </form>
     </div>
 
-    {# Résultats #}
     <div id="packs-results">
         {% include 'pack_agence/_pack_cards.html.twig' %}
     </div>
@@ -125,18 +134,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetBtn = document.getElementById('reset-btn');
     const resultsContainer = document.getElementById('packs-results');
     let searchTimeout;
-    
-    // Fonction de recherche
+
     const performSearch = () => {
         resultsContainer.classList.add('search-loading');
-        
+
         const params = new URLSearchParams();
         params.append('nom', document.getElementById('nom').value);
         params.append('prix_min', document.getElementById('prix_min').value);
         params.append('prix_max', document.getElementById('prix_max').value);
         params.append('duree_min', document.getElementById('duree_min').value);
         params.append('duree_max', document.getElementById('duree_max').value);
-        
+        params.append('order_by', document.getElementById('order_by').value);
+        params.append('order_dir', document.getElementById('order_dir').value);
+
         fetch('{{ path('app_pack_agence_liste') }}?' + params.toString(), {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
@@ -149,39 +159,39 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContainer.classList.remove('search-loading');
         });
     };
-    
-    // Réinitialisation des filtres
+
     const resetFilters = () => {
         document.getElementById('nom').value = '';
         document.getElementById('prix_min').value = 100;
         document.getElementById('prix_max').value = 10000;
         document.getElementById('duree_min').value = 1;
         document.getElementById('duree_max').value = 30;
+        document.getElementById('order_by').value = 'p.nom_pk';
+        document.getElementById('order_dir').value = 'asc';
         performSearch();
     };
-    
-    // Événements
+
     filterForm.addEventListener('submit', function(e) {
         e.preventDefault();
         performSearch();
     });
-    
+
     resetBtn.addEventListener('click', resetFilters);
-    
-    filterForm.querySelectorAll('input').forEach(input => {
+
+    filterForm.querySelectorAll('input, select').forEach(input => {
         input.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(performSearch, 500);
         });
+        input.addEventListener('change', performSearch);
     });
-    
-    // Validation des plages
+
     document.getElementById('prix_min').addEventListener('change', function() {
         if (parseInt(this.value) > parseInt(document.getElementById('prix_max').value)) {
             document.getElementById('prix_max').value = this.value;
         }
     });
-    
+
     document.getElementById('duree_min').addEventListener('change', function() {
         if (parseInt(this.value) > parseInt(document.getElementById('duree_max').value)) {
             document.getElementById('duree_max').value = this.value;
