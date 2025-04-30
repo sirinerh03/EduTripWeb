@@ -1,0 +1,22 @@
+hwi_oauth:
+    # https://github.com/hwi/HWIOAuthBundle/blob/master/docs/2-configuring_resource_owners.md
+    firewall_names: [main]
+    connect:
+        confirmation: false  # Ne pas demander de confirmation lors de la connexion
+    # L'URL de base est gérée automatiquement par Symfony
+    resource_owners:
+        google:
+            type:                google
+            client_id:           '%env(GOOGLE_ID)%'
+            client_secret:       '%env(GOOGLE_SECRET)%'
+            scope:               "email profile"
+            options:
+                access_type:     offline
+                approval_prompt: force
+                csrf:            true
+                display:         page
+        facebook:
+            type:                facebook
+            client_id:           '%env(FB_ID)%'
+            client_secret:       '%env(FB_SECRET)%'
+            scope:               "email public_profile"

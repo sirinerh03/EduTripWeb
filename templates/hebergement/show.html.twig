@@ -1,0 +1,70 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Détails Hébergement{% endblock %}
+
+{% block Content %}
+<section style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; margin-bottom: 30px;">{{ hebergement.nomh }}</h1>
+
+    {% if hebergement.imageh %}
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="{{ asset('img/' ~ hebergement.imageh) }}" 
+                 alt="{{ hebergement.nomh }}" 
+                 width="300" 
+                 style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        </div>
+    {% else %}
+        <p style="text-align: center; margin-bottom: 30px;">Pas d'image disponible.</p>
+    {% endif %}
+
+    <div style="margin-bottom: 20px; line-height: 1.8;">
+        <p><strong>Type :</strong> {{ hebergement.typeh }}</p>
+        <p><strong>Adresse :</strong> {{ hebergement.adressh }}</p>
+        <p><strong>Capacité :</strong> {{ hebergement.capaciteh }}</p>
+        <p><strong>Prix :</strong> {{ hebergement.prixh }} TND</p>
+        <p><strong>Disponibilité :</strong> {{ hebergement.disponibleh ? 'Oui' : 'Non' }}</p>
+        <p><strong>Description :</strong> {{ hebergement.descriptionh }}</p>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+        <a href="{{ path('app_hebergement_edit', {'id_hebergement': hebergement.id}) }}" 
+           class="btn" 
+           style="background-color: #06BBCC; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+            ✏️ Modifier
+        </a>
+
+        <a href="{{ path('app_hebergement_index') }}" 
+           class="btn" 
+           style="background-color: #f0f0f0; color: #333; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+            ⬅ Retour à la liste
+        </a>
+    </div>
+</section>
+
+<div style="height: 60px;"></div> {# Espace réservé pour le footer #}
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+        border-top: 1px solid #ddd;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transition: opacity 0.2s ease-in-out;
+    }
+</style>
+{% endblock %}

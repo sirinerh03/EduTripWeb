@@ -1,18 +1,47 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    upload_directory: '%kernel.project_dir%/public/images'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
+    diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
+    candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
+      # Chemin absolu vers le dossier d'upload des photos d'avis
+    avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
+    # Clés Google reCAPTCHA (clés de production)
+    recaptcha.site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha.secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+    # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
+    abstract_api.email_validation_key: 'YOUR_API_KEY'
 
+
+# ------------------------------------------------------------------
+# SERVICES
+# ------------------------------------------------------------------
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false 
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+        shared: false
+
+    Symfony\Component\Filesystem\Filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+        public: false
+
+    App\Command\GenerateRepositoriesCommand:
+        tags: ['console.command']
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+        public: true
+
+
+
+
     App\:
         resource: '../src/'
         exclude:
@@ -20,5 +49,12 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: ['doctrine.repository_service']
+

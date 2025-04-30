@@ -1,0 +1,29 @@
+{# templates/form/recaptcha_widget.html.twig #}
+{% block recaptcha_widget %}
+    <div class="mb-3">
+        <div class="g-recaptcha" data-sitekey="{{ site_key }}" data-callback="onRecaptchaSuccess"></div>
+        <input type="hidden" id="{{ id }}" name="g-recaptcha-response" {{ block('widget_attributes') }}>
+        {% if errors|length > 0 %}
+            <div class="invalid-feedback d-block">
+                {{ errors[0].message }}
+            </div>
+        {% endif %}
+    </div>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onRecaptchaSuccess(token) {
+            // Mettre la réponse dans le champ caché
+            document.getElementById('{{ id }}').value = token;
+
+            // Mettre également la réponse dans un champ avec le nom standard
+            var hiddenInput = document.querySelector('input[name="g-recaptcha-response"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'g-recaptcha-response';
+                document.querySelector('form').appendChild(hiddenInput);
+            }
+            hiddenInput.value = token;
+        }
+    </script>
+{% endblock %}

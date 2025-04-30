@@ -1,27 +1,84 @@
 <?php
+
+
 namespace App\Controller;
 
+use App\Repository\AvisRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Entity\Post;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 
 class HomeController extends AbstractController
 {
-
-
+    #[Route('/base', name: 'show_base_template')]
+    public function base(): Response
+    {
+        // Rediriger vers la page d'accueil
+        return $this->redirectToRoute('app_home');
+    }
 
 
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(AvisRepository $avisRepository): Response
     {
         return $this->render('home/index.html.twig');
     }
 
-    
-    #[Route('/base', name: 'show_base_template')]
-    public function base(): Response
+
+    #[Route('/avis', name: 'app_avis')]
+    public function avis(AvisRepository $avisRepository): Response
+     {
+        // Vérifier si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+        
+        return $this->render('avis/index.html.twig', [
+            'avis' => $avisRepository->findAll()
+        ]);
+    }
+
+
+
+    #[Route('/adminhome', name: 'base_admin')]
+    public function homeadmin(): Response
     {
-        return $this->render('base.html.twig');
+        return $this->render('admin/homeadmin.html.twig');
+    }
+
+
+    
+ 
+
+   
+
+    #[Route('/dashboard', name: 'app_dashboard')]
+    #[IsGranted('ROLE_USER')]
+    public function dashboard(AvisRepository $avisRepository, UserRepository $userRepository): Response
+    {
+        $user = $this->getUser();
+        
+        // Get user's reviews
+        $userAvis = $avisRepository->findBy(['user' => $user]);
+        
+        // Get recent users (for admin view)
+        $recentUsers = $userRepository->findBy([], ['id' => 'DESC'], 5);
+        
+        // Get recent reviews (for admin view)
+        $recentReviews = $avisRepository->findBy([], ['createdAt' => 'DESC'], 5);
+    
+        return $this->render('dashboard.html.twig', [
+            'user' => $user,
+            'userAvis' => $userAvis,
+            'recentUsers' => $recentUsers,
+            'recentReviews' => $recentReviews
+        ]);
     }
 
     #[Route('/about', name: 'app_about')]
@@ -30,34 +87,26 @@ class HomeController extends AbstractController
         return $this->render('website/about.html.twig');
     }
 
-    #[Route('/posts', name: 'app_posts')]
+
+
+   #[Route('/posts', name: 'app_posts')]
     public function posts(): Response
     {
         return $this->render('posts.html.twig');
     }
 
-    #[Route('/team', name: 'app_team')]
-    public function team(): Response
-    {
-        return $this->render('website/team.html.twig');
-    }
-    
-    #[Route('/contact', name: 'app_contact')]
-    public function contact(): Response
-    {
-        return $this->render('website/contact.html.twig');
-    }
-    
-    #[Route('/testimonial', name: 'app_testimonial')]
-    public function testimonial(): Response
-    {
-        return $this->render('website/testimonial.html.twig');
-    }
 
+   
+
+
+   
     #[Route('/notfound', name: 'app_not_found')]
     public function not_found(): Response
     {
         return $this->render('website/notfound.html.twig');
+
     }
-   
-}
+
+
+    }
+

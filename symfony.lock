@@ -26,6 +26,47 @@
             "./migrations/.gitignore"
         ]
     },
+
+    "gregwar/captcha-bundle": {
+        "version": "v2.3.0"
+    },
+    "hwi/oauth-bundle": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "20154480d558409ad3eb9de3644817c81fad2268"
+        },
+        "files": [
+            "./config/packages/hwi_oauth.yaml",
+            "./config/routes/hwi_oauth_routing.yaml"
+        ]
+    },
+    "nucleos/dompdf-bundle": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.1",
+            "ref": "ac77a0c751bdccab42ddc73d7290719b31ecb691"
+        },
+        "files": [
+            "./config/packages/nucleos_dompdf.yaml"
+        ]
+    },
+
+
+
+
+
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.8.0"
+    },
+
+
+
+
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -210,7 +251,11 @@
         ]
     },
     "symfony/stimulus-bundle": {
+
+
         "version": "2.23",
+
+
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -250,7 +295,10 @@
         ]
     },
     "symfony/ux-turbo": {
+
         "version": "2.23",
+
+
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -285,5 +333,22 @@
     },
     "twig/extra-bundle": {
         "version": "v3.20.0"
+
+
+
+    },
+    "vich/uploader-bundle": {
+        "version": "2.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.13",
+            "ref": "1b3064c2f6b255c2bc2f56461aaeb76b11e07e36"
+        },
+        "files": [
+            "./config/packages/vich_uploader.yaml"
+        ]
+
+
     }
 }

@@ -3,3 +3,23 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Import des routes OAuth
+hwi_oauth_routes:
+    resource: "./routes/hwi_oauth_routing.yaml"
+
+app_home:
+    path: /
+    controller: App\Controller\HomeController::index
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+app_register:
+    path: /register
+    controller: App\Controller\SecurityController::register

@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Félicitations ! Réduction sauvegardée{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .reward-container {
+            padding: 30px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .reward-card {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background-color: white;
+        }
+
+        .reward-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .reward-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .reward-body {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .reward-value {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #6a11cb;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reward-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            color: white;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="reward-container">
+    <div class="reward-card">
+        <div class="reward-header">
+            <h1>Félicitations !</h1>
+            <p class="lead">Merci pour votre avis sur EduTrip</p>
+        </div>
+
+        <div class="reward-body">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+
+            <h2>Réduction sauvegardée !</h2>
+
+            <div class="reward-value">
+                {{ reward.percentage }}% de réduction
+            </div>
+
+            <p class="reward-description">
+                Votre réduction de {{ reward.percentage }}% sur votre prochain voyage éducatif a été sauvegardée avec succès.
+            </p>
+
+            <a href="{{ path('app_reward_pdf', {'id': reward.id}) }}" class="btn-download" id="download-pdf-button">
+                <i class="fas fa-file-pdf me-2"></i>Télécharger en PDF
+            </a>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{{ path('app_review_index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Retour aux avis
+                </a>
+                <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

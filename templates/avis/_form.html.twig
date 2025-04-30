@@ -1,0 +1,43 @@
+{{ form_start(form) }}
+    <div class="mb-4">
+        {{ form_label(form.rating, 'Note', {'label_attr': {'class': 'form-label'}}) }}
+        <div class="rating-input">
+            {{ form_widget(form.rating, {'attr': {'class': 'rating-radio'}}) }}
+            {{ form_errors(form.rating) }}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.comment, 'Commentaire', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.comment, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.comment) }}
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}
+
+<style>
+.rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.rating-radio {
+    display: none;
+}
+
+.rating-radio + label {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #ddd;
+    margin: 0 0.2rem;
+}
+
+.rating-radio + label:hover,
+.rating-radio + label:hover ~ label,
+.rating-radio:checked + label,
+.rating-radio:checked + label ~ label {
+    color: #ffc107;
+}
+</style>
