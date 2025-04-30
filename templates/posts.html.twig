@@ -1,0 +1,345 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Posts{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Nouveaux styles spécifiques à cette page */
+        .custom-main-container {
+            background-color: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .post-header-container {
+            background-color: #e6f7ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .image-frame {
+            border: 2px solid #e2e8f0;
+            padding: 8px;
+            border-radius: 12px;
+            background: white;
+            display: inline-block;
+            margin: 1rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .action-bar {
+            background-color: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-top: 1px solid #edf2f7;
+        }
+        
+        .comment-input-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+        
+       .post-card {
+    background: rgb(156, 228, 248);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Important pour l'alignement */
+}
+        
+        .vote-container {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border-top: 1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .comment-section {
+            background: #f8fafc;
+            padding: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl py-5">
+    <div class="custom-main-container"> <!-- Nouveau container principal -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Liste des Posts</h1>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div></div> <!-- Espaceur -->
+                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Nouveau Post
+                </a>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        {% if posts is defined and posts|length > 0 %}
+            <div class="row g-4">
+                {% for post in posts %}
+                <div class="post-card"> 
+<div class="post-header-container">
+    <div class="d-flex justify-content-between align-items-center"> <!-- Nouveau conteneur flex -->
+        <div class="d-flex align-items-center"> <!-- Partie gauche avec infos utilisateur -->
+            {% if post.utilisateur %}
+                <div class="me-3">
+                    <i class="fas fa-user-circle fa-2x text-primary"></i>
+                </div>
+                <div>
+                    <h5 class="mb-0 text-primary">
+                        {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                    </h5>
+                    <small class="text-muted">{{ post.dateCreation|date('d/m/Y H:i') }}</small>
+                       {% if post.categorie %}
+                            <span class="badge bg-secondary ms-2">{{ post.categorie }}</span>
+                        {% endif %}
+                </div>
+
+            {% else %}
+                <h5 class="mb-0 text-danger">Utilisateur inconnu</h5>
+            {% endif %}
+        </div>
+
+        <!-- Partie droite avec les boutons -->
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" 
+               class="btn btn-sm btn-outline-warning"
+               title="Modifier">
+                <i class="fas fa-edit"></i>
+            </a>
+            <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
+                <button class="btn btn-sm btn-outline-danger" title="Supprimer">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+                            <div class="p-4">
+                                <p class="card-text mb-4">{{ post.contenu }}</p>
+                                
+                                {% if post.image %}
+                                    <div class="text-center">
+                                        <div class="image-frame"> <!-- Nouveau frame pour l'image -->
+                                            <img src="{{ asset('images/' ~ post.image) }}" 
+                                                 class="post-image img-fluid"
+                                                 style="max-height: 400px; object-fit: contain;">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="vote-container d-flex align-items-center gap-2">
+                                <form class="d-inline vote-form" action="{{ path('post_like', {'id': post.idPost}) }}" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.idPost) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center">
+                                        <img src="{{ asset('images/like.png') }}" alt="Like" class="me-1" style="width: 18px; height: 18px;">
+                                        <span class="vote-count">{{ post.likes ?? 0 }}</span>
+                                    </button>
+                                </form>
+                                
+                                <form class="d-inline vote-form" action="{{ path('post_dislike', {'id': post.idPost}) }}" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('dislike' ~ post.idPost) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center">
+                                        <img src="{{ asset('images/dislike.png') }}" alt="Dislike" class="me-1" style="width: 18px; height: 18px;">
+                                        <span class="vote-count">{{ post.dislikes ?? 0 }}</span>
+                                    </button>
+                                </form>
+                                
+                                <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="toggleCommentaires({{ post.idPost }})">
+                                    <i class="far fa-comment me-1"></i> Commentaires
+                                </button>
+                            </div>
+                            
+                            <div id="commentaires-{{ post.idPost }}" class="comment-section" style="display: none;">
+                                                            <div class="comment-input-container"> <!-- Nouveau container pour l'input -->
+                                    <form onsubmit="ajouterCommentaire(event, {{ post.idPost }})">
+                                      <div class="input-group">
+    <textarea class="form-control" 
+              id="contenu-commentaire-{{ post.idPost }}" 
+              rows="2" 
+              placeholder="Écrire un commentaire..." 
+              required></textarea>
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-paper-plane"></i>
+    </button>
+</div>
+
+
+                                    </form>
+                                </div>
+                                
+                                
+                                {% if post.commentaires|length > 0 %}
+                                    <div class="mt-3">
+                                        {% for commentaire in post.commentaires %}
+                                            <div class="card mb-2">
+                                                <div class="card-body p-3">
+                                                    <div class="d-flex">
+                                                        <div class="flex-grow-1">
+                                                            <strong>{{ commentaire.utilisateur.prenom }}</strong>
+                                                            <p class="mb-0">{{ commentaire.contenu }}</p>
+                                                        </div>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm" data-bs-toggle="dropdown">
+                                                                <i class="fas fa-ellipsis-h"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" href="{{ path('commentaire_edit', {'id': commentaire.idCommentaire}) }}">Modifier</a></li>
+                                                                <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire({{ commentaire.idCommentaire }})">Supprimer</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+             
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="far fa-newspaper fa-3x text-muted mb-3"></i>
+                        <h3 class="text-muted">Aucun post trouvé</h3>
+                        <p class="text-muted">Soyez le premier à créer un post !</p>
+                        <a href="{{ path('app_new_post') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i> Créer un post
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Vos scripts JavaScript restent inchangés -->
+<script>
+    function toggleCommentaires(postId) {
+        var commentairesDiv = document.getElementById('commentaires-' + postId);
+        if (commentairesDiv.style.display === 'none' || commentairesDiv.style.display === '') {
+            commentairesDiv.style.display = 'block';
+        } else {
+            commentairesDiv.style.display = 'none';
+        }
+    }
+
+    function ajouterCommentaire(event, postId) {
+        event.preventDefault();
+        const textarea = document.getElementById('contenu-commentaire-' + postId);
+        const contenu = textarea.value.trim();
+        if (contenu === '') return;
+        fetch('{{ path('ajouter_commentaire') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                'postId': postId,
+                'contenu': contenu
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.contenu) {
+                location.reload(); // Rechargement pour voir le nouveau commentaire
+            } else {
+                alert('Erreur lors de l\'ajout du commentaire');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur AJAX :', error);
+            alert('Erreur serveur');
+        });
+    }
+
+    function supprimerCommentaire(id) {
+        if (confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
+            fetch(`/commentaire/${id}/delete`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert("Erreur lors de la suppression");
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('.vote-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const button = this.querySelector('button');
+            const countElement = this.querySelector('.vote-count');
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    countElement.textContent = data.count;
+                    button.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        button.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %}

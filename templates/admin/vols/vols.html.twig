@@ -1,0 +1,215 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Gestion des vols{% endblock %}
+
+{% block Content %}
+<style>
+  
+
+    /* Personnalisation du ticket */
+    .vol-ticket {
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        background-color: #fff;
+        box-shadow: 0 1px 15px 1px rgba(39, 39, 62, .1);
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .vol-ticket:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Effet de sélection du vol */
+    .vol-selected {
+        background-color: #f8f5ff !important;
+        border-color: #7c4dff !important;
+    }
+
+    .divider {
+        border-top: 1px solid #f0f0f0;
+        margin: 12px 0;
+    }
+
+    /* Style pour le bouton "Voir plus" */
+    .btn-outline-secondary {
+        border-color: #7c4dff;
+        color: #7c4dff;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #7c4dff;
+        color: white;
+    }
+
+    /* Titre */
+    .page-title {
+        color: #4b4b4b;
+        font-weight: 500;
+    }
+
+    /* Bouton Ajouter */
+    .btn-outline-success {
+        border-color: #7c4dff;
+        color: #7c4dff;
+    }
+    .btn-outline-success:hover {
+        background-color: #7c4dff;
+        color: white;
+    }
+
+    /* Icônes */
+    .bi {
+        vertical-align: middle;
+    }
+</style>
+
+<!-- Avions animés -->
+<div class="animated-plane" style="animation-delay: 0s;"></div>
+<div class="animated-plane" style="animation-delay: 5s; animation-duration: 25s;"></div>
+<div class="animated-plane" style="animation-delay: 10s; animation-duration: 22s;"></div>
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                <i class="mdi mdi-airplane"></i>
+            </span> 
+            Gestion des vols
+        </h3>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-end mb-4">
+                        <a href="{{ path('vol_new') }}" class="btn btn-gradient-primary btn-rounded">
+                            <i class="mdi mdi-plus-circle-outline me-2"></i> Nouveau vol
+                        </a>
+                    </div>
+
+                    {% if vols is not empty %}
+                        <div class="row" id="vols-container">
+                            {% for vol in vols %}
+                                <div class="col-md-6 mb-4 vol-item {% if loop.index > 4 %}d-none{% endif %}">
+                                    <div class="vol-ticket p-4" data-vol-id="{{ vol.getIdVol()}}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="text-primary mb-0">
+                                                <i class="mdi mdi-airplane-takeoff"></i> 
+                                                {{ vol.aeroportDepart }} → {{ vol.aeroportArrivee }}
+                                            </h5>
+                                            <span class="badge badge-gradient-info">#{{ vol.numVol }}</span>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-2">
+                                                    <i class="mdi mdi-clock-outline me-2"></i>
+                                                    Départ : {{ vol.dateDepart|date('d/m/Y H:i') }}
+                                                </p>
+                                                <p class="mb-2">
+                                                    <i class="mdi mdi-clock-check-outline me-2"></i>
+                                                    Arrivée : {{ vol.dateArrivee|date('d/m/Y H:i') }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-2">
+                                                    <i class="mdi mdi-seat-recline-extra me-2"></i>
+                                                    Places : {{ vol.placesDispo }}
+                                                </p>
+                                                <p class="mb-2">
+                                                    <i class="mdi mdi-cash-multiple me-2"></i>
+                                                    Prix : {{ vol.prixVol }} TND
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <a href="{{ path('vol_edit', {'id': vol.getIdVol}) }}" 
+                                               class="btn btn-sm btn-outline-secondary me-2">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </a>
+                                            <form method="post"
+                                                  action="{{ path('vol_delete', {'id': vol.getIdVol()}) }}" 
+                                                  onsubmit="return confirm('Supprimer ce vol ?');">
+                                                <input type="hidden" name="_token" 
+                                                       value="{{ csrf_token('delete' ~ vol.getIdVol()) }}">
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="mdi mdi-delete"></i> 
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if vols|length > 4 %}
+                            <div class="text-center mt-3">
+                                <button id="toggleVolsBtn" class="btn btn-outline-secondary">
+                                    Voir plus
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info text-center">
+                            Aucun vol trouvé dans la base de données
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleVolsBtn");
+        const volItems = document.querySelectorAll(".vol-item");
+        const volTickets = document.querySelectorAll(".vol-ticket");
+
+        if (toggleBtn) {
+            let expanded = false;
+            toggleBtn.addEventListener("click", function () {
+                expanded = !expanded;
+                volItems.forEach((item, index) => {
+                    if (index >= 4) item.classList.toggle("d-none", !expanded);
+                });
+                toggleBtn.textContent = expanded ? "Voir moins" : "Voir plus";
+            });
+        }
+
+        volTickets.forEach(ticket => {
+            ticket.addEventListener("click", function () {
+                volTickets.forEach(t => t.classList.remove("vol-selected"));
+                this.classList.add("vol-selected");
+            });
+        });
+    });
+</script>
+{# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+
+
+<style>
+    /* Correction du positionnement */
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white; /* Ajoutez un fond si nécessaire */
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1); /* Ombre optionnelle */
+    }
+</style>
+
+{% endblock %}

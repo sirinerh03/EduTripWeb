@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Réservation {{ reservation_hebergement.hebergement.nomh }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #06BBCC;
+      --secondary-color: #ffffff;
+      --accent-color: #06BBCC;
+      --text-color: #212529;
+      --muted-text: #6c757d;
+      --border-radius: 16px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --print-primary: #06BBCC;
+      --print-secondary: #ffffff;
+    }
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      color: var(--text-color);
+      padding: 30px;
+    }
+    .reservation-card {
+      background: var(--secondary-color);
+      max-width: 850px;
+      margin: auto;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* —— HEADER —— */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      padding: 30px 20px;
+      font-family: 'Playfair Display', serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header-text h1 {
+      font-size: 3.2rem;  /* Increased size for better visibility */
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+    .header-text p {
+      font-size: 1.4rem;
+      opacity: 0.95;
+      color: var(--secondary-color);
+    }
+    .header-logo img {
+      max-height: 120px;  /* Increased logo size */
+      width: auto;
+    }
+    @media (max-width: 576px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .header-text {
+        text-align: center;
+      }
+    }
+
+    .hebergement-image {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+    }
+    .details-container {
+      padding: 40px 30px;
+    }
+    .detail-section {
+      margin-bottom: 40px;
+      page-break-inside: avoid;
+    }
+    .detail-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #ecf0f1;
+      page-break-inside: avoid;
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-label {
+      font-weight: 500;
+      color: var(--muted-text);
+      font-size: 1rem;
+    }
+    .detail-value {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-color);
+    }
+    .price-highlight {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.3rem;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .status-badge {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .qr-code {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+      page-break-inside: avoid;
+    }
+    .qr-code img {
+      width: 140px;
+      height: 140px;
+      background: #f1f1f1;
+      border-radius: var(--border-radius);
+      padding: 10px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: var(--primary-color);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .no-print button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .no-print button:hover {
+      background: #0496a8;
+    }
+
+    /* —— PRINT STYLES —— */
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      body { background: none !important; padding: 0 !important; font-size: 12pt; }
+      .reservation-card {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+      }
+      .header {
+        background: var(--print-primary) !important;
+        color: var(--print-secondary) !important;
+        padding: 30px 20px !important;
+      }
+      .header-text h1, .header-text p {
+        color: var(--print-secondary) !important;
+      }
+      .hebergement-image { height: 250px !important; }
+      .details-container { padding: 20px !important; }
+      .detail-section h2 { font-size: 16pt !important; }
+      .detail-label, .detail-value { font-size: 11pt !important; }
+      .price-highlight {
+        font-size: 12pt !important;
+        color: var(--print-primary) !important;
+      }
+      .status-badge {
+        background: var(--print-primary) !important;
+        color: var(--print-secondary) !important;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reservation-card">
+
+    <!-- HEADER WITH LOGO -->
+    <div class="header">
+      <div class="header-text">
+        <h1>Confirmation de Réservation</h1>
+        <p>{{ reservation_hebergement.hebergement.nomh }}</p>
+      </div>
+      <div class="header-logo">
+        <img
+          src="{{ absolute_url(asset('images/edutrip-removebg-preview.png')) }}"
+          alt="Logo EduTrip"
+        />
+      </div>
+    </div>
+
+    <!-- MAIN IMAGE -->
+    <img
+      src="{{ absolute_url(asset('img/' ~ reservation_hebergement.hebergement.imageh)) }}"
+      alt="Image de l'hébergement {{ reservation_hebergement.hebergement.nomh }}"
+      class="hebergement-image"
+    />
+
+    <!-- DETAILS -->
+    <div class="details-container">
+      <div class="detail-section">
+        <h2>Détails de la réservation</h2>
+        <div class="detail-item">
+          <span class="detail-label">Date de début :</span>
+          <span class="detail-value">{{ reservation_hebergement.dateD|date('d/m/Y') }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Date de fin :</span>
+          <span class="detail-value">{{ reservation_hebergement.dateF|date('d/m/Y') }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Statut :</span>
+          <span class="detail-value">
+            <span class="status-badge">{{ reservation_hebergement.status }}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h2>Détails de l'hébergement</h2>
+        <div class="detail-item">
+          <span class="detail-label">Nom :</span>
+          <span class="detail-value">{{ reservation_hebergement.hebergement.nomh }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Adresse :</span>
+          <span class="detail-value">{{ reservation_hebergement.hebergement.adressh }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Prix :</span>
+          <span class="detail-value price-highlight">{{ reservation_hebergement.hebergement.prixh }} €</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h2>Calcul du prix total</h2>
+        <div class="detail-item">
+          <span class="detail-label">Prix par nuit :</span>
+          <span class="detail-value">{{ reservation_hebergement.hebergement.prixh }} €</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Nombre de nuits :</span>
+          <span class="detail-value">{{ number_of_days }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Total :</span>
+          <span class="detail-value price-highlight">{{ total_price }} €</span>
+        </div>
+      </div>
+
+      <div class="qr-code">
+        <img src="{{ qr_code }}" alt="QR code des détails de réservation" />
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Merci pour votre réservation !</p>
+      <p>Document généré le : {{ "now"|date('d/m/Y H:i') }}</p>
+    </div>
+  </div>
+
+  <!-- PRINT BUTTON (HIDDEN ON PRINT) -->
+  <div class="no-print" style="text-align: center; margin-top: 20px;">
+    <button onclick="window.print()">Imprimer la confirmation</button>
+  </div>
+</body>
+</html>
