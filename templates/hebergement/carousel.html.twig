@@ -21,13 +21,13 @@
 
                             <div class="d-flex justify-content-center gap-3">
                                <a href="{{ path('app_hebergement_show_carousel', {'id_hebergement': hebergement.id}) }}"
-   class="btn btn-outline-light">
-    Voir Détails
-</a>
-                                <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}"
-                                   class="btn btn-outline-light">
+                                  class="btn btn-outline-light">
+                                    Voir Détails
+                               </a>
+                               <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}"
+                                  class="btn btn-outline-light">
                                     Faire une Réservation
-                                </a>
+                               </a>
                             </div>
                         </div>
                     </div>
@@ -43,86 +43,134 @@
         </button>
     </div>
 
-   
+    <div class="text-center mt-4">
+        <a href="{{ path('app_hebergement_list') }}" class="btn btn-outline-primary">
+            Voir la liste des hébergements
+        </a>
+    </div>
 </section>
 
 <style>
+    body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background-color: #f8f9fa;
+    }
+
     .carousel-img {
-        width: 70%;
-        max-height: 450px;
+        width: 80%;
+        max-height: 480px;
         object-fit: cover;
         border-radius: 20px;
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out;
     }
 
     .carousel-item.active .carousel-img {
-        transform: scale(1.04);
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
     }
 
     .custom-caption {
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         border-radius: 16px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        padding: 1.5rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        max-width: 600px;
+        margin: 0 auto;
     }
 
+    .custom-caption h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .custom-caption p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* White outline buttons (Voir Détails & Faire une Réservation) */
     .btn-outline-light {
-        border: 1px solid #ffffff;  /* Thinner border */
+        border: 1px solid #fff;
+        color: #fff;
         font-weight: 600;
-        padding: 0.6rem 1.4rem;
-        border-radius: 50px;
-        transition: all 0.3s ease;
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        transition: all 0.3s ease-in-out;
         position: relative;
         overflow: hidden;
     }
 
-    .btn-outline-light::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 300%;
-        height: 300%;
-        background: rgba(255, 255, 255, 0.1);
-        transition: width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-    }
-
     .btn-outline-light:hover {
-        background-color: #ffffff;
-        color: #000000;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        background-color: #fff;
+        color: #000;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
         transform: translateY(-2px);
     }
 
-    .btn-outline-light:active {
-        transform: translateY(0px);  /* Button reset after click */
+    /* Blue outline button (Voir la liste des hébergements) */
+    .btn-outline-primary {
+        border: 1px solid #00aabb;
+        color: #00aabb;
+        background-color: transparent;
+        font-weight: 600;
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        transition: all 0.3s ease-in-out;
     }
 
-    .btn-outline-light:focus::after {
-        width: 0;
-        height: 0;
-        top: 50%;
-        left: 50%;
+    .btn-outline-primary:hover {
+        background-color: #00aabb;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 170, 187, 0.5);
+        transform: translateY(-2px);
     }
 
-    .btn-outline-light:hover::after {
-        width: 300%;
-        height: 300%;
-        top: -100%;
-        left: -100%;
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-size: 60% 60%;
+        filter: drop-shadow(0 0 5px #000);
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: -40px;
+    }
+
+    .carousel-indicators [data-bs-target] {
+        background-color: #000;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .carousel-indicators .active {
+        background-color: #fff;
     }
 
     @media (max-width: 768px) {
         .carousel-img {
             width: 100%;
-            max-height: 300px;
+            max-height: 280px;
         }
 
         .custom-caption {
+            padding: 1rem;
+        }
+
+        .custom-caption h3 {
+            font-size: 1.4rem;
+        }
+
+        .custom-caption p {
+            font-size: 0.95rem;
+        }
+
+        .btn-outline-light,
+        .btn-outline-primary {
+            padding: 0.5rem 1.2rem;
             font-size: 0.9rem;
         }
     }

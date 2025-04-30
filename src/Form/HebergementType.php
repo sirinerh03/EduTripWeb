@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+
 
 class HebergementType extends AbstractType
 {
@@ -39,13 +41,16 @@ class HebergementType extends AbstractType
                 'choices' => Hebergement::AVAILABILITY_CHOICES,
                 'placeholder' => 'Choisir une disponibilité',
                 'required' => true,
-                'empty_data' => 0, 
+                'empty_data' => '',
+ 
             ])
             ->add('descriptionh', TextareaType::class, [
                 'empty_data' => '',
             ])
-            ->add('imageh', null, [
-                'empty_data' => '', // Ensure empty submits as "" instead of null
+            ->add('imageh', FileType::class, [
+                'label' => 'Image',
+                'mapped' => false,
+                'required' => true,
             ]);
     }
 

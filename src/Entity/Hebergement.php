@@ -3,8 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\HebergementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+
+
+
+
+
+
+
+
 
 #[ORM\Entity(repositoryClass: HebergementRepository::class)]
 class Hebergement
@@ -59,6 +69,9 @@ class Hebergement
     #[Assert\NotBlank(message: "L'image est obligatoire.")]
     private string $imageh;
 
+    #[ORM\OneToMany(mappedBy: 'hebergement', targetEntity: ReservationHebergement::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $reservations;
+
     public const AVAILABILITY_CHOICES = [
         'Disponible' => 'Disponible',
         'Non disponible' => 'Non disponible',
@@ -71,6 +84,11 @@ class Hebergement
         'Appartements' => 'Appartements',
         'Foyers' => 'Foyers',
     ];
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -162,6 +180,32 @@ class Hebergement
     public function setImageh(string $imageh): static
     {
         $this->imageh = $imageh;
+        return $this;
+    }
+
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(ReservationHebergement $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setHebergement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(ReservationHebergement $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            if ($reservation->getHebergement() === $this) {
+                $reservation->setHebergement(null);
+            }
+        }
+
         return $this;
     }
 }

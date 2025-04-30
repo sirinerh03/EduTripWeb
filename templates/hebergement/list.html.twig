@@ -1,0 +1,318 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Hébergements{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {# Title Section #}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="elegant-heading">Liste des Hébergements</h1>
+        </div>
+    </div>
+
+    {# Search and Sort Form #}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form id="searchForm" method="get" action="{{ path('app_hebergement_list') }}">
+                        <div class="row g-3">
+                            {# Search Fields #}
+                            <div class="col-md-3">
+                                <input type="text" name="nom" class="form-control" placeholder="Nom de l'hébergement" value="{{ app.request.query.get('nom') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <select name="type" class="form-select">
+                                    <option value="">Type d'hébergement</option>
+                                    {% for key, type in constant('App\\Entity\\Hebergement::TYPE_CHOICES') %}
+                                        <option value="{{ type }}" {{ app.request.query.get('type') == type ? 'selected' : '' }}>{{ type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="min_capacity" class="form-control" placeholder="Capacité min" value="{{ app.request.query.get('min_capacity') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="max_price" class="form-control" placeholder="Prix max" value="{{ app.request.query.get('max_price') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <select name="disponibilite" class="form-select">
+                                    <option value="">Disponibilité</option>
+                                    {% for key, dispo in constant('App\\Entity\\Hebergement::AVAILABILITY_CHOICES') %}
+                                        <option value="{{ dispo }}" {{ app.request.query.get('disponibilite') == dispo ? 'selected' : '' }}>{{ dispo }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                            </div>
+                        </div>
+                        {# Sort Options #}
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-3">
+                                <select name="sort" class="form-select" id="sortSelect">
+                                    <option value="">Trier par</option>
+                                    <option value="price_asc" {{ app.request.query.get('sort') == 'price_asc' ? 'selected' : '' }}>Prix (Croissant)</option>
+                                    <option value="price_desc" {{ app.request.query.get('sort') == 'price_desc' ? 'selected' : '' }}>Prix (Décroissant)</option>
+                                    <option value="capacity_asc" {{ app.request.query.get('sort') == 'capacity_asc' ? 'selected' : '' }}>Capacité (Croissant)</option>
+                                    <option value="capacity_desc" {{ app.request.query.get('sort') == 'capacity_desc' ? 'selected' : '' }}>Capacité (Décroissant)</option>
+                                    <option value="name_asc" {{ app.request.query.get('sort') == 'name_asc' ? 'selected' : '' }}>Nom (A-Z)</option>
+                                    <option value="name_desc" {{ app.request.query.get('sort') == 'name_desc' ? 'selected' : '' }}>Nom (Z-A)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Results Container #}
+    <div class="row">
+        <div class="col-12">
+            <div id="resultsContainer">
+                {% if pagination|length == 0 %}
+                    <p class="text-center">Aucun hébergement trouvé.</p>
+                {% else %}
+                    <div class="row">
+                        {% for hebergement in pagination %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    {% if hebergement.imageh %}
+                                        <img src="{{ asset('img/' ~ hebergement.imageh) }}" class="card-img-top" alt="{{ hebergement.nomh }}" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='{{ asset('img/placeholder.jpg') }}';">
+                                    {% else %}
+                                        <img src="{{ asset('img/placeholder.jpg') }}" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;">
+                                    {% endif %}
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{ hebergement.nomh }}</h5>
+                                        <p class="card-text flex-grow-1">{{ hebergement.descriptionh|slice(0, 100) }}{% if hebergement.descriptionh|length > 100 %}...{% endif %}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary">Capacité: {{ hebergement.capaciteh }}</span>
+                                            <span class="badge bg-success">{{ hebergement.prixh }} €</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="{{ path('app_hebergement_show_carousel', {'id_hebergement': hebergement.id}) }}" class="btn btn-primary">Voir détails</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Pagination #}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div id="paginationContainer" class="pagination-wrapper">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+    {# Loading Indicator #}
+    <div id="loadingIndicator" class="row text-center my-5" style="display: none;">
+        <div class="col-12">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .elegant-heading {
+        position: relative;
+        display: inline-block;
+        font-weight: 600;
+        color: #2c3e50;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        font-size: 2.2rem;
+    }
+    .elegant-heading:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: #06BBCC;
+    }
+    .card-img-top {
+        transition: transform 0.3s ease;
+    }
+    .card:hover .card-img-top {
+        transform: scale(1.03);
+    }
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        list-style: none;
+        padding-left: 0;
+    }
+    .pagination a, .pagination span {
+        padding: 8px 12px;
+        border: 1px solid #06BBCC;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #06BBCC;
+    }
+    .pagination a:hover {
+        background-color: #e7f9fc;
+    }
+    .pagination .current {
+        background-color: #06BBCC;
+        color: white;
+        font-weight: bold;
+    }
+    @media (max-width: 768px) {
+        .elegant-heading {
+            font-size: 1.8rem;
+        }
+        .card-img-top {
+            height: 180px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const sortSelect = document.getElementById('sortSelect');
+        
+        // Initialize form behavior
+        let isAjaxEnabled = true;
+        
+        // Handle form submission
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (isAjaxEnabled) {
+                performSearch();
+            } else {
+                // For sort changes, do a full page reload
+                this.submit();
+            }
+        });
+        
+        // Handle sort change
+        sortSelect.addEventListener('change', function() {
+            // For sort changes, we want a full page reload to maintain pagination
+            isAjaxEnabled = false;
+            searchForm.submit();
+        });
+        
+       function performSearch() {
+    loadingIndicator.style.display = 'flex';
+    
+    const formData = new FormData(searchForm);
+    const searchParams = new URLSearchParams(formData).toString();
+    
+    fetch('{{ path('app_hebergement_search') }}?' + searchParams, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadingIndicator.style.display = 'none';
+        
+        if (data.items.length > 0) {
+            resultsContainer.innerHTML = `
+                <div class="row">
+                    ${data.items.map(hebergement => `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="/img/${hebergement.image}" class="card-img-top" alt="${hebergement.nom}" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='{{ asset('img/placeholder.jpg') }}';">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">${hebergement.nom}</h5>
+                                    <p class="card-text flex-grow-1">${hebergement.description.substring(0, 100)}${hebergement.description.length > 100 ? '...' : ''}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-primary">Capacité: ${hebergement.capacite}</span>
+                                        <span class="badge bg-success">${hebergement.prix} €</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a href="${hebergement.url}" class="btn btn-primary">Voir détails</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            // Update pagination (simplified example)
+            paginationContainer.innerHTML = `
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        ${Array.from({ length: data.pagination.total_pages }, (_, i) => `
+                            <li class="page-item ${data.pagination.current_page === i + 1 ? 'active' : ''}">
+                                <a class="page-link" href="#" onclick="updatePage(${i + 1}); return false;">${i + 1}</a>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </nav>
+            `;
+            paginationContainer.style.display = 'block';
+        } else {
+            resultsContainer.innerHTML = '<p class="text-center">Aucun résultat trouvé.</p>';
+            paginationContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        loadingIndicator.style.display = 'none';
+        resultsContainer.innerHTML = '<p class="text-center text-danger">Une erreur est survenue lors de la recherche.</p>';
+    });
+}
+
+function updatePage(page) {
+    const formData = new FormData(searchForm);
+    formData.set('page', page);
+    const searchParams = new URLSearchParams(formData).toString();
+    // Trigger search with updated page
+    fetch('{{ path('app_hebergement_search') }}?' + searchParams, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update results and pagination as above
+        performSearch(); // Simplified; you can refactor to avoid duplication
+    });
+}
+        
+        // Optional: Trigger search on input change with debounce
+        const inputs = searchForm.querySelectorAll('input[name="nom"], input[name="min_capacity"], input[name="max_price"], select[name="type"], select[name="disponibilite"]');
+        let debounceTimer;
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    isAjaxEnabled = true;
+                    performSearch();
+                }, 500);
+            });
+        });
+    });
+</script>
+{% endblock %}

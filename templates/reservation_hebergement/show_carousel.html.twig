@@ -17,7 +17,7 @@
                     <li><strong>Hébergement :</strong> {{ reservation_hebergement.hebergement.nomh }}</li>
                     <li><strong>Date de début :</strong> {{ reservation_hebergement.dateD|date('d/m/Y') }}</li>
                     <li><strong>Date de fin :</strong> {{ reservation_hebergement.dateF|date('d/m/Y') }}</li>
-                    <li><strong>Statut :</strong> {{ reservation_hebergement.status }}</li>
+                    <li><strong>Commentaire :</strong> {{ reservation_hebergement.status }}</li>
                 </ul>
             </div>
         </div>
@@ -27,19 +27,19 @@
             <div class="card shadow-sm rounded p-4">
                 <h2 class="h4 mb-4 text-dark">Actions</h2>
                 <div class="d-flex flex-column gap-3 align-items-start">
-    <a href="{{ path('app_reservation_hebergement_edit_carousel', {'id_reservationh': reservation_hebergement.idReservationh}) }}" 
-       class="btn custom-btn">
-        Modifier la Réservation
-    </a>
+                    <a href="{{ path('app_reservation_hebergement_edit_carousel', {'id_reservationh': reservation_hebergement.idReservationh}) }}" 
+                    class="btn custom-btn">
+                        Modifier la Réservation
+                    </a>
 
-    <form action="{{ path('app_reservation_hebergement_delete_carousel', {'id_reservationh': reservation_hebergement.idReservationh}) }}"
-          method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_hebergement.idReservationh) }}">
-        <button type="submit" class="btn custom-btn">
-            Supprimer la Réservation
-        </button>
-    </form>
-</div>
+                    <form action="{{ path('app_reservation_hebergement_delete_carousel', {'id_reservationh': reservation_hebergement.idReservationh}) }}"
+                          method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_hebergement.idReservationh) }}">
+                        <button type="submit" class="btn custom-btn">
+                            Supprimer la Réservation
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
