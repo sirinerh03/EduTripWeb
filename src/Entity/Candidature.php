@@ -22,6 +22,10 @@ class Candidature
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $diplome = null;
 
+
+
+    
+
     #[ORM\Column(type: "string", length: 30)]
     private string $etat = 'en_attente';
 
