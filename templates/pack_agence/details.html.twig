@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Pack: {{ pack.nomPk }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-5">Détails du Pack: {{ pack.nomPk }}</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-lg border-0 overflow-hidden">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h5 class="card-title mb-0">{{ pack.nomPk }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Description:</strong> {{ pack.description }}<br>
+                        <strong>Prix:</strong> {{ pack.prix }} TND <br>
+                        <strong>Durée:</strong> {{ pack.duree }} jours<br>
+                        <strong>Date de Création:</strong> {{ pack.createdAt|date('d/m/Y') }}<br>
+                    </p>
+                    <hr>
+                    <h5 class="text-center text-success">Les avantages de ce pack :</h5>
+                    <ul>
+                        {% for avantage in pack.avantages %}
+                            <li>{{ avantage }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ path('app_pack_agence_index') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill">Retour à la Liste des Packs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

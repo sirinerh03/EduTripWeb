@@ -17,15 +17,29 @@ use App\Service\TwilioService;
 
 final class PackAgenceController extends AbstractController
 {
-    #[Route('/pack/agence', name: 'app_pack_agence')]
-    public function index(Pack_agenceRepository $packAgenceRepository): Response
+    #[Route('/pack/agence', name: 'app_pack_agence', methods: ['GET'])]
+    public function index(Request $request, Pack_agenceRepository $packAgenceRepository): Response
     {
-        $packAgences = $packAgenceRepository->findAll();
-
+        $filters = [
+            'nomPk' => $request->query->get('nom'),
+            'prix' => $request->query->get('prix'),
+            'duree' => $request->query->get('duree'),
+        ];
+    
+        $sort = $request->query->get('sort', 'date_ajout');
+        $direction = strtoupper($request->query->get('order', 'ASC')) === 'DESC' ? 'DESC' : 'ASC';
+    
+        $packAgences = $packAgenceRepository->findWithFiltersAndSort($filters, $sort, $direction);
+    
         return $this->render('pack_agence/index.html.twig', [
             'packAgences' => $packAgences,
         ]);
     }
+    
+    
+
+
+    
 
     #[Route('/pack/agence/liste', name: 'app_pack_agence_liste')]
     public function simpleList(Request $request, Pack_agenceRepository $packAgenceRepository): Response
@@ -211,7 +225,7 @@ final class PackAgenceController extends AbstractController
     public function meilleursPacks(Request $request, Pack_agenceRepository $packAgenceRepository): Response
     {
         // Récupérer les 3 packs ayant les prix les plus élevés
-        $meilleursPacks = $packAgenceRepository->findBy([], ['prix' => 'DESC'], 3);
+        $meilleursPacks = $packAgenceRepository->findBy([], ['prix' => 'asc'], 3);
     
         return $this->render('pack_agence/meilleurs_packs.html.twig', [
             'meilleursPacks' => $meilleursPacks,
@@ -237,6 +251,13 @@ final class PackAgenceController extends AbstractController
     
         return $this->render('pack_agence/calendar.html.twig', [
             'events' => $events,  // Passer les événements à la vue
+        ]);
+    }
+    #[Route('/pack/details/{id_pack}', name: 'app_pack_agence_details')]
+    public function details(PackAgence $pack): Response
+    {
+        return $this->render('pack_agence/details.html.twig', [
+            'pack' => $pack,
         ]);
     }
     
