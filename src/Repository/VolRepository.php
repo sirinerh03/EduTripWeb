@@ -16,6 +16,32 @@ class VolRepository extends ServiceEntityRepository
         parent::__construct($registry, Vol::class);
     }
 
+    // src/Repository/VolRepository.php
+
+public function findByFilters(?string $departure = null, ?string $arrival = null, ?\DateTimeInterface $date = null)
+{
+    $qb = $this->createQueryBuilder('v');
+    
+    if ($departure) {
+        $qb->andWhere('v.aeroportDepart LIKE :departure')
+           ->setParameter('departure', '%'.$departure.'%');
+    }
+    
+    if ($arrival) {
+        $qb->andWhere('v.aeroportArrivee LIKE :arrival')
+           ->setParameter('arrival', '%'.$arrival.'%');
+    }
+    
+    if ($date) {
+        $qb->andWhere('v.dateDepart >= :startDate')
+           ->andWhere('v.dateDepart < :endDate')
+           ->setParameter('startDate', $date->format('Y-m-d 00:00:00'))
+           ->setParameter('endDate', $date->modify('+1 day')->format('Y-m-d 00:00:00'));
+    }
+    
+    return $qb->getQuery()->getResult();
+}
+
     //    /**
     //     * @return Vol[] Returns an array of Vol objects
     //     */

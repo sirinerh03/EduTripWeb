@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\AviationStackService;
 use Knp\Snappy\Pdf;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\ReservationVol;
+
 
 
 final class VolsController extends AbstractController
@@ -19,14 +22,24 @@ final class VolsController extends AbstractController
     #[Route('/admin/vols', name: 'app_vols')]
     public function index(VolRepository $volRepository, AviationStackService $aviationStackService): Response
     {
+       $departure = $request->query->get('departure');
+       $arrival = $request->query->get('arrival');
+       $date = $request->query->get('date') ? new \DateTime($request->query->get('date')) : null;
+    // Filtrage
+        $vols = $volRepository->findByFilters($departure, $arrival, $date);
+
         $vols = $volRepository->findAll(); // correspond à ce que Twig attend
-    
         $apiVols = $aviationStackService->getFlights(); // données API séparées
-    
         return $this->render('admin/vols/vols.html.twig', [
             'vols' => $vols,
             'apiVols' => $apiVols,
-        ]);
+            'currentFilters' => [
+            'departure' => $departure,
+            'arrival' => $arrival,
+            'date' => $date ? $date->format('Y-m-d') : null
+        ]
+    ]);
+        
     }
     #[Route('/vols/new', name: 'vol_new')]
     public function ajouterVol(Request $request, EntityManagerInterface $entityManager): Response
@@ -94,22 +107,22 @@ public function afficherReservations(\App\Repository\ReservationVolRepository $r
 
 
 #[Route('/admin/reservations/pdf', name: 'admin_reservations_pdf')]
-    public function downloadPdf(Pdf $knpSnappyPdf): Response
-    {
-        $reservations = $this->getDoctrine()->getRepository(ReservationVol::class)->findAll();
+public function downloadPdf(ManagerRegistry $doctrine, Pdf $knpSnappyPdf): Response
+{
+    $reservations = $doctrine->getRepository(ReservationVol::class)->findAll();
 
-        $html = $this->renderView('admin/vols/reservations_pdf.html.twig', [
-            'reservations' => $reservations,
-        ]);
+    $html = $this->renderView('admin/vols/reservations_pdf.html.twig', [
+        'reservations' => $reservations,
+    ]);
 
-        return new Response(
-            $knpSnappyPdf->getOutputFromHtml($html),
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="liste_reservations.pdf"',
-            ]
-        );
-    }
+    return new Response(
+        $knpSnappyPdf->getOutputFromHtml($html),
+        200,
+        [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="liste_reservations.pdf"',
+        ]
+    );
+}
 
 }
