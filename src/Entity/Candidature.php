@@ -8,12 +8,6 @@ use App\Entity\University;
 #[ORM\Entity]
 class Candidature
 {
-
-
-
-
-
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
