@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\AviationStackService;
+use Knp\Snappy\Pdf;
+
 
 final class VolsController extends AbstractController
 {
@@ -96,7 +98,7 @@ public function afficherReservations(\App\Repository\ReservationVolRepository $r
     {
         $reservations = $this->getDoctrine()->getRepository(ReservationVol::class)->findAll();
 
-        $html = $this->renderView('admin/reservations_pdf.html.twig', [
+        $html = $this->renderView('admin/vols/reservations_pdf.html.twig', [
             'reservations' => $reservations,
         ]);
 

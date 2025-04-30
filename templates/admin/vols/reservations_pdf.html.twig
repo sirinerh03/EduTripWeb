@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Réservations de Vols</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #343a40;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .container {
+            margin: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Réservations de Vols</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Vol N°</th>
+                    <th>Nom & Prénom</th>
+                    <th>Email</th>
+                    <th>Places</th>
+                    <th>Date Réservation</th>
+                    <th>Départ</th>
+                    <th>Arrivée</th>
+                    <th>Prix (€)</th>
+                    <th>État du Paiement</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.vol ? reservation.vol.getNumVol() }}</td>
+                        <td>{{ reservation.nom ~ ' ' ~ reservation.prenom }}</td>
+                        <td>{{ reservation.email }}</td>
+                        <td>{{ reservation.getNbPlace() }}</td>
+                        <td>{{ reservation.dateReservation ? reservation.dateReservation|date('d/m/Y H:i') : '' }}</td>
+                        <td>{{ reservation.vol ? reservation.vol.aeroportDepart }}</td>
+                        <td>{{ reservation.vol ? reservation.vol.aeroportArrivee }}</td>
+                        <td>{{ reservation.vol ? reservation.vol.getPrixVol() }}</td>
+                        <td>{{ reservation.getEtat() }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Édition par {{ 'now'|date('d/m/Y') }} - Toutes les informations sont confidentielles</p>
+    </div>
+</body>
+</html>
