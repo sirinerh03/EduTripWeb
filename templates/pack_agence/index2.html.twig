@@ -6,39 +6,45 @@
     {{ parent() }}
     <style>
         .packs-container {
+            transition: opacity 0.3s ease;
             min-height: 300px;
-            transition: opacity 0.3s;
         }
 
-        .search-loading {
-            opacity: 0.7;
-            pointer-events: none;
+        .packs-container.loading {
+            opacity: 0.5;
+            position: relative;
         }
 
-        .filter-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .range-input-group {
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
         }
 
-        .range-input {
-            flex: 1;
-            min-width: 80px;
+        #filter-form input,
+        #filter-form select {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #filter-form input:focus,
+        #filter-form select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            justify-content: space-between;
+            margin-top: 20px;
         }
     </style>
 {% endblock %}
@@ -56,74 +62,66 @@
         </a>
     </div>
 
-    <div class="filter-card">
-        <form id="filter-form" class="row g-3">
-            <div class="col-md-4">
-                <label for="nom" class="form-label">🔍 Nom</label>
-                <input type="text" class="form-control" id="nom" name="nom" 
-                       value="{{ app.request.query.get('nom') }}" 
-                       placeholder="Rechercher...">
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">💰 Prix (TND)</label>
-                <div class="range-input-group">
-                    <input type="number" class="form-control range-input" 
-                           id="prix_min" name="prix_min" 
-                           min="100" max="10000" step="100" 
-                           value="{{ prix_min ?? 100 }}">
-                    <span class="text-muted">à</span>
-                    <input type="number" class="form-control range-input" 
-                           id="prix_max" name="prix_max" 
-                           min="100" max="10000" step="100" 
-                           value="{{ prix_max ?? 10000 }}">
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="nom" class="form-label">🔍 Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom"
+                           value="{{ app.request.query.get('nom') }}"
+                           placeholder="Rechercher...">
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">⏳ Durée (jours)</label>
-                <div class="range-input-group">
-                    <input type="number" class="form-control range-input" 
-                           id="duree_min" name="duree_min" 
-                           min="1" max="30" step="1" 
-                           value="{{ duree_min ?? 1 }}">
-                    <span class="text-muted">à</span>
-                    <input type="number" class="form-control range-input" 
-                           id="duree_max" name="duree_max" 
-                           min="1" max="30" step="1" 
-                           value="{{ duree_max ?? 30 }}">
+                <div class="col-md-3">
+                    <label class="form-label">💰 Prix (TND)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" class="form-control" id="prix_min" name="prix_min" value="{{ prix_min ?? 100 }}"
+                               min="100" max="10000" step="100">
+                        <span class="text-muted">à</span>
+                        <input type="number" class="form-control" id="prix_max" name="prix_max" value="{{ prix_max ?? 10000 }}"
+                               min="100" max="10000" step="100">
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">🔃 Trier par</label>
-                <div class="input-group">
+                <div class="col-md-3">
+                    <label class="form-label">⏳ Durée (jours)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" class="form-control" id="duree_min" name="duree_min" value="{{ duree_min ?? 1 }}"
+                               min="1" max="30" step="1">
+                        <span class="text-muted">à</span>
+                        <input type="number" class="form-control" id="duree_max" name="duree_max" value="{{ duree_max ?? 30 }}"
+                               min="1" max="30" step="1">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">🔃 Trier par</label>
                     <select name="order_by" id="order_by" class="form-select">
                         <option value="p.nom_pk" {{ order_by == 'p.nom_pk' ? 'selected' : '' }}>Nom</option>
                         <option value="p.prix" {{ order_by == 'p.prix' ? 'selected' : '' }}>Prix</option>
                         <option value="p.duree" {{ order_by == 'p.duree' ? 'selected' : '' }}>Durée</option>
                     </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
                     <select name="order_dir" id="order_dir" class="form-select">
                         <option value="asc" {{ order_dir == 'asc' ? 'selected' : '' }}>⬆️ Croissant</option>
                         <option value="desc" {{ order_dir == 'desc' ? 'selected' : '' }}>⬇️ Décroissant</option>
                     </select>
                 </div>
-            </div>
 
-            <div class="col-12">
-                <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-filter me-2"></i>Filtrer
                     </button>
-                    <button type="button" id="reset-btn" class="btn btn-outline-secondary">
+                </div>
+                <div class="col-md-3">
+                    <button type="button" id="reset-btn" class="btn btn-outline-secondary w-100">
                         <i class="fas fa-undo me-2"></i>Réinitialiser
                     </button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
-    <div id="packs-results">
+    <div class="packs-container" id="packs-results">
         {% include 'pack_agence/_pack_cards.html.twig' %}
     </div>
 </div>
@@ -136,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let searchTimeout;
 
     const performSearch = () => {
-        resultsContainer.classList.add('search-loading');
+        resultsContainer.classList.add('loading');
 
         const params = new URLSearchParams();
         params.append('nom', document.getElementById('nom').value);
@@ -156,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.history.replaceState(null, null, '?' + params.toString());
         })
         .finally(() => {
-            resultsContainer.classList.remove('search-loading');
+            resultsContainer.classList.remove('loading');
         });
     };
 

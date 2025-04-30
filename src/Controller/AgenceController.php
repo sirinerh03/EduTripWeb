@@ -12,76 +12,89 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\AgenceRepository;
+
 
 #[Route('/agence')]
 final class AgenceController extends AbstractController
 {
     #[Route('/', name: 'app_agence_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        $agences = $entityManager
-            ->getRepository(Agence::class)
-            ->findAll();
+public function index(Request $request, AgenceRepository $agenceRepository): Response
+{
+    // Get filters from request
+    $filters = [
+        'nom_ag' => $request->query->get('nom_ag'),
+        'adresse_ag' => $request->query->get('adresse_ag')
+    ];
 
-        return $this->render('agence/index.html.twig', [
-            
-            'agences' => $agences,
-        ]);
-    }
+    // Get sorting parameters
+    $sort = $request->query->get('sort', 'date_creation');
+    $direction = strtolower($request->query->get('direction', 'asc')) === 'desc' ? 'DESC' : 'ASC';
+
+    // Get filtered and sorted agencies
+    $agences = $agenceRepository->findWithFiltersAndSort($filters, $sort, $direction);
+
+    return $this->render('agence/index.html.twig', [
+        'agences' => $agences,
+    ]);
+}
+
+    
+
+    
    
 
 
-#[Route('/Liste', name: 'app_agence_liste', methods: ['GET'])]
-public function simpleList(Request $request, EntityManagerInterface $entityManager): Response
-{
-     // Récupération des filtres depuis la requête GET
-     $nom = $request->query->get('nom');
-     $description = $request->query->get('description');
-     $dateCreation = $request->query->get('date_creation');
-     $sort = $request->query->get('sort');
-     $direction = $request->query->get('direction', 'asc');
+    #[Route('/Liste', name: 'app_agence_liste', methods: ['GET'])]
+    public function simpleList(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer les paramètres de la requête
+        $nom = $request->query->get('nom');
+        $description = $request->query->get('description');
+        $dateCreation = $request->query->get('date_creation');
+        $sort = $request->query->get('sort');
+        $direction = $request->query->get('direction', 'asc');
 
-     $queryBuilder = $agenceRepository->createQueryBuilder('a');
+        $agenceRepository = $entityManager->getRepository(Agence::class);
+        $queryBuilder = $agenceRepository->createQueryBuilder('a');
 
-     // Filtres
-     if ($nom) {
-         $queryBuilder->andWhere('a.nom_ag LIKE :nom')
-                      ->setParameter('nom', '%' . $nom . '%');
-     }
+        // Ajouter des filtres à la requête
+        if ($nom) {
+            $queryBuilder->andWhere('a.nom_ag LIKE :nom')
+                         ->setParameter('nom', '%' . $nom . '%');
+        }
 
-     if ($description) {
-         $queryBuilder->andWhere('a.description LIKE :description')
-                      ->setParameter('description', '%' . $description . '%');
-     }
+        if ($description) {
+            $queryBuilder->andWhere('a.description LIKE :description')
+                         ->setParameter('description', '%' . $description . '%');
+        }
 
-     if ($dateCreation) {
-         $queryBuilder->andWhere('DATE(a.date_creation) = :date_creation')
-                      ->setParameter('date_creation', $dateCreation);
-     }
+        if ($dateCreation) {
+            $queryBuilder->andWhere('DATE(a.date_creation) = :date_creation')
+                         ->setParameter('date_creation', $dateCreation->format('Y-m-d'));
+        }
+        // Ajouter le tri à la requête
+        if ($sort) {
+            $queryBuilder->orderBy($sort, strtolower($direction) === 'desc' ? 'DESC' : 'ASC');
+        } else {
+            $queryBuilder->orderBy('a.nom_ag', 'ASC');
+        }
 
-     // Tri
-     if ($sort) {
-         $queryBuilder->orderBy($sort, strtolower($direction) === 'desc' ? 'DESC' : 'ASC');
-     } else {
-         $queryBuilder->orderBy('a.id', 'DESC');
-     }
+        // Exécuter la requête
+        $agences = $queryBuilder->getQuery()->getResult();
 
-     $agences = $queryBuilder->getQuery()->getResult();
+        // Si la requête est AJAX, on renvoie seulement les cartes d'agences
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('agence/_agences_cards.html.twig', [
+                'agences' => $agences,
+            ]);
+        }
 
-     // Si la requête est AJAX, on renvoie juste le fragment HTML
-     if ($request->isXmlHttpRequest()) {
-         return $this->render('agence/_agences_cards.html.twig', [
-             'agences' => $agences,
-         ]);
-     }
-
-     // Sinon, vue complète
-     return $this->render('agence/index2.html.twig', [
-         'agences' => $agences,
-     ]);
- 
-}
-
+        // Sinon, afficher la vue complète
+        return $this->render('agence/index2.html.twig', [
+            'agences' => $agences,
+        ]);
+    }
     
 
     #[Route('/new', name: 'app_agence_new', methods: ['GET', 'POST'])]
