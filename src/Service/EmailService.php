@@ -15,12 +15,17 @@ class EmailService
 
     public function sendConfirmationEmail(string $to, string $subject, string $body): void
     {
-        $email = (new Email())
-            ->from('edutrip.edutrip@gmail.com')
-            ->to($to)
-            ->subject($subject)
-            ->html($body);
-
-        $this->mailer->send($email);
-    }
-}
+        try {
+            $email = (new Email())
+                ->from('edutrip.edutrip@gmail.com')
+                ->to($to)
+                ->subject($subject)
+                ->html($body);
+    
+            $this->mailer->send($email);
+        } catch (\Exception $e) {
+            // Loguer l'erreur pour le débogage
+            error_log('Erreur lors de l’envoi de l’email : ' . $e->getMessage());
+            throw new \Exception('Échec de l’envoi de l’email : ' . $e->getMessage());
+        }
+    } }

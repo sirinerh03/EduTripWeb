@@ -17,16 +17,19 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Service\EmailService;
+use Psr\Log\LoggerInterface;
 
 
 
 class ReservationVolController extends AbstractController
 {  private WeatherService $weatherService;
+   private LoggerInterface $logger;
 
-    public function __construct(WeatherService $weatherService, EmailService $emailService )
+    public function __construct(WeatherService $weatherService, EmailService $emailService, LoggerInterface $logger )
     {
         $this->weatherService = $weatherService;
         $this->emailService = $emailService;
+        $this->logger = $logger;
     }
     #[Route('/reservationvol', name: 'app_reservation_vol')]
     public function index(Request $request, VolRepository $volRepository): Response
@@ -207,7 +210,8 @@ class ReservationVolController extends AbstractController
     public function success(
         int $id,
         ReservationVolRepository $reservationVolRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        EmailService $emailService
     ): Response {
         $reservation = $reservationVolRepository->find($id);
 
@@ -227,34 +231,39 @@ class ReservationVolController extends AbstractController
             ]);
 
             // 👉 3. Envoyer l’e-mail
-            $this->emailService->sendConfirmationEmail(
+            $emailService->sendConfirmationEmail(
                 $reservation->getEmail(),
-                'Confirmation de réservation',
+                'Confirmation de réservation n°' . $reservation->getId(),
                 $body
             );
-
+    
             $this->addFlash('success', 'Paiement réussi et email envoyé !');
         } catch (\Exception $e) {
             $this->addFlash('warning', 'Erreur : ' . $e->getMessage());
+            // Logger l'erreur
+            $this->logger->error('Erreur envoi email: ' . $e->getMessage());
         }
-
+        
         return $this->redirectToRoute('app_reservation_vol');
     }
 
 
 
 
-    #[Route('/test-mail', name: 'test_mail')]
-    public function testMail(EmailService $emailService): Response
+    #[Route('/test-email', name: 'test_email')]
+    public function testEmail(EmailService $emailService): Response
     {
-        $emailService->sendConfirmationEmail(
-            'edutrip.edutrip@gmail.com',
-            'Test Email',
-            '<p>Ceci est un test de mail.</p>'
-        );
-    
-        return new Response('Email envoyé (si tout est bien configuré)');
-    }    
+        try {
+            $emailService->sendConfirmationEmail(
+                'votre_email@test.com', // Remplacez par un email de test
+                'Test Email',
+                '<p>Ceci est un email de test.</p>'
+            );
+            return new Response('Email envoyé avec succès !');
+        } catch (\Exception $e) {
+            return new Response('Erreur : ' . $e->getMessage());
+        }
+    }   
 
    
 
