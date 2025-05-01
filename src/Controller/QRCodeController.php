@@ -47,9 +47,10 @@ class QRCodeController extends AbstractController
             writer: new PngWriter(),
             data: $url,
             size: 400,
+            
             margin: 10
         );
-        
+
         $qr = $builder->build();
         return new Response($qr->getString(), 200, [
             'Content-Type' => 'image/png',
