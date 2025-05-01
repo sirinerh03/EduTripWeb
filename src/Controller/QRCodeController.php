@@ -49,11 +49,12 @@ class QRCodeController extends AbstractController
             size: 400,
             margin: 10
         );
+        
         $qr = $builder->build();
         return new Response($qr->getString(), 200, [
             'Content-Type' => 'image/png',
             'Content-Disposition' => 'attachment; filename="university-qr-'.$id.'.png"',
         ]);
     }
-    
+
 }
