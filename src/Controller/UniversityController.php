@@ -191,6 +191,7 @@ final class UniversityController extends AbstractController
         $university = new University();
         $form = $this->createForm(UniversityType::class, $university);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($university);
@@ -205,7 +206,7 @@ final class UniversityController extends AbstractController
         ]);
     }
 
-    
+
 
     #[Route('/{id}', name: 'app_university_show', methods: ['GET'])]
     public function show(University $university): Response
