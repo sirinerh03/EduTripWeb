@@ -1,12 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}University{% endblock %}
+{% block title %}{{ university.nom }} - Details{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/qr-code.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>University</h1>
-
-    <table class="table">
-        <tbody>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ university.nom }}</h1>
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <table class="table table-hover mb-0">
+                            <tbody>
             <tr>
                 <th>IdUniversity</th>
                 <td>{{ university.id }}</td>
@@ -27,12 +36,41 @@
                 <th>Description</th>
                 <td>{{ university.description }}</td>
             </tr>
-        </tbody>
-    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <a href="{{ path('app_university_index') }}">back to list</a>
+                <div class="mt-4">
+                    <a href="{{ path('app_university_index') }}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <a href="{{ path('app_university_edit', {'idUniversity': university.id}) }}" class="btn btn-primary me-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {{ include('university/_delete_form.html.twig') }}
+                </div>
+            </div>
 
-    <a href="{{ path('app_university_edit', {'idUniversity': university.id}) }}">edit</a>
-
-    {{ include('university/_delete_form.html.twig') }}
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title mb-3">QR Code</h5>
+                        <div class="qr-code-container mb-3">
+                            <img src="{{ path('app_qr_code_university', {'id': university.id}) }}" 
+                                 alt="QR Code for {{ university.nom }}" 
+                                 class="qr-code-preview"
+                                 style="width: 200px; height: 200px;"
+                                 data-bs-toggle="tooltip"
+                                 title="Scan to view university details">
+                        </div>
+                        <a href="{{ path('app_qr_code_download', {'id': university.id}) }}" 
+                           class="btn btn-outline-primary">
+                            <i class="fas fa-download"></i> Download QR Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

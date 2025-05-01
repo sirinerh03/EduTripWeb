@@ -88,6 +88,9 @@
                   <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
               </div>
             </li>
+            <a href="{{ path('app_statistics') }}" class="nav-item nav-link">
+    <i class="fas fa-chart-bar me-2"></i>Statistics
+</a>
             <li class="nav-item d-none d-lg-block full-screen-link">
               <a class="nav-link">
                 <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
@@ -225,11 +228,19 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <span class="menu-title">Universités</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-              </a>
+               <a class="nav-link" href="{{ path('app_university_back') }}">
+               <span class="menu-title">Universités</span>
+               <i class="menu-arrow"></i>
+               <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+  </a>
+  <li class="nav-item">
+  <a class="nav-link" href="{{ path('app_candidature_index') }}">
+    <span class="menu-title">Candidatures</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-account-box-multiple menu-icon"></i>
+  </a>
+</li>
+
               <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">

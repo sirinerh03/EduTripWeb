@@ -1,0 +1,24 @@
+endroid_qr_code:
+    default:
+        writer: Endroid\QrCode\Writer\SvgWriter
+        size: 300
+        margin: 10
+        encoding: 'UTF-8'
+        error_correction_level: 'high'
+        round_block_size_mode: 'margin'
+        foreground_color: { r: 45, g: 55, b: 72 }
+        background_color: { r: 255, g: 255, b: 255 }
+        validate_result: false
+
+    builders:
+        download:
+            writer: Endroid\QrCode\Writer\SvgWriter
+            data: null
+            size: 300
+            margin: 10
+            encoding: 'UTF-8'
+            error_correction_level: 'high'
+            round_block_size_mode: 'margin'
+            foreground_color: { r: 45, g: 55, b: 72 }
+            background_color: { r: 255, g: 255, b: 255 }
+            validate_result: false

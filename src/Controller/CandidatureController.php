@@ -9,18 +9,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options as DompdfOptions;
 
 #[Route('/candidature')]
 final class CandidatureController extends AbstractController
 {
     #[Route(name: 'app_candidature_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $candidatures = $entityManager->getRepository(Candidature::class)->findAll();
+        $searchTerm = $request->query->get('search');
+        $sort = $request->query->get('sort', 'etat');
+        $direction = strtoupper($request->query->get('direction', 'asc')) === 'DESC' ? 'DESC' : 'ASC';
+
+        $queryBuilder = $entityManager->getRepository(Candidature::class)->createQueryBuilder('c');
+
+        if ($searchTerm) {
+            $queryBuilder->where('LOWER(c.cv) LIKE :search OR LOWER(c.lettre_motivation) LIKE :search OR LOWER(c.diplome) LIKE :search')
+                ->setParameter('search', '%' . strtolower($searchTerm) . '%');
+        }
+
+        $allowedSortFields = ['cv', 'lettre_motivation', 'diplome', 'etat'];
+        $sortField = in_array($sort, $allowedSortFields) ? $sort : 'etat';
+        $queryBuilder->orderBy('c.' . $sortField, $direction);
+
+        $candidatures = $queryBuilder->getQuery()->getResult();
 
         return $this->render('candidature/index.html.twig', [
             'candidatures' => $candidatures,
+            'search' => $searchTerm,
+            'sort' => $sortField,
+            'direction' => $direction,
         ]);
     }
 
@@ -38,7 +59,32 @@ final class CandidatureController extends AbstractController
             $entityManager->persist($candidature);
             $entityManager->flush();
 
-            
+            // Generate PDF with dompdf
+            $options = new DompdfOptions();
+            $options->set('defaultFont', 'DejaVu Sans');//Set the default font to DejaVu Sans (good for supporting accents, Arabic, special characters).
+            $dompdf = new Dompdf($options);
+            $html = $this->renderView('candidature/candidature_pdf.html.twig', [
+                'candidature' => $candidature,
+            ]);
+            // Debug: Save HTML to file for inspection 
+            file_put_contents(dirname(__DIR__, 2) . '/var/candidature_pdf_debug.html', $html);//Save the HTML into a file inside your var/ directory.
+            $dompdf->loadHtml($html);//Give the rendered HTML to Dompdf so it can transform it into a PDF.
+
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();//load pdf 
+
+            return new Response(
+                $dompdf->output(),
+                200,//HTTP code 200 (OK).
+
+
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT . '; filename="candidature_' . $candidature->getId() . '.pdf"'//Content-Disposition = attachment = force download.
+
+
+                ]
+            );
         }
 
         return $this->render('candidature/new.html.twig', [
