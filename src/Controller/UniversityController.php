@@ -212,13 +212,13 @@ final class UniversityController extends AbstractController
 
 
 
-
     #[Route('/{id}', name: 'app_university_show', methods: ['GET'])]
     public function show(University $university): Response
     {
         return $this->render('university/show.html.twig', [
             'university' => $university,
         ]);
+
     }
 
     #[Route('/{id}/edit', name: 'app_university_edit', methods: ['GET', 'POST'])]
