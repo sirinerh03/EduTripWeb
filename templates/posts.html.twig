@@ -540,7 +540,9 @@
                                 <img src="{{ asset('images/dislike.png') }}" alt="{{ 'post.dislike'|trans }}" class="me-1" style="width: 18px; height: 18px;">
                                 <span class="vote-count">{{ post.dislikes ?? 0 }}</span>
                             </button>
+                          
                         </form>
+
                         
                         <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="toggleCommentaires({{ post.idPost }})">
                             <i class="far fa-comment me-1"></i> {{ 'post.comments'|trans }}
@@ -826,5 +828,6 @@ document.getElementById('searchInput')?.addEventListener('input', function() {
         card.style.display = text.includes(searchTerm) ? '' : 'none';
     });
 });
+
 </script>
 {% endblock %}

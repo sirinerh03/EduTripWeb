@@ -13,6 +13,7 @@ parameters:
     diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
     candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
     env(RAPIDAPI_KEY): 'db9079933msh7a6e8d3fc763abcp1647c1iand4518b66527'
+    
 services:
     _defaults:
         autowire: true
@@ -38,7 +39,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-
+    App\Service\BadWordsService:
+        arguments:
+            $apiKey: '%env(BADWORDS_API_KEY)%'
+            $client: '@Symfony\Contracts\HttpClient\HttpClientInterface'
   
 
     # add more service definitions when explicit configuration is needed

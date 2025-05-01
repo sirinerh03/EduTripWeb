@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Service\BadWordsChecker;
+use App\Service\BadWordsService;
+use App\Service\FacebookShareService;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class PostController extends AbstractController
 {
@@ -175,103 +177,63 @@ public function posts(Request $request, EntityManagerInterface $entityManager): 
 }
 
 
-    #[Route('/commentaire/add', name: 'ajouter_commentaire', methods: ['POST'])]
-    public function ajouterCommentaire(
-        Request $request,
-        EntityManagerInterface $em,
-        HttpClientInterface $client,
-        PostRepository $postRepository
-    ): JsonResponse {
-        try {
-            // 1. Récupération et validation des données
-            $postId = $request->request->get('postId');
-            $contenu = $request->request->get('contenu');
-        
-            if (empty($postId)) {
-                return new JsonResponse(['error' => 'L\'identifiant du post est requis'], 400);
-            }
-            
-            if (empty($contenu)) {
-                return new JsonResponse(['error' => 'Le contenu du commentaire ne peut pas être vide'], 400);
-            }
-    
-            // 2. Vérification de l'existence du post
-            $post = $postRepository->find($postId);
-            if (!$post) {
-                return new JsonResponse(['error' => 'Le post spécifié n\'existe pas'], 404);
-            }
-    
-            // 3. Vérification des mots interdits avec gestion d'erreur améliorée
-            try {
-                $response = $client->request('POST', 'https://api.api-ninjas.com/v1/profanityfilter', [
-                    'headers' => [
-                        'X-Api-Key' => $this->getParameter('badwords_api_key'),
-                        'Content-Type' => 'application/json',
-                    ],
-                    'json' => ['text' => $contenu],
-                    'timeout' => 3 // Timeout de 3 secondes
-                ]);
-    
-                $result = $response->toArray();
-    
-                if (($result['has_bad_words'] ?? false) === true) {
-                    return new JsonResponse([
-                        'error' => 'Votre commentaire contient des termes inappropriés',
-                        'filtered_text' => $result['filtered_text'] ?? null
-                    ], 422);
-                }
-            } catch (\Exception $apiError) {
-                // Fallback si l'API échoue
-                $badWords = ['stupid', 'fuck','shit']; // Liste basique de mots interdits
-                foreach ($badWords as $word) {
-                    if (stripos($contenu, $word) !== false) {
-                        return new JsonResponse([
-                            'error' => 'Votre commentaire contient des termes inappropriés',
-                            'filtered_text' => str_ireplace($badWords, '***', $contenu)
-                        ], 422);
-                    }
-                }
-            }
-    
-            // 4. Création et persistance du commentaire
-            $commentaire = (new Commentaire())
-                ->setContenu($contenu)
-                ->setPost($post)
-                ->setDateCommentaire(new \DateTime())
-                ->setUtilisateur($em->getRepository(Utilisateur::class)->find(1) ?? 
-                    throw new \RuntimeException('Utilisateur par défaut introuvable'));
-    
-            $em->persist($commentaire);
-            $em->flush();
-    
-            // 5. Retour de la réponse
-            return new JsonResponse([
-                'success' => true,
-                'commentaire' => [
-                    
-                    'contenu' => $commentaire->getContenu(),
-                    'username' => $commentaire->getUtilisateur()->getPrenom(),
-                    'date' => $commentaire->getDateCommentaire()->format('d/m/Y H:i')
-                ]
-            ]);
-    
-        } catch (\Exception $e) {
-            // 6. Gestion des erreurs inattendues
-            return new JsonResponse([
-                'error' => 'Une erreur technique est survenue',
-                'details' => $e->getMessage() // À désactiver en production
-            ], 500);
+#[Route('/commentaire/add', name: 'ajouter_commentaire', methods: ['POST'])]
+public function ajouterCommentaire(
+    Request $request,
+    EntityManagerInterface $em,
+    PostRepository $postRepository,
+    \App\Service\BadWordsService $BadWordsService
+): JsonResponse {
+    try {
+        $postId = $request->request->get('postId');
+        $contenu = $request->request->get('contenu');
+
+        if (empty($postId)) {
+            return new JsonResponse(['error' => 'L\'identifiant du post est requis'], 400);
         }
-    }
-    
-    #[Route('/commentaire/{id}/delete', name: 'delete_commentaire', methods: ['POST'])]
-    public function deleteCommentaire(Commentaire $commentaire, EntityManagerInterface $em): JsonResponse
-    {
-        $em->remove($commentaire);
+
+        if (empty($contenu)) {
+            return new JsonResponse(['error' => 'Le contenu du commentaire ne peut pas être vide'], 400);
+        }
+
+        $post = $postRepository->find($postId);
+        if (!$post) {
+            return new JsonResponse(['error' => 'Le post spécifié n\'existe pas'], 404);
+        }
+
+        // 🚀 Vérification des bad words avec BadWordsService
+        if ($BadWordsService->containsBadWords($contenu)) {
+            return new JsonResponse([
+                'error' => 'Votre commentaire contient des termes inappropriés'
+            ], 422);
+        }
+
+        $commentaire = (new Commentaire())
+            ->setContenu($contenu)
+            ->setPost($post)
+            ->setDateCommentaire(new \DateTime())
+            ->setUtilisateur($em->getRepository(Utilisateur::class)->find(1) ??
+                throw new \RuntimeException('Utilisateur par défaut introuvable'));
+
+        $em->persist($commentaire);
         $em->flush();
-    
-        return new JsonResponse(['success' => true]);
+
+        return new JsonResponse([
+            'success' => true,
+            'commentaire' => [
+                'contenu' => $commentaire->getContenu(),
+                'username' => $commentaire->getUtilisateur()->getPrenom(),
+                'date' => $commentaire->getDateCommentaire()->format('d/m/Y H:i')
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        return new JsonResponse([
+            'error' => 'Une erreur technique est survenue',
+            'details' => $e->getMessage() // À désactiver en prod
+        ], 500);
     }
+}
     #[Route('/commentaire/{id}/edit', name: 'commentaire_edit')]
     public function editCommentaire(Request $request, Commentaire $commentaire)
     {
@@ -394,5 +356,6 @@ public function favorites(EntityManagerInterface $em): Response
         'posts' => $posts
     ]);
 }
+
 
 }
