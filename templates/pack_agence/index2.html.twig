@@ -122,79 +122,11 @@
     </div>
 
     <div class="packs-container" id="packs-results">
-        {% include 'pack_agence/_pack_cards.html.twig' %}
+        {% if packAgences is empty %}
+            <p>Aucun pack ne correspond à vos critères.</p>
+        {% else %}
+            {% include 'pack_agence/_pack_cards.html.twig' %}
+        {% endif %}
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filterForm = document.getElementById('filter-form');
-    const resetBtn = document.getElementById('reset-btn');
-    const resultsContainer = document.getElementById('packs-results');
-    let searchTimeout;
-
-    const performSearch = () => {
-        resultsContainer.classList.add('loading');
-
-        const params = new URLSearchParams();
-        params.append('nom', document.getElementById('nom').value);
-        params.append('prix_min', document.getElementById('prix_min').value);
-        params.append('prix_max', document.getElementById('prix_max').value);
-        params.append('duree_min', document.getElementById('duree_min').value);
-        params.append('duree_max', document.getElementById('duree_max').value);
-        params.append('order_by', document.getElementById('order_by').value);
-        params.append('order_dir', document.getElementById('order_dir').value);
-
-        fetch('{{ path('app_pack_agence_liste') }}?' + params.toString(), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.text())
-        .then(html => {
-            resultsContainer.innerHTML = html;
-            window.history.replaceState(null, null, '?' + params.toString());
-        })
-        .finally(() => {
-            resultsContainer.classList.remove('loading');
-        });
-    };
-
-    const resetFilters = () => {
-        document.getElementById('nom').value = '';
-        document.getElementById('prix_min').value = 100;
-        document.getElementById('prix_max').value = 10000;
-        document.getElementById('duree_min').value = 1;
-        document.getElementById('duree_max').value = 30;
-        document.getElementById('order_by').value = 'p.nom_pk';
-        document.getElementById('order_dir').value = 'asc';
-        performSearch();
-    };
-
-    filterForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        performSearch();
-    });
-
-    resetBtn.addEventListener('click', resetFilters);
-
-    filterForm.querySelectorAll('input, select').forEach(input => {
-        input.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(performSearch, 500);
-        });
-        input.addEventListener('change', performSearch);
-    });
-
-    document.getElementById('prix_min').addEventListener('change', function() {
-        if (parseInt(this.value) > parseInt(document.getElementById('prix_max').value)) {
-            document.getElementById('prix_max').value = this.value;
-        }
-    });
-
-    document.getElementById('duree_min').addEventListener('change', function() {
-        if (parseInt(this.value) > parseInt(document.getElementById('duree_max').value)) {
-            document.getElementById('duree_max').value = this.value;
-        }
-    });
-});
-</script>
 {% endblock %}

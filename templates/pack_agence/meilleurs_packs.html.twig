@@ -9,7 +9,8 @@
         {% for pack in meilleursPacks %}
             <div class="col-md-4 mb-4">
                 <div class="card shadow-lg rounded-lg border-0 overflow-hidden">
-                    <div class="card-header bg-success text-white text-center py-3">
+                    <!-- Changement de la couleur de fond en bleu -->
+                    <div class="card-header bg-primary text-white text-center py-3">
                         <h5 class="card-title mb-0">{{ pack.nomPk }}</h5>
                     </div>
                     <div class="card-body">
@@ -18,8 +19,8 @@
                             <strong>Durée:</strong> {{ pack.duree }} jours
                         </p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <!-- Lien corrigé vers la route 'app_pack_agence_details' -->
-                            <a href="{{ path('app_pack_agence_details', { 'id_pack': pack.idPack }) }}" class="btn btn-outline-success px-4 py-2 rounded-pill text-success">Voir Détails</a>
+                            <!-- Changement de la couleur du bouton en bleu -->
+                            <a href="{{ path('app_pack_agence_details', { 'id_pack': pack.idPack }) }}" class="btn btn-outline-primary px-4 py-2 rounded-pill text-primary">Voir Détails</a>
                         </div>
                     </div>
                     <div class="card-footer text-center">
@@ -28,6 +29,12 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+
+    <!-- Ajout d'un bouton de retour vers la liste des packs -->
+    <div class="text-center mt-4">
+        <!-- Changement de la couleur du bouton de retour en bleu -->
+        <a href="{{ path('app_pack_agence_liste') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill">Retour à la Liste des Packs</a>
     </div>
 </div>
 {% endblock %}
