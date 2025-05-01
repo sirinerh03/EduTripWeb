@@ -191,7 +191,7 @@ final class UniversityController extends AbstractController
         $university = new University();
         $form = $this->createForm(UniversityType::class, $university);
         $form->handleRequest($request);
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($university);
@@ -205,6 +205,8 @@ final class UniversityController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    
 
 
 
