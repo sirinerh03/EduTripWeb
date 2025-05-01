@@ -1,0 +1,162 @@
+{# PDF template for Candidature #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Candidature PDF</title>
+    <style>
+        body { 
+            font-family: DejaVu Sans, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6f42c1, #4582EC);
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #4582EC;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #495057;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-accepted {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .status-rejected {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .document-info {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Candidature Details</h1>
+        <div class="timestamp">
+            Generated on: 2025-05-01 00:42:38 UTC
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="document-info">
+            <strong>Reference:</strong> CAND-{{ "now"|date("Ymd") }}-{{ candidature.id }}
+            <br>
+            <strong>Generated for:</strong> fatma1111111
+        </div>
+
+        <div class="section">
+            <span class="label">University Name</span>
+            <div class="value">{{ candidature.university ? candidature.university.nom : 'Not Specified' }}</div>
+        </div>
+
+        <div class="section">
+            <span class="label">Status</span>
+            <div class="value">
+                <span class="status {% if candidature.etat == 'Acceptée' %}status-accepted{% elseif candidature.etat == 'Refusée' %}status-rejected{% else %}status-pending{% endif %}">
+                    {{ candidature.etat }}
+                </span>
+            </div>
+        </div>
+
+        <div class="section">
+            <span class="label">CV</span>
+            <div class="value">{{ candidature.cv }}</div>
+        </div>
+
+        <div class="section">
+            <span class="label">Motivation Letter</span>
+            <div class="value">{{ candidature.lettreMotivation }}</div>
+        </div>
+
+        <div class="section">
+            <span class="label">Diploma</span>
+            <div class="value">{{ candidature.diplome }}</div>
+        </div>
+
+        <div class="footer">
+            <p>This document is automatically generated and is valid without signature.</p>
+            <p>EduTrip - {{ "now"|date("Y") }} All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

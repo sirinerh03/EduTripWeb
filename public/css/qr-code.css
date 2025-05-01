@@ -1,0 +1,30 @@
+.qr-code-preview {
+    transition: transform 0.3s ease;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    background: white;
+}
+
+.qr-code-preview:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.qr-code-container {
+    position: relative;
+    display: inline-block;
+}
+
+.qr-code-actions {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.qr-code-container:hover .qr-code-actions {
+    opacity: 1;
+}

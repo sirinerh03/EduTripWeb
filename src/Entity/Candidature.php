@@ -23,11 +23,9 @@ class Candidature
     private ?string $diplome = null;
 
     #[ORM\Column(type: "string", length: 30)]
-    private string $etat = 'en_attente';
-
-    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: "candidatures")]
+    private string $etat = 'en_attente';    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: "candidatures")]
     #[ORM\JoinColumn(name: 'idUniversity', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    private University $university;
+    private ?University $university = null;
 
     public function getId(): ?int
     {
