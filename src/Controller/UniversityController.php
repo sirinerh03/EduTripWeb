@@ -197,6 +197,8 @@ final class UniversityController extends AbstractController
             $entityManager->persist($university);
             $entityManager->flush();
 
+
+             
             return $this->redirectToRoute('app_university_back', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -206,7 +208,7 @@ final class UniversityController extends AbstractController
         ]);
     }
 
-    
+
 
 
 
