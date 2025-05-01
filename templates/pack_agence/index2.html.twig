@@ -130,3 +130,17 @@
     </div>
 </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resetBtn = document.getElementById('reset-btn');
+
+            resetBtn.addEventListener('click', function () {
+                // Redirige vers l'URL de base sans paramètres pour réinitialiser les filtres
+                window.location.href = '{{ path("app_pack_agence_liste") }}';
+            });
+        });
+    </script>
+{% endblock %}

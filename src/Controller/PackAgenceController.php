@@ -42,71 +42,76 @@ final class PackAgenceController extends AbstractController
     
 
     #[Route('/pack/agence/liste', name: 'app_pack_agence_liste')]
-public function simpleList(Request $request, Pack_agenceRepository $packAgenceRepository): Response
-{
-    // Récupération des filtres
-    $nom = $request->query->get('nom');
-    $prixMin = $request->query->get('prix_min', 100);
-    $prixMax = $request->query->get('prix_max', 10000);
-    $dureeMin = $request->query->get('duree_min', 1);
-    $dureeMax = $request->query->get('duree_max', 30);
-    $orderBy = $request->query->get('order_by', 'p.nom_pk');
-    $orderDir = strtolower($request->query->get('order_dir', 'asc'));
-
-    // Vérification de la validité des paramètres de tri
-    $allowedOrderFields = ['p.nom_pk', 'p.prix', 'p.duree'];
-    $allowedOrderDirs = ['asc', 'desc'];
-
-    if (!in_array($orderBy, $allowedOrderFields)) {
-        $orderBy = 'p.nom_pk';
-    }
-    if (!in_array($orderDir, $allowedOrderDirs)) {
-        $orderDir = 'asc';
-    }
-
-    // Construction de la requête
-    $queryBuilder = $packAgenceRepository->createQueryBuilder('p')
-        ->leftJoin('p.id_agence', 'a')
-        ->addSelect('a')
-        ->where('p.prix >= :prixMin')
-        ->andWhere('p.prix <= :prixMax')
-        ->andWhere('p.duree >= :dureeMin')
-        ->andWhere('p.duree <= :dureeMax')
-        ->setParameter('prixMin', (float)$prixMin)
-        ->setParameter('prixMax', (float)$prixMax)
-        ->setParameter('dureeMin', (int)$dureeMin)
-        ->setParameter('dureeMax', (int)$dureeMax)
-        ->orderBy($orderBy, $orderDir);
-
-    // Filtre par nom si présent
-    if ($nom) {
-        $queryBuilder->andWhere('p.nom_pk LIKE :nom')
-            ->setParameter('nom', '%' . $nom . '%');
-    }
-
-    // Récupération des résultats
-    $packAgences = $queryBuilder->getQuery()->getResult();
-
-    // Vérification si la requête retourne bien des résultats
-    dump($packAgences);
-
-    // Vérification si la requête a été effectuée via Ajax
-    if ($request->isXmlHttpRequest()) {
-        return $this->render('pack_agence/_pack_cards.html.twig', [
-            'packAgences' => $packAgences
+    public function simpleList(Request $request, Pack_agenceRepository $packAgenceRepository): Response
+    {
+        $nom = $request->query->get('nom');
+        $prixMin = $request->query->get('prix_min');
+        $prixMax = $request->query->get('prix_max');
+        $dureeMin = $request->query->get('duree_min');
+        $dureeMax = $request->query->get('duree_max');
+        $orderBy = $request->query->get('order_by', 'p.nom_pk');
+        $orderDir = strtolower($request->query->get('order_dir', 'asc'));
+    
+        $allowedOrderFields = ['p.nom_pk', 'p.prix', 'p.duree'];
+        $allowedOrderDirs = ['asc', 'desc'];
+    
+        if (!in_array($orderBy, $allowedOrderFields)) {
+            $orderBy = 'p.nom_pk';
+        }
+        if (!in_array($orderDir, $allowedOrderDirs)) {
+            $orderDir = 'asc';
+        }
+    
+        $queryBuilder = $packAgenceRepository->createQueryBuilder('p')
+            ->leftJoin('p.id_agence', 'a')
+            ->addSelect('a')
+            ->orderBy($orderBy, $orderDir);
+    
+        // Application des filtres seulement si présents
+        if ($prixMin !== null) {
+            $queryBuilder->andWhere('p.prix >= :prixMin')
+                ->setParameter('prixMin', (float)$prixMin);
+        }
+    
+        if ($prixMax !== null) {
+            $queryBuilder->andWhere('p.prix <= :prixMax')
+                ->setParameter('prixMax', (float)$prixMax);
+        }
+    
+        if ($dureeMin !== null) {
+            $queryBuilder->andWhere('p.duree >= :dureeMin')
+                ->setParameter('dureeMin', (int)$dureeMin);
+        }
+    
+        if ($dureeMax !== null) {
+            $queryBuilder->andWhere('p.duree <= :dureeMax')
+                ->setParameter('dureeMax', (int)$dureeMax);
+        }
+    
+        if ($nom) {
+            $queryBuilder->andWhere('p.nom_pk LIKE :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
+    
+        $packAgences = $queryBuilder->getQuery()->getResult();
+    
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('pack_agence/_pack_cards.html.twig', [
+                'packAgences' => $packAgences
+            ]);
+        }
+    
+        return $this->render('pack_agence/index2.html.twig', [
+            'packAgences' => $packAgences,
+            'prix_min' => $prixMin,
+            'prix_max' => $prixMax,
+            'duree_min' => $dureeMin,
+            'duree_max' => $dureeMax,
+            'order_by' => $orderBy,
+            'order_dir' => $orderDir
         ]);
     }
-
-    return $this->render('pack_agence/index2.html.twig', [
-        'packAgences' => $packAgences,
-        'prix_min' => $prixMin,
-        'prix_max' => $prixMax,
-        'duree_min' => $dureeMin,
-        'duree_max' => $dureeMax,
-        'order_by' => $orderBy,
-        'order_dir' => $orderDir
-    ]);
-}
+    
 
 
     #[Route('/pack/agence/new', name: 'app_pack_agence_new', methods: ['GET', 'POST'])]
