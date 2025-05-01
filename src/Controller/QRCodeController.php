@@ -34,6 +34,7 @@ class QRCodeController extends AbstractController
         ]);
     }
 
+    
     #[Route('/university-qr/custom-download/{id}', name: 'app_qr_code_download', methods: ['GET'])]
     public function downloadQr(int $id, EntityManagerInterface $entityManager): Response
     {
