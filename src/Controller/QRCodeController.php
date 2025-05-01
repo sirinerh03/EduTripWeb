@@ -21,6 +21,7 @@ class QRCodeController extends AbstractController
             throw $this->createNotFoundException('University not found');
         }
         
+
         $url = 'mailto:' . $university->getEmail() . '?subject=Demande d\'information&body=Bonjour, je souhaite en savoir plus sur votre université.';
         $builder = new Builder(
             writer: new PngWriter(),
@@ -29,6 +30,7 @@ class QRCodeController extends AbstractController
             margin: 10
         );
         $qr = $builder->build();
+
         return new Response($qr->getString(), 200, [
             'Content-Type' => 'image/png',
             'Cache-Control' => 'no-store',
