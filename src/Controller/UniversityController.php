@@ -184,7 +184,6 @@ final class UniversityController extends AbstractController
             'direction' => $direction,
         ]);
 
-        
     }//render the new ui with the searched item sorted ..
 
     #[Route('/new', name: 'app_university_new', methods: ['GET', 'POST'])]
