@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-md-5 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Destinations les plus réservées</h4>
+      <div class="doughnutjs-wrapper d-flex justify-content-center">
+        <canvas id="traffic-chart"></canvas>
+      </div>
+      <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('traffic-chart').getContext('2d');
+  const data = {
+    labels: {{ stats|map(s => s.aeroport_arrivee)|json_encode|raw }},
+    datasets: [{
+      label: 'Réservations',
+      data: {{ stats|map(s => s.count)|json_encode|raw }},
+      backgroundColor: [
+        '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

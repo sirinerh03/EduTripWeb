@@ -16,6 +16,17 @@ class ReservationVolRepository extends ServiceEntityRepository
         parent::__construct($registry, ReservationVol::class);
     }
 
+
+
+    public function countReservationsByDestination(): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('v.aeroport_arrivee', 'COUNT(r.id) as count')
+            ->join('r.vol', 'v')
+            ->groupBy('v.aeroport_arrivee');
+    
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return ReservationVol[] Returns an array of ReservationVol objects
     //     */

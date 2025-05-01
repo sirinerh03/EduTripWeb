@@ -14,6 +14,8 @@ use App\Service\AviationStackService;
 use Knp\Snappy\Pdf;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\ReservationVol;
+use App\Repository\ReservationVolRepository;
+
 
 
 
@@ -124,6 +126,19 @@ public function downloadPdf(ManagerRegistry $doctrine, Pdf $knpSnappyPdf): Respo
             'Content-Disposition' => 'attachment; filename="liste_reservations.pdf"',
         ]
     );
+}
+
+
+
+#[Route('/admin/stats', name: 'admin_stats')]
+public function stats(ReservationVolRepository $repo): Response
+{
+    // Regrouper les réservations par ville de destination
+    $stats = $repo->countReservationsByDestination();
+
+    return $this->render('admin/vols/statisticVol.html.twig', [
+        'stats' => $stats
+    ]);
 }
 
 }
