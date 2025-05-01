@@ -205,6 +205,8 @@ final class UniversityController extends AbstractController
         ]);
     }
 
+    
+
     #[Route('/{id}', name: 'app_university_show', methods: ['GET'])]
     public function show(University $university): Response
     {
