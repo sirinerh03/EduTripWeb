@@ -46,7 +46,7 @@ class Vol
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotNull(message: 'La date d’arrivée est obligatoire.')]
-    #[Assert\GreaterThan(propertyPath: 'date_depart', message: 'La date d’arrivée doit être après la date de départ.')]
+    #[Assert\GreaterThan("today", message: 'La date d’arrivée doit être après la date de départ.')]
     private ?\DateTimeInterface $date_arrivee = null;
 
     #[ORM\Column]

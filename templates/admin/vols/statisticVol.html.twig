@@ -1,44 +1,88 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Statistiques - Réservations{% endblock %}
 
 {% block body %}
-<div class="col-md-5 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title">Destinations les plus réservées</h4>
-      <div class="doughnutjs-wrapper d-flex justify-content-center">
-        <canvas id="traffic-chart"></canvas>
-      </div>
-      <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
+<div class="container mt-5">
+    <!-- Bouton retour -->
+    <div class="mb-4">
+        <a href="{{ path('admin_listreservations') }}" class="btn btn-light shadow-sm border">
+            <i class="fas fa-arrow-left me-2"></i> <--Retour à l’accueil
+        </a>
     </div>
-  </div>
+
+    <!-- Carte des statistiques -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h3 class="card-title text-center text-primary mb-4">
+                        <i class="fas fa-chart-pie me-2"></i> Destinations les plus réservées
+                    </h3>
+                    <div class="d-flex justify-content-center mb-4">
+                        <canvas id="traffic-chart" width="150" height="150"></canvas>
+                    </div>
+                    <div id="traffic-chart-legend" class="text-center pt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const ctx = document.getElementById('traffic-chart').getContext('2d');
-  const data = {
-    labels: {{ stats|map(s => s.aeroport_arrivee)|json_encode|raw }},
-    datasets: [{
-      label: 'Réservations',
-      data: {{ stats|map(s => s.count)|json_encode|raw }},
-      backgroundColor: [
-        '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
-      ],
-      borderWidth: 1
-    }]
-  };
 
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('traffic-chart').getContext('2d');
+        const data = {
+            labels: {{ stats|map(s => s.aeroport_arrivee)|json_encode|raw }},
+            datasets: [{
+                label: 'Réservations',
+                data: {{ stats|map(s => s.count)|json_encode|raw }},
+                backgroundColor: [
+                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796', '#20c9a6'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                cutout: '40%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#333',
+                            boxWidth: 20,
+                            padding: 10,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
 </script>
+
+<style>
+    canvas#traffic-chart {
+        max-width: 100%;
+        height: auto;
+    }
+
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border-radius: 5px;
+    }
+</style>
 {% endblock %}

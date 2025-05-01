@@ -18,6 +18,8 @@ use Stripe\Checkout\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Service\EmailService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 
 
@@ -25,12 +27,11 @@ class ReservationVolController extends AbstractController
 {  private WeatherService $weatherService;
    private LoggerInterface $logger;
 
-    public function __construct(WeatherService $weatherService, EmailService $emailService, LoggerInterface $logger )
-    {
-        $this->weatherService = $weatherService;
-        $this->emailService = $emailService;
-        $this->logger = $logger;
-    }
+   public function __construct(WeatherService $weatherService, LoggerInterface $logger)
+   {
+       $this->weatherService = $weatherService;
+       $this->logger = $logger;
+   }
     #[Route('/reservationvol', name: 'app_reservation_vol')]
     public function index(Request $request, VolRepository $volRepository): Response
     {
@@ -211,61 +212,60 @@ class ReservationVolController extends AbstractController
         int $id,
         ReservationVolRepository $reservationVolRepository,
         EntityManagerInterface $em,
-        EmailService $emailService
+        MailerInterface $mailer // <-- injecte ici
     ): Response {
         $reservation = $reservationVolRepository->find($id);
-
+    
         if (!$reservation) {
             $this->addFlash('danger', 'Réservation introuvable.');
             return $this->redirectToRoute('app_reservation_vol');
         }
-
+    
         try {
-            // 👉 1. Mettre à jour l’état de la réservation
             $reservation->setEtat('payée');
             $em->flush();
-
-            // 👉 2. Préparer le contenu de l’e-mail
+    
+            // ✅ Génère le contenu HTML
             $body = $this->renderView('emails/reservation_confirmation.html.twig', [
-                'reservation' => $reservation
+                'reservation' => $reservation,
             ]);
-
-            // 👉 3. Envoyer l’e-mail
-            $emailService->sendConfirmationEmail(
-                $reservation->getEmail(),
-                'Confirmation de réservation n°' . $reservation->getId(),
-                $body
-            );
+    
+            // ✅ Prépare et envoie l'e-mail
+            $email = (new Email())
+                ->from('noreply@monsite.com')
+                ->to($reservation->getEmail())
+                ->subject('Confirmation de réservation n°' . $reservation->getId())
+                ->html($body);
+    
+            $mailer->send($email);
     
             $this->addFlash('success', 'Paiement réussi et email envoyé !');
         } catch (\Exception $e) {
             $this->addFlash('warning', 'Erreur : ' . $e->getMessage());
-            // Logger l'erreur
             $this->logger->error('Erreur envoi email: ' . $e->getMessage());
         }
-        
+    
         return $this->redirectToRoute('app_reservation_vol');
     }
-
-
+    
 
 
     #[Route('/test-email', name: 'test_email')]
-    public function testEmail(EmailService $emailService): Response
-    {
-        try {
-            $emailService->sendConfirmationEmail(
-                'votre_email@test.com', // Remplacez par un email de test
-                'Test Email',
-                '<p>Ceci est un email de test.</p>'
-            );
-            return new Response('Email envoyé avec succès !');
-        } catch (\Exception $e) {
-            return new Response('Erreur : ' . $e->getMessage());
-        }
-    }   
+public function testEmail(MailerInterface $mailer): Response
+{
+    try {
+        $email = (new Email())
+            ->from('noreply@monsite.com')
+            ->to('test@example.com')
+            ->subject('Test Email')
+            ->html('<p>Ceci est un email de test.</p>');
 
-   
+        $mailer->send($email);
+        return new Response('Email envoyé avec succès !');
+    } catch (\Exception $e) {
+        return new Response('Erreur : ' . $e->getMessage());
+    }
+}
 
     #[Route('/weather', name: 'app_weather')]
     public function weather(Request $request, WeatherService $weatherService): Response
