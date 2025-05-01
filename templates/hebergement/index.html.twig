@@ -3,11 +3,11 @@
 {% block title %}Hébergement - Liste{% endblock %}
 
 {% block Content %}
-<div class="container-fluid px-3 py-4">
+<div class="container-fluid px-1 py-1">
     {# Search Form #}
-    <div class="search-container mb-4 shadow-sm rounded">
+    <div class="search-container mb-1 shadow-sm rounded">
         <form id="searchForm" method="get" action="{{ path('app_hebergement_index') }}">
-            <div class="row g-2 align-items-center">
+            <div class="row g-1 align-items-center">
                 <div class="col-md-3 col-sm-6">
                     <label for="nom" class="form-label small">Nom</label>
                     <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom de l'hébergement" value="{{ app.request.query.get('nom') }}">
@@ -51,20 +51,20 @@
                     </select>
                 </div>
                 <div class="col-md-1 col-sm-6 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100 py-2">Rechercher</button>
+                    <button type="submit" class="btn btn-primary w-100 py-1">Rechercher</button>
                 </div>
             </div>
         </form>
     </div>
 
     {# Action Buttons #}
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
-        <div class="d-flex flex-column gap-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-1 gap-1">
+        <div class="d-flex flex-column gap-1">
             <a href="{{ path('app_hebergement_new') }}" class="create-btn">➕ Créer un nouvel hébergement</a>
             <a href="{{ path('app_hebergement_admin_export_excel') }}" class="excel-btn">📊 Exporter vers Excel</a>
         </div>
         <div class="reservations-btn-container">
-            <a href="{{ path('app_reservation_hebergement_index') }}" class="reservations-link">📋 Réservations</a>
+            <a href="{{ path('app_reservation_hebergement_index') }}" class="reservations-link">📋 Liste des Réservations</a>
         </div>
     </div>
 
@@ -75,51 +75,45 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nom</th>
-                            <th>Type</th>
-                            <th>Adresse</th>
-                            <th>Capacité</th>
-                            <th>Prix</th>
-                            <th>Disponibilité</th>
-                            <th>Description</th>
-                            <th>Image</th>
-                            <th>Actions</th>
+                            <th>SSE</th>
+                            <th>CAPACITÉ</th>
+                            <th>PRIX</th>
+                            <th>DISPONIBILITÉ</th>
+                            <th>DESCRIPTION</th>
+                            <th>IMAGE</th>
+                            <th>ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for hebergement in pagination %}
                             <tr>
-                                <td>{{ hebergement.id }}</td>
                                 <td>{{ hebergement.nomh }}</td>
-                                <td>{{ hebergement.typeh }}</td>
-                                <td>{{ hebergement.adressh }}</td>
                                 <td>{{ hebergement.capaciteh }}</td>
                                 <td>{{ hebergement.prixh }} €</td>
                                 <td>{{ hebergement.disponibleh }}</td>
-                                <td>{{ hebergement.descriptionh|length > 50 ? hebergement.descriptionh|slice(0, 50) ~ '...' : hebergement.descriptionh }}</td>
+                                <td>{{ hebergement.descriptionh|length > 35 ? hebergement.descriptionh|slice(0, 35) ~ '...' : hebergement.descriptionh }}</td>
                                 <td>
                                     {% if hebergement.imageh %}
-                                        <img src="{{ asset('img/' ~ hebergement.imageh) }}" width="60" alt="{{ hebergement.nomh }}" onerror="this.onerror=null; this.src='{{ asset('img/placeholder.jpg') }}';">
+                                        <img src="{{ asset('img/' ~ hebergement.imageh) }}" width="25" alt="{{ hebergement.nomh }}" onerror="this.onerror=null; this.src='{{ asset('img/placeholder.jpg') }}';">
                                     {% else %}
                                         <em>Aucun visuel</em>
                                     {% endif %}
                                 </td>
                                 <td class="actions-column">
                                     <div class="action-buttons">
-                                        <a href="{{ path('app_hebergement_show', {'id_hebergement': hebergement.id}) }}" class="btn btn-details">Détails</a>
-                                        <a href="{{ path('app_hebergement_edit', {'id_hebergement': hebergement.id}) }}" class="btn btn-edit">Modifier</a>
+                                        <a href="{{ path('app_hebergement_show', {'id_hebergement': hebergement.id}) }}" class="btn btn-details">DÉTAILS</a>
+                                        <a href="{{ path('app_hebergement_edit', {'id_hebergement': hebergement.id}) }}" class="btn btn-edit">MODIFIER</a>
                                         <form method="post" action="{{ path('app_hebergement_delete', {'id_hebergement': hebergement.id}) }}" style="display:inline;">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ hebergement.id) }}">
-                                            <button type="submit" class="btn btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cet hébergement ?');">Supprimer</button>
+                                            <button type="submit" class="btn btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cet hébergement ?');">SUPPRIMER</button>
                                         </form>
-                                        <a href="{{ path('app_reservation_hebergement_new', {'id_hebergement': hebergement.id}) }}" class="btn btn-reserver">Réserver</a>
+                                        <a href="{{ path('app_reservation_hebergement_new', {'id_hebergement': hebergement.id}) }}" class="btn btn-reserver">RÉSERVER</a>
                                     </div>
                                 </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="10" class="text-center">Aucun hébergement trouvé.</td>
+                                <td colspan="7" class="text-center">Aucun hébergement trouvé.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -129,13 +123,13 @@
     </div>
 
     {# Pagination Controls #}
-    <div id="paginationContainer" class="pagination-wrapper mt-3">
+    <div id="paginationContainer" class="pagination-wrapper mt-1">
         {{ knp_pagination_render(pagination) }}
     </div>
 </div>
 
 {# Loading Indicator #}
-<div id="loadingIndicator" class="row text-center my-4" style="display: none;">
+<div id="loadingIndicator" class="row text-center my-1" style="display: none;">
     <div class="col-12">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Chargement...</span>
@@ -145,60 +139,63 @@
 
 <style>
     .container-fluid {
-        max-width: 1200px; /* Reduced from 1400px for better fit */
-        padding-left: 10px;
-        padding-right: 10px;
+        max-width: none; /* Remove max-width to prevent interference with parent layout */
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-left: auto; /* Ensure content aligns properly without affecting sidebar */
+        margin-right: auto;
     }
 
     .search-container {
         background-color: #f8f9fa;
-        padding: 12px;
-        border-radius: 6px;
+        padding: 5px;
+        border-radius: 2px;
     }
 
     .form-label {
         color: #2c3e50;
         font-weight: 500;
-        font-size: 0.85rem;
+        font-size: 0.55rem;
     }
 
     .form-control, .form-select {
-        border-radius: 4px;
+        border-radius: 2px;
         border: 1px solid #ced4da;
-        font-size: 0.9rem;
-        padding: 5px 8px;
+        font-size: 0.6rem;
+        padding: 1px 3px;
+        height: 22px;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: #06BBCC;
-        box-shadow: 0 0 4px rgba(6, 187, 204, 0.3);
+        box-shadow: 0 0 2px rgba(6, 187, 204, 0.3);
     }
 
     .btn-primary {
         background-color: #06BBCC;
         border-color: #06BBCC;
         font-weight: 600;
-        font-size: 0.9rem;
-        padding: 6px;
+        font-size: 0.6rem;
+        padding: 2px;
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
     .btn-primary:hover {
         background-color: #0498a8;
         border-color: #0498a8;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
     }
 
     .table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 12px;
+        margin-top: 5px;
         background-color: #fff;
-        font-size: 0.9rem;
+        font-size: 0.6rem;
     }
 
     .table th, .table td {
-        padding: 6px 8px;
+        padding: 2px 3px;
         text-align: left;
         border-bottom: 1px solid #e9ecef;
         vertical-align: middle;
@@ -209,7 +206,7 @@
         color: #2c3e50;
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 0.8rem;
+        font-size: 0.5rem;
     }
 
     .table-hover tbody tr:hover {
@@ -217,28 +214,29 @@
     }
 
     .actions-column {
-        min-width: 220px; /* Reduced from 250px */
-        max-width: 240px; /* Prevent overflow */
+        min-width: 140px;
+        max-width: 160px;
     }
 
     .action-buttons {
         display: flex;
-        flex-wrap: nowrap; /* Prevent wrapping to ensure all buttons show */
-        gap: 6px;
+        flex-wrap: nowrap;
+        gap: 2px;
         align-items: center;
-        white-space: nowrap; /* Prevent button text wrapping */
+        white-space: nowrap;
     }
 
     .btn {
-        padding: 5px 10px;
-        font-size: 0.85rem;
-        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 0.55rem;
+        border-radius: 2px;
         text-decoration: none;
         cursor: pointer;
         transition: opacity 0.3s ease, transform 0.2s ease;
-        display: inline-block !important; /* Ensure all buttons are visible */
-        min-width: 50px; /* Ensure buttons are wide enough */
+        display: inline-block !important;
+        min-width: 30px;
         text-align: center;
+        text-transform: uppercase;
     }
 
     .btn-details {
@@ -273,24 +271,24 @@
     .pagination-wrapper {
         display: flex;
         justify-content: center;
-        margin-top: 15px;
+        margin-top: 6px;
     }
 
     .pagination {
         display: flex;
-        gap: 6px;
+        gap: 2px;
         list-style: none;
         padding-left: 0;
     }
 
     .pagination a, .pagination span {
-        padding: 6px 10px;
+        padding: 2px 5px;
         border: 1px solid #06BBCC;
-        border-radius: 4px;
+        border-radius: 2px;
         text-decoration: none;
         color: #06BBCC;
         background-color: white;
-        font-size: 0.85rem;
+        font-size: 0.55rem;
         transition: background-color 0.3s ease;
     }
 
@@ -307,16 +305,16 @@
     .create-btn, .excel-btn, .reservations-link {
         background-color: #06BBCC;
         color: white;
-        padding: 6px 12px; /* Further reduced padding */
-        font-size: 0.85rem; /* Smaller font */
+        padding: 2px 5px;
+        font-size: 0.6rem;
         font-weight: bold;
-        border-radius: 4px;
+        border-radius: 2px;
         text-decoration: none;
         transition: background-color 0.3s ease, transform 0.2s ease;
         display: inline-block;
         text-align: center;
         width: auto;
-        min-width: 120px; /* Ensure button is wide enough */
+        min-width: 85px;
     }
 
     .excel-btn {
@@ -325,30 +323,30 @@
 
     .create-btn:hover, .reservations-link:hover {
         background-color: #0498a8;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
         text-decoration: none;
         color: white;
     }
 
     .excel-btn:hover {
         background-color: #145732;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
         text-decoration: none;
     }
 
     .reservations-btn-container {
         flex-shrink: 0;
-        max-width: 200px; /* Limit width to prevent overflow */
-        overflow: visible; /* Ensure button isn’t clipped */
+        max-width: 150px;
+        overflow: visible;
     }
 
     .card {
         border: none;
-        border-radius: 6px;
+        border-radius: 2px;
     }
 
     .card-body {
-        padding: 12px;
+        padding: 5px;
     }
 
     .text-center {
@@ -358,37 +356,37 @@
 
     @media (max-width: 992px) {
         .container-fluid {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-left: 4px;
+            padding-right: 4px;
         }
 
         .search-container {
-            padding: 8px;
+            padding: 3px;
         }
 
         .table th, .table td {
-            padding: 5px 6px;
+            padding: 1px 2px;
         }
 
         .actions-column {
-            min-width: 180px;
-            max-width: 200px;
+            min-width: 120px;
+            max-width: 140px;
         }
 
         .btn {
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            min-width: 45px;
+            padding: 1px 3px;
+            font-size: 0.5rem;
+            min-width: 25px;
         }
 
         .action-buttons {
-            gap: 4px;
+            gap: 1px;
         }
     }
 
     @media (max-width: 576px) {
-        .row.g-2 {
-            gap: 0.4rem;
+        .row.g-1 {
+            gap: 0.1rem;
         }
 
         .col-md-3, .col-md-2, .col-md-1, .col-sm-6 {
@@ -398,17 +396,17 @@
 
         .create-btn, .excel-btn, .reservations-link {
             width: 100%;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
             min-width: 0;
         }
 
         .table {
-            font-size: 0.8rem;
+            font-size: 0.5rem;
         }
 
         .action-buttons {
-            flex-wrap: wrap; /* Allow wrapping on very small screens */
-            gap: 4px;
+            flex-wrap: wrap;
+            gap: 1px;
         }
 
         .table-responsive {
@@ -450,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchForm.submit();
     });
     
-    // Perform AJAX search
+    // Perform Bears AJAX search
     function performSearch() {
         loadingIndicator.style.display = 'flex';
         
@@ -470,7 +468,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             loadingIndicator.style.display = 'none';
-            console.log('AJAX Response:', data); // Debugging: Log response
             
             if (data.items && data.items.length > 0) {
                 let tableHtml = `
@@ -478,43 +475,37 @@ document.addEventListener('DOMContentLoaded', function() {
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nom</th>
-                                    <th>Type</th>
-                                    <th>Adresse</th>
-                                    <th>Capacité</th>
-                                    <th>Prix</th>
-                                    <th>Disponibilité</th>
-                                    <th>Description</th>
-                                    <th>Image</th>
-                                    <th>Actions</th>
+                                    <th>SSE</th>
+                                    <th>CAPACITÉ</th>
+                                    <th>PRIX</th>
+                                    <th>DISPONIBILITÉ</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>IMAGE</th>
+                                    <th>ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${data.items.map(hebergement => `
                                     <tr>
-                                        <td>${hebergement.id}</td>
                                         <td>${hebergement.nom}</td>
-                                        <td>${hebergement.type}</td>
-                                        <td>${hebergement.adresse}</td>
                                         <td>${hebergement.capacite}</td>
                                         <td>${hebergement.prix} €</td>
                                         <td>${hebergement.disponibilite}</td>
-                                        <td>${hebergement.description.length > 50 ? hebergement.description.substring(0, 50) + '...' : hebergement.description}</td>
+                                        <td>${hebergement.description.length > 35 ? hebergement.description.substring(0, 35) + '...' : hebergement.description}</td>
                                         <td>
                                             ${hebergement.image ? 
-                                                `<img src="/img/${hebergement.image}" width="60" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">` : 
+                                                `<img src="/img/${hebergement.image}" width="25" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">` : 
                                                 `<em>Aucun visuel</em>`}
                                         </td>
                                         <td class="actions-column">
                                             <div class="action-buttons">
-                                                <a href="${hebergement.show_url}" class="btn btn-details">Détails</a>
-                                                <a href="${hebergement.edit_url}" class="btn btn-edit">Modifier</a>
+                                                <a href="${hebergement.show_url}" class="btn btn-details">DÉTAILS</a>
+                                                <a href="${hebergement.edit_url}" class="btn btn-edit">MODIFIER</a>
                                                 <form method="post" action="${hebergement.delete_url}" style="display:inline;">
                                                     <input type="hidden" name="_token" value="${hebergement.csrf_token}">
-                                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cet hébergement ?');">Supprimer</button>
+                                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Voulez-vous vraiment supprimer cet hébergement ?');">SUPPRIMER</button>
                                                 </form>
-                                                <a href="${hebergement.reserver_url}" class="btn btn-reserver">Réserver</a>
+                                                <a href="${hebergement.reserver_url}" class="btn btn-reserver">RÉSERVER</a>
                                             </div>
                                         </td>
                                     </tr>
