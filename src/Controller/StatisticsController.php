@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/statistics')]
 class StatisticsController extends AbstractController
 {
+    
     #[Route('/', name: 'app_statistics')]
     public function index(
         UniversityRepository $universityRepository,
