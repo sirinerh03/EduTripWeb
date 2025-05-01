@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'avis - EduTrip{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0">Détails de l'avis</h1>
+                        <div>
+                            <a href="{{ path('app_avis_index') }}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                            </a>
+                            {% if app.user %}
+                            <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-0">{{ avi.user.prenom }} {{ avi.user.nom }}</h5>
+                                <small class="text-muted">{{ avi.createdAt|date('d/m/Y') }}</small>
+                            </div>
+                            <div class="rating">
+                                {% for i in 1..5 %}
+                                    {% if i <= avi.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="card-text">{{ avi.comment }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if isOwner %}
+                        <div class="d-flex gap-2 mb-4">
+                            <a href="{{ path('app_avis_edit', {'id': avi.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Modifier
+                            </a>
+                            <form method="post" action="{{ path('app_avis_delete', {'id': avi.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-trash-alt me-2"></i>Supprimer
+                                </button>
+                            </form>
+                        </div>
+
+                        {% if avi.spinReward %}
+                            <div class="card bg-light mb-4">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success mb-3">
+                                        <i class="fas fa-gift me-2"></i>Récompense obtenue
+                                    </h4>
+                                    <p class="lead">Vous avez gagné une réduction de <strong>{{ avi.spinReward.percentage }}%</strong> sur votre prochain voyage éducatif !</p>
+
+                                    {% if not avi.rewardClaimed %}
+                                        <a href="{{ path('app_spin_reward', {'id': avi.id}) }}" class="btn btn-success">
+                                            <i class="fas fa-gift me-2"></i>Voir ma récompense
+                                        </a>
+                                    {% else %}
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i>Récompense déjà réclamée
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-info-circle me-2"></i>Aucune récompense disponible pour cet avis.
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

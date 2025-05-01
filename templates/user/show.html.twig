@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}Détail utilisateur{% endblock %}
+{% block body %}
+    <h1>Détails de l'utilisateur</h1>
+    <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+    <p><strong>Nom :</strong> {{ user.nom }}</p>
+    <p><strong>Mail :</strong> {{ user.mail }}</p>
+    <p><strong>Téléphone :</strong> {{ user.tel }}</p>
+    <p><strong>Status :</strong> {{ user.status }}</p>
+    <p><strong>Rôle :</strong> {{ user.role }}</p>
+    <div class="d-flex gap-2 mt-3">
+        <a href="{{ path('app_user_edit', {'id_user': user.idUser}) }}" class="btn btn-warning">Éditer</a>
+        {{ include('user/_delete_form.html.twig') }}
+        <a href="{{ path('app_user_index') }}" class="btn btn-secondary">← Retour à la liste</a>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+        </a>
+    </div>
+{% endblock %}

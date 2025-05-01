@@ -7,12 +7,18 @@ parameters:
     lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
     diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
     candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
+    avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
+    # Clés Google reCAPTCHA (clés de production)
+    recaptcha.site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha.secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+    # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
+    abstract_api.email_validation_key: 'YOUR_API_KEY'
 
 services:
     _defaults:
         autowire: true
         autoconfigure: true
-
+        public: false 
     Symfony\Component\Finder\Finder:
         class: Symfony\Component\Finder\Finder
         public: false
@@ -39,10 +45,16 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
-
+        public: true 
     App\Repository\HebergementRepository: ~
 
     App\Service\HebergementExcelExporter:
         arguments:
             $logger: '@logger'
             $reservationRepository: '@App\Repository\ReservationHebergementRepository'
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: ['doctrine.repository_service']

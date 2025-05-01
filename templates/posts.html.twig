@@ -133,12 +133,12 @@
 
         <!-- Partie droite avec les boutons -->
         <div class="d-flex gap-2">
-            <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" 
-               class="btn btn-sm btn-outline-warning"
-               title="Modifier">
-                <i class="fas fa-edit"></i>
-            </a>
-            <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
+            <a href="{{ path('app_post_edit', {'id_post': post.idPost}) }}" 
+   class="btn btn-sm btn-outline-warning"
+   title="Modifier">
+    <i class="fas fa-edit"></i>
+</a>
+            <form method="post" action="{{ path('app_post_delete', {'id': post.idPost}) }}" 
                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
                 <button class="btn btn-sm btn-outline-danger" title="Supprimer">

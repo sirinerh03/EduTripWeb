@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des avis{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Liste des avis</h1>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="mb-3 d-flex justify-content-between">
+            <a href="{{ path('app_review_new') }}" class="btn btn-primary">Ajouter un avis</a>
+            <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+                <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+            </a>
+        </div>
+
+        <div class="row">
+            {% for review in reviews %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ review.user.prenom }} {{ review.user.nom }}
+                                <small class="text-muted">
+                                    ({{ review.createdAt|date('d/m/Y H:i') }})
+                                </small>
+                            </h5>
+                            <div class="mb-2">
+                                {% for i in 1..5 %}
+                                    {% if i <= review.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="card-text">{{ review.comment }}</p>
+                            <div class="btn-group">
+                                <a href="{{ path('app_review_show', {'id': review.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                                {% if app.user and review.user == app.user %}
+                                    <a href="{{ path('app_review_edit', {'id': review.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                    <form method="post" action="{{ path('app_review_delete', {'id': review.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');" style="display: inline-block;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
+                                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        Aucun avis n'a encore été publié.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

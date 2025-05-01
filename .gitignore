@@ -1,34 +1,25 @@
-###> Environment Files ###
-/.env
-/.env.local
-/.env.*.local
-/.env.local.php
-/config/secrets/*
 
-###> Symfony ###
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
 /var/
 /vendor/
-/public/bundles/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+###< phpunit/phpunit ###
 
-###> Frontend ###
-/node_modules/
-/assets/vendor/
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
 /public/assets/
-/yarn-error.log
-npm-debug.log*
-
-###> IDE ###
-.idea/
-.vscode/
-*.swp
-*.swo
-
-###> OS Generated ###
-.DS_Store
-Thumbs.db
-
-###> Custom ###
-# Hugging Face API test files
-/tests/huggingface_test_output.*
+/assets/vendor/
+###< symfony/asset-mapper ###
