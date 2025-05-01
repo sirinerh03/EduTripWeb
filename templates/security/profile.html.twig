@@ -1,0 +1,352 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - EduTrip{% endblock %}
+
+{% block content %}
+    
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, #4158D0 0%, #C850C0 50%, #FFCC70 100%);
+            padding: 100px 0 120px;
+            margin-bottom: 0;
+            color: white;
+            border-radius: 0 0 30% 30% / 60px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-subtitle {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+        
+        .profile-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 50px;
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+            background: white;
+        }
+        
+        .profile-header-overlay {
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .profile-header-circles {
+            position: absolute;
+            bottom: -50px;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .profile-header-circles:before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -100px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .profile-section {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-info {
+            padding: 40px;
+        }
+        
+        .info-group {
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .info-group:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #6c5ce7;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-label i {
+            margin-right: 8px;
+            opacity: 0.8;
+        }
+        
+        .info-value {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #333;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(to right, #4158D0, #C850C0);
+        }
+        
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4158D0, #C850C0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 5px solid white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-avatar:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
+            top: 0;
+            left: 0;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 35px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.4);
+            color: white;
+        }
+        
+        .btn-back {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 35px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 184, 148, 0.4);
+            color: white;
+        }
+        
+        .badge {
+            padding: 8px 15px;
+            font-weight: 500;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge.bg-success {
+            background: #00b894 !important;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.2);
+        }
+        
+        .badge.bg-secondary {
+            background: #636e72 !important;
+            box-shadow: 0 5px 15px rgba(99, 110, 114, 0.2);
+        }
+        
+        .badge.bg-danger {
+            background: #e74c3c !important;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+        }
+        
+        .badge.bg-primary {
+            background: #3498db !important;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .badge.bg-info {
+            background: #00cec9 !important;
+            box-shadow: 0 5px 15px rgba(0, 206, 201, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 80px 0 100px;
+                border-radius: 0 0 25% 25% / 40px;
+            }
+            
+            .profile-card {
+                margin-top: -60px;
+            }
+            
+            .user-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+        }
+    </style>
+
+<div class="profile-header">
+    <div class="profile-header-overlay"></div>
+    <div class="profile-header-circles"></div>
+    <div class="container text-center profile-section">
+        <div class="user-avatar">
+            {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+        </div>
+        <h1 class="profile-title">{{ user.prenom }} {{ user.nom }}</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="profile-card card">
+                <div class="profile-info">
+                    <a href="javascript:history.back()" class="btn btn-sm btn-outline-primary mb-3">
+                        <i class="fas fa-arrow-left me-1"></i> Retour
+                    </a>
+                    <h2 class="section-title">Informations personnelles</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <p class="info-label"><i class="fas fa-user"></i> Prénom</p>
+                                <p class="info-value">{{ user.prenom }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <p class="info-label"><i class="fas fa-user-tag"></i> Nom</p>
+                                <p class="info-value">{{ user.nom }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <p class="info-label"><i class="fas fa-envelope"></i> Email</p>
+                        <p class="info-value">{{ user.mail }}</p>
+                    </div>
+                    
+                    <div class="info-group">
+                        <p class="info-label"><i class="fas fa-phone-alt"></i> Téléphone</p>
+                        <p class="info-value">{{ user.tel }}</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <p class="info-label"><i class="fas fa-toggle-on"></i> Statut</p>
+                                <p class="info-value">
+                                    {% if user.status == 'active' %}
+                                        <span class="badge bg-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactif</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-group">
+                                <p class="info-label"><i class="fas fa-user-shield"></i> Rôle</p>
+                                <p class="info-value">
+                                    {% if user.role == 'ROLE_ADMIN' %}
+                                        <span class="badge bg-danger">Administrateur</span>
+                                    {% elseif user.role == 'ROLE_AGENCY' %}
+                                        <span class="badge bg-primary">Agence</span>
+                                    {% else %}
+                                        <span class="badge bg-info">Utilisateur</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('app_dashboard') }}" class="btn btn-back">
+                            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                        </a>
+                        <a href="{{ path('app_profile_edit') }}" class="btn btn-edit">
+                            <i class="fas fa-user-edit me-2"></i>Modifier mon profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

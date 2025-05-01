@@ -1,34 +1,28 @@
-# config/services.yaml
+
 parameters:
-    # Répertoires d'upload
+    env(HUGGINGFACE_API_KEY): '%env(HUGGINGFACE_API_KEY)%'
+    env(WKHTMLTOPDF_PATH): ''
+    env(WKHTMLTOIMAGE_PATH): ''
+
     upload_directory: '%kernel.project_dir%/public/images'
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
     lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
     diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
     candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
-    
     # Configuration Twilio
     twilio.sid: '%env(TWILIO_SID)%'
     twilio.token: '%env(TWILIO_TOKEN)%'
     twilio.from: '%env(TWILIO_PHONE)%'
+    
+    avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
+    # Clés Google reCAPTCHA (clés de production)
+    recaptcha.site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha.secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+    # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
+    abstract_api.email_validation_key: 'YOUR_API_KEY'
 
 services:
-    # Defaults
-    _defaults:
-        autowire: true      # Active l'autowiring
-        autoconfigure: true # Active l'autoconfiguration
-        public: false       # Rend les services privés par défaut
 
-    # Services partagés
-    Symfony\Component\Finder\Finder:
-        class: Symfony\Component\Finder\Finder
-        shared: false # Non partagé pour éviter les conflits
-
-    Symfony\Component\Filesystem\Filesystem: ~
-
-    # Commandes
-    App\Command\GenerateRepositoriesCommand:
-        tags: ['console.command']
 
     # Service Twilio avec injection explicite des paramètres
     App\Service\TwilioService:
@@ -38,10 +32,53 @@ services:
             $from: '%twilio.from%'
 
     # Autres services
+
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false 
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+        shared: false
+
+    Symfony\Component\Filesystem\Filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+        public: false
+
+    App\Command\GenerateRepositoriesCommand:
+        tags: ['console.command']
+
+
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
             - '../src/Tests/'
+
+
+    App\Service\HuggingFaceService:
+        arguments:
+            $apiKey: '%env(HUGGINGFACE_API_KEY)%'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+        public: true 
+    App\Repository\HebergementRepository: ~
+
+    App\Service\HebergementExcelExporter:
+        arguments:
+            $logger: '@logger'
+            $reservationRepository: '@App\Repository\ReservationHebergementRepository'
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: ['doctrine.repository_service']
+

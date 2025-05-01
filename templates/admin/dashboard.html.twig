@@ -1,0 +1,113 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Tableau de bord administrateur{% endblock %}
+
+{% block page_title %}Tableau de bord administrateur{% endblock %}
+
+{% block Content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tableau de bord administrateur</h1>
+
+    {# Statistics Cards #}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Utilisateurs totaux</h5>
+                    <p class="card-text display-4">{{ totalUsers }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Avis totaux</h5>
+                    <p class="card-text display-4">{{ totalReviews }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Recent Users #}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Utilisateurs récents</h5>
+            <a href="{{ path('app_user_index') }}" class="btn btn-sm btn-primary">Voir tous</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Date d'inscription</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recentUsers %}
+                            <tr>
+                                <td>{{ user.prenom }} {{ user.nom }}</td>
+                                <td>{{ user.mail }}</td>
+                                <td>{% if user.createdAt is defined %}{{ user.createdAt|date('d/m/Y H:i') }}{% else %}N/A{% endif %}</td>
+                                <td>
+                                    <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# Recent Reviews #}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Avis récents</h5>
+            <a href="{{ path('app_avis_index') }}" class="btn btn-sm btn-primary">Voir tous</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Note</th>
+                            <th>Commentaire</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in recentReviews %}
+                            <tr>
+                                <td>{{ review.user.prenom }} {{ review.user.nom }}</td>
+                                <td>
+                                    {% for i in 1..5 %}
+                                        {% if i <= review.rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ review.comment|slice(0, 50) }}{% if review.comment|length > 50 %}...{% endif %}</td>
+                                <td>{% if review.createdAt is defined %}{{ review.createdAt|date('d/m/Y H:i') }}{% else %}N/A{% endif %}</td>
+                                <td>
+                                    <a href="{{ path('app_avis_show', {'id': review.id}) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,4 @@
 <?php
-// src/Form/ReservationHebergementType.php
 
 namespace App\Form;
 
@@ -10,11 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this line
 
-
-
-    class ReservationHebergementType extends AbstractType
+class ReservationHebergementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -27,7 +23,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this line
                     'min' => (new \DateTime())->format('Y-m-d')
                 ],
                 'label' => 'Date de début',
-                'empty_data' => null, // Important for validation
+                'empty_data' => null,
+                'required' => true,
             ])
             ->add('date_f', DateType::class, [
                 'widget' => 'single_text',
@@ -37,7 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this line
                     'min' => (new \DateTime())->modify('+1 day')->format('Y-m-d')
                 ],
                 'label' => 'Date de fin',
-                'empty_data' => null, // Important for validation
+                'empty_data' => null,
+                'required' => true,
             ])
             ->add('status', TextareaType::class, [
                 'attr' => [
@@ -46,15 +44,20 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this line
                     'placeholder' => 'Votre commentaire...'
                 ],
                 'label' => 'Commentaire',
-                'required' => false,
-                'empty_data' => '',
-            ])
-            ->add('hebergement', TextType::class, [
-                'disabled' => true,
+                'required' => true,
+            ]);
+
+        if ($options['is_new']) {
+            $builder->add('hebergement', TextType::class, [
                 'mapped' => false,
                 'data' => $options['hebergement_name'],
-                'attr' => ['class' => 'form-control'],
+                'attr' => [
+                    'class' => 'form-control',
+                    'readonly' => true
+                ],
+                'label' => 'Hébergement'
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -62,6 +65,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Add this line
         $resolver->setDefaults([
             'data_class' => ReservationHebergement::class,
             'hebergement_name' => null,
+            'is_new' => false,
         ]);
     }
 }

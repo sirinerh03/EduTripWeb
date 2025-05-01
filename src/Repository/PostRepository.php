@@ -40,13 +40,4 @@ class PostRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    public function getStatsByYear(): array
-{
-    return $this->createQueryBuilder('p')
-        ->select('YEAR(p.date_ajout) as year, COUNT(p.id_pack) as count')
-        ->groupBy('year')
-        ->orderBy('year', 'ASC')
-        ->getQuery()
-        ->getResult();
-}
 }

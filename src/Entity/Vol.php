@@ -15,6 +15,7 @@ class Vol
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id_vol = null;
     
     #[ORM\Column(length: 7)]
@@ -113,11 +114,13 @@ class Vol
     public function setAeroportArrivee(string $aeroport_arrivee): static
     {
         $this->aeroport_arrivee = $aeroport_arrivee;
+
         return $this;
     }
 
     public function getDateDepart(): ?\DateTimeInterface
     {
+
         return $this->date_depart;
     }
 
@@ -158,12 +161,10 @@ class Vol
     public function setPrixVol(float $prix_vol): static
     {
         $this->prix_vol = $prix_vol;
+
         return $this;
     }
 
-    /**
-     * @return Collection<int, ReservationVol>
-     */
     public function getReservationVols(): Collection
     {
         return $this->reservationVols;
