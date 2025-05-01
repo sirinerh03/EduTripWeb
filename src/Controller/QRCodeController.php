@@ -20,6 +20,7 @@ class QRCodeController extends AbstractController
         if (!$university) {
             throw $this->createNotFoundException('University not found');
         }
+        
         $url = 'mailto:' . $university->getEmail() . '?subject=Demande d\'information&body=Bonjour, je souhaite en savoir plus sur votre université.';
         $builder = new Builder(
             writer: new PngWriter(),
@@ -47,7 +48,7 @@ class QRCodeController extends AbstractController
             writer: new PngWriter(),
             data: $url,
             size: 400,
-            
+
             margin: 10
         );
 
