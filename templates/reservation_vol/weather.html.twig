@@ -155,13 +155,15 @@
     <div id="weather-info">
         {% if weather %}
             <h1>Météo à {{ city|capitalize }}</h1>
-            <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png" alt="{{ weather.weather[0].description }}" class="weather-icon">
-            <div class="temperature">{{ weather.main.temp }}°C</div>
+<img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png"
+     alt="{{ weather.weather[0].description }}"
+     class="weather-icon"
+     onerror="this.onerror=null; this.src='/images/default-weather.png';">            <div class="temperature">{{ weather.main.temp }}°C</div>
             <h5 class="card-title">{{ weather.weather[0].description|capitalize }}</h5>
             <div class="details">
-                <p><strong>Ressentie :</strong> {{ weather.main.feels_like }}°C</p>
-                <p><strong>Humidité :</strong> {{ weather.main.humidity }}%</p>
-                <p><strong>Vent :</strong> {{ weather.wind.speed }} m/s</p>
+               <p><i class="fas fa-thermometer-half" style="color: #e74c3c;"></i> <strong>Ressentie :</strong> {{ weather.main.feels_like }}°C</p>
+               <p><i class="fas fa-tint" style="color: #3498db;"></i> <strong>Humidité :</strong>  {{ weather.main.humidity }}%</p>
+               <p><i class="fas fa-wind" style="color: #2ecc71;"></i>  <strong>Vent :</strong> {{ weather.wind.speed }} m/s</p>
             </div>
         {% else %}
             <p class="alert alert-warning mt-4 text-center">Désolé, informations météo non disponibles.</p>
@@ -198,17 +200,19 @@
                 weatherInfo.innerHTML = '<p class="alert alert-danger">Erreur : ' + data.error + '</p>';
             } else {
                 weatherInfo.innerHTML = `
-                    <h1>Météo à ${city.charAt(0).toUpperCase() + city.slice(1)}</h1>
-                    <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png" alt="${data.weather[0].description}" class="weather-icon">
+    <h1>Météo à ${city.charAt(0).toUpperCase() + city.slice(1)}</h1>
+    <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png" 
+         alt="${data.weather[0].description}" 
+         class="weather-icon">
 
-                    <div class="temperature">${data.main.temp}°C</div>
-                    <h5 class="card-title">${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</h5>
-                    <div class="details">
-                        <p><strong>Ressentie :</strong> ${data.main.feels_like}°C</p>
-                        <p><strong>Humidité :</strong> ${data.main.humidity}%</p>
-                        <p><strong>Vent :</strong> ${data.wind.speed} m/s</p>
-                    </div>
-                `;
+    <div class="temperature">🌡️ ${data.main.temp}°C</div>
+    <h5 class="card-title">☁️ ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</h5>
+    <div class="details">
+        <p>🌡️ <strong>Ressentie :</strong> ${data.main.feels_like}°C</p>
+        <p>💧 <strong>Humidité :</strong> ${data.main.humidity}%</p>
+        <p>💨 <strong>Vent :</strong> ${data.wind.speed} m/s</p>
+    </div>
+`;
             }
         })
         .catch(error => {
@@ -218,3 +222,4 @@
     });
 </script>
 {% endblock %}
+ 
