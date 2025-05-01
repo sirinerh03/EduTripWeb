@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class QRCodeController extends AbstractController
 {
     #[Route('/university-qr/university/{id}', name: 'app_qr_code_university', methods: ['GET'])]
