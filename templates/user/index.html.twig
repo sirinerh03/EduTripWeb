@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste des utilisateurs{% endblock %}
+{% block body %}
+    <h1>Utilisateurs</h1>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('app_user_new') }}" class="btn btn-primary">+ Nouvel utilisateur</a>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <!-- Colonne ID masquée -->
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Mail</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <!-- ID masqué -->
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>
+                        <a href="{{ path('app_user_show', {'id_user': user.idUser}) }}">Voir</a>
+                        <a href="{{ path('app_user_edit', {'id_user': user.idUser}) }}">Éditer</a>
+                        {{ include('user/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun utilisateur trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

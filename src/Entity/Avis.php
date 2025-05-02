@@ -1,101 +1,119 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\AvisRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use App\Repository\AviRepository;
-
-#[ORM\Entity(repositoryClass: AviRepository::class)]
+#[ORM\Entity(repositoryClass: AvisRepository::class)]
 #[ORM\Table(name: 'avis')]
 class Avis
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Le commentaire est obligatoire')]
+    #[Assert\Length(min: 10, max: 1000, minMessage: 'Le commentaire doit faire au moins {{ limit }} caractères', maxMessage: 'Le commentaire ne peut pas dépasser {{ limit }} caractères')]
+    private ?string $comment = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank(message: 'La note est obligatoire')]
+    #[Assert\Range(min: 1, max: 5, notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}')]
+    private ?int $rating = null;
+
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    private ?SpinReward $spinReward = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $rewardClaimed = false;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->rewardClaimed = false;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function getComment(): ?string
     {
-        $this->id = $id;
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): static
+    {
+        $this->comment = $comment;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $user_id = null;
-
-    public function getUser_id(): ?int
+    public function getRating(): ?int
     {
-        return $this->user_id;
+        return $this->rating;
     }
 
-    public function setUser_id(int $user_id): self
+    public function setRating(int $rating): static
     {
-        $this->user_id = $user_id;
+        $this->rating = $rating;
         return $this;
     }
 
-    #[ORM\Column(type: 'text', nullable: false)]
-    private ?string $commentaire = null;
-
-    public function getCommentaire(): ?string
+    public function getUser(): ?User
     {
-        return $this->commentaire;
+        return $this->user;
     }
 
-    public function setCommentaire(string $commentaire): self
+    public function setUser(?User $user): static
     {
-        $this->commentaire = $commentaire;
+        $this->user = $user;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $note = null;
-
-    public function getNote(): ?int
+    public function getSpinReward(): ?SpinReward
     {
-        return $this->note;
+        return $this->spinReward;
     }
 
-    public function setNote(?int $note): self
+    public function setSpinReward(?SpinReward $spinReward): static
     {
-        $this->note = $note;
+        $this->spinReward = $spinReward;
         return $this;
     }
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
-    private ?\DateTimeInterface $date_creation = null;
-
-    public function getDate_creation(): ?\DateTimeInterface
+    public function isRewardClaimed(): ?bool
     {
-        return $this->date_creation;
+        return $this->rewardClaimed;
     }
 
-    public function setDate_creation(\DateTimeInterface $date_creation): self
+    public function setRewardClaimed(bool $rewardClaimed): static
     {
-        $this->date_creation = $date_creation;
+        $this->rewardClaimed = $rewardClaimed;
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $photo = null;
-
-    public function getPhoto(): ?string
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->photo;
+        return $this->createdAt;
     }
 
-    public function setPhoto(string $photo): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->photo = $photo;
+        $this->createdAt = $createdAt;
         return $this;
     }
-
 }

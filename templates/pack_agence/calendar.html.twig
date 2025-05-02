@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+   
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />    <style>
+        /* Personnalisation du calendrier */
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .fc-header-toolbar {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .fc-daygrid-day-number {
+            color: #4CAF50;  /* Changer la couleur des numéros de jours */
+        }
+
+        .fc-daygrid-event {
+            background-color: #ff5722;  /* Personnaliser la couleur des événements */
+        }
+
+        .fc-toolbar-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+
+<h2 class="text-center mb-4" style="color: #003366; font-weight: bold;">
+            📅 Calendrier des Packs
+        </h2>
+<div id="calendar"></div>
+    <div class="text-center mt-4">
+        <a href="{{ path('app_pack_agence_liste') }}" class="btn btn-primary">Retour à l'accueil</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Chargement des scripts FullCalendar #}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: {{ events|json_encode|raw }},  {# Passer les événements du contrôleur vers le calendrier #}
+
+                // Gestion du clic sur un événement
+                eventClick: function(info) {
+                    // Obtenez l'ID de l'événement
+                    var eventId = info.event.id;
+
+                    // Affichage des détails de l'événement (par exemple, dans une alerte)
+                    alert('ID de l\'événement : ' + eventId + '\n' +
+                          'Nom du pack : ' + info.event.title + '\n' +
+                          'Date : ' + info.event.start.toLocaleString());
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}

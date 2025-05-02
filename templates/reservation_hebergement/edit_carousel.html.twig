@@ -8,19 +8,40 @@
         Modifier la réservation de {{ reservation_hebergement.hebergement.nomh }}
     </h1>
 
-    <div class="row justify-content-center">
+     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm p-4 rounded">
-                {{ form_start(form) }}
-                    {% for child in form %}
-                        {% if child.vars.name != '_token' %}
-                            <div class="mb-3">
-                                {{ form_label(child) }}
-                                {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(child) }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <!-- Date de début -->
+                    <div class="mb-3">
+                        {{ form_label(form.date_d) }}
+                        {{ form_widget(form.date_d, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.date_d) }}
+                    </div>
+
+                    <!-- Date de fin -->
+                    <div class="mb-3">
+                        {{ form_label(form.date_f) }}
+                        {{ form_widget(form.date_f, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.date_f) }}
+                    </div>
+
+                    <!-- Commentaire -->
+                    <div class="mb-3">
+                        {{ form_label(form.status) }}
+                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.status) }}
+                    </div>
+
+                    <!-- Hébergement (read-only display) -->
+                    <div class="mb-3">
+    <label class="form-label">Hébergement</label>
+    <input type="text" 
+           class="form-control" 
+           value="{{ reservation_hebergement.hebergement.nomh }}" 
+           disabled>
+</div>
+
                     <div class="text-center">
                         <button type="submit" class="btn custom-btn">Mettre à jour</button>
                     </div>
@@ -84,6 +105,12 @@
         .form-control:focus {
             border-color: #06BBCC;
             box-shadow: 0 0 0 0.2rem rgba(6, 187, 204, 0.25);
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
         }
     </style>
 {% endblock %}

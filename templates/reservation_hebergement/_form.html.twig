@@ -8,7 +8,7 @@
         Modifier la réservation de {{ reservation_hebergement.hebergement.nomh }}
     </h1>
 
-    <div class="row justify-content-center">
+   <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm p-4 rounded">
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
@@ -30,11 +30,19 @@
                             <td>{{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}</td>
                             <td class="text-danger">{{ form_errors(form.status) }}</td>
                         </tr>
-                        <tr>
-                            <td class="align-middle">{{ form_label(form.hebergement, "Hébergement") }}</td>
-                            <td>{{ form_widget(form.hebergement, {'attr': {'class': 'form-control'}}) }}</td>
-                            <td class="text-danger">{{ form_errors(form.hebergement) }}</td>
-                        </tr>
+                        {% if form.hebergement is defined %}
+                            <tr>
+                                <td class="align-middle">{{ form_label(form.hebergement, "Hébergement") }}</td>
+                                <td>{{ form_widget(form.hebergement, {'attr': {'class': 'form-control'}}) }}</td>
+                                <td class="text-danger">{{ form_errors(form.hebergement) }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td class="align-middle">Hébergement</td>
+                                <td>{{ reservation_hebergement.hebergement.nomh }}</td>
+                                <td></td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
 
@@ -125,4 +133,4 @@
             margin-bottom: 0;
         }
     </style>
-{% endblock %}
+{% endblock %}5

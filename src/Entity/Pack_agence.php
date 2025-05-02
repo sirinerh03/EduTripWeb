@@ -7,6 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Agence;
 
 #[ORM\Entity]
+
+#[ORM\Table(name: 'pack_agence')]
+
 class Pack_agence
 {
     #[ORM\Id]

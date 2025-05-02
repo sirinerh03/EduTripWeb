@@ -58,7 +58,6 @@
 </div>{# Espace réservé pour le footer #}
     <div style="height: 60px;"></div>
 
-
 <style>
     /* Correction du positionnement */
     body {
@@ -66,7 +65,7 @@
         min-height: 100vh;
         padding-bottom: 60px;
     }
-    
+
     footer.footer {
         position: absolute;
         bottom: 0;
@@ -92,6 +91,15 @@
                     form.classList.add('was-validated');
                 }, false);
             });
+
+            // ✅ Auto-dismiss des flashs après 4 secondes
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 4000);
         });
     </script>
 {% endblock %}

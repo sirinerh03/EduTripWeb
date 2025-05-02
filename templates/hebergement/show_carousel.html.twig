@@ -1,185 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de {{ hebergement.nomh }} | EduTrip{% endblock %}
+{% block title %}Détails de {{ hebergement.nomh }}{% endblock %}
 
 {% block content %}
 <section class="container py-5">
-    <div class="row g-4">
-        <!-- Main Image Gallery -->
-        <div class="col-lg-7">
-            <div class="card border-0 shadow-lg overflow-hidden rounded-4">
-                <img src="{{ asset('img/' ~ hebergement.imageh) }}" 
-                     class="img-fluid w-100 object-cover"
-                     alt="{{ hebergement.nomh }}"
-                     style="height: 400px;">
-                
-                <!-- Image Thumbnails -->
-                <div class="d-flex gap-2 p-3 bg-light">
-                    <div class="rounded-3 overflow-hidden" style="width: 80px; height: 60px;">
-                        <img src="{{ asset('img/' ~ hebergement.imageh) }}" 
-                             class="img-fluid h-100 w-100 object-cover cursor-pointer"
-                             onclick="document.querySelector('.card img').src = this.src">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg">
+                <img src="{{ asset('img/' ~ hebergement.imageh) }}" class="card-img-top" alt="{{ hebergement.nomh }}">
+                <div class="card-body">
+                    <h1 class="card-title display-5 fw-bold mb-4">{{ hebergement.nomh }}</h1>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="fs-5"><strong>Type:</strong> {{ hebergement.typeh }}</p>
+                            <p class="fs-5"><strong>Capacité:</strong> {{ hebergement.capaciteh }} personnes</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="fs-5"><strong>Prix:</strong> {{ hebergement.prixh }} DT/nuit</p>
+                            <p class="fs-5"><strong>Disponibilité:</strong> {{ hebergement.disponibleh }}</p>
+                        </div>
                     </div>
-                    <!-- Add more thumbnails here if available -->
-                </div>
-            </div>
-            
-            <!-- Amenities Section -->
-            <div class="mt-4">
-                <h4 class="fw-bold mb-3 text-dark"><i class="fas fa-info-circle text-primary me-2"></i>Caractéristiques</h4>
-                <div class="d-flex flex-wrap gap-3">
-                    <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3">
-                        <i class="fas fa-users text-primary me-2"></i>
-                        <span>{{ hebergement.capaciteh }} personnes</span>
+                    
+                    <h3 class="fw-bold mb-3">Adresse</h3>
+                    <p class="fs-5 mb-4">{{ hebergement.adressh }}</p>
+                    
+                    <h3 class="fw-bold mb-3">Description</h3>
+                    <p class="fs-5 mb-4">{{ hebergement.descriptionh }}</p>
+                    
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="{{ path('app_hebergement_carousel') }}" class="btn btn-outline-primary">
+                            Retour au carousel
+                        </a>
+                        <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}" 
+                           class="btn btn-primary">
+                            Réserver maintenant
+                        </a>
+                        <button class="btn btn-success" id="showMapBtn">
+                            Voir sur la carte
+                        </button>
                     </div>
-                    <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3">
-                        <i class="fas fa-home text-primary me-2"></i>
-                        <span>{{ hebergement.typeh }}</span>
-                    </div>
-                    {% if hebergement.prixh is defined %}
-                    <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3">
-                        <i class="fas fa-tag text-primary me-2"></i>
-                        <span>{{ hebergement.prixh }} DT/nuit</span>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
 
-        <!-- Booking & Details Section -->
-        <div class="col-lg-5">
-            <div class="sticky-top" style="top: 20px;">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <!-- Title -->
-                        <h1 class="h2 fw-bold text-dark mb-3">{{ hebergement.nomh }}</h1>
-                        
-                        <!-- Location (if available) -->
-                        {% if hebergement.localisation is defined %}
-                        <div class="d-flex align-items-center mb-4">
-                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
-                            <span class="text-muted">{{ hebergement.localisation }}</span>
-                        </div>
-                        {% endif %}
-                        
-                        <!-- Description -->
-                        <div class="mb-4">
-                            <h4 class="h5 fw-bold text-dark mb-3">Description</h4>
-                            <p class="text-muted mb-0">
-                                {{ hebergement.descriptionh ?? "Cet hébergement confortable offre tout le nécessaire pour un séjour agréable." }}
-                            </p>
-                        </div>
-                        
-                        <hr class="my-4">
-                        
-                        <!-- Booking Card -->
-                        <div class="bg-light p-4 rounded-3 mb-4">
-                            <h5 class="fw-bold mb-3">Réserver maintenant</h5>
-                            <div class="d-grid gap-2">
-                                <a href="{{ path('app_reservation_hebergement_new_carousel', {'id_hebergement': hebergement.id}) }}" 
-                                   class="btn btn-primary btn-lg py-3 fw-bold">
-                                    <i class="fas fa-calendar-check me-2"></i> Choisir des dates
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Back Button -->
-                        <div class="d-flex justify-content-start">
-                            <a href="{{ path('app_hebergement_carousel') }}" 
-                               class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i> Retour au carousel
-                            </a>
-                        </div>
+                    <div id="mapContainer" class="mt-5" style="display: none;">
+                        <iframe
+                            width="100%"
+                            height="400"
+                            frameborder="0"
+                            style="border:0; border-radius: 10px;"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            id="mapIframe"
+                            allowfullscreen
+                        ></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block stylesheets %}
+<script>
+    document.getElementById('showMapBtn').addEventListener('click', function () {
+        const encodedAddress = encodeURIComponent(`{{ hebergement.adressh }}`);
+        const url = `https://maps.google.com/maps?q=${encodedAddress}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+        document.getElementById('mapIframe').src = url;
+        document.getElementById('mapContainer').style.display = 'block';
+        this.style.display = 'none';
+    });
+</script>
+
 <style>
-    :root {
-        --primary-color: #06BBCC;
-        --primary-hover: #05a8b8;
-        --secondary-color: #6c757d;
-    }
-    
-    body {
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        background-color: #f8fafc;
-        color: #333;
-    }
-    
     .card {
-        border-radius: 12px;
+        border-radius: 15px;
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: none;
     }
     
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
-    }
-    
-    .btn {
-        border-radius: 8px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-lg {
-        padding: 12px 24px;
-    }
-    
-    .btn-primary {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
-    
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-        transform: translateY(-2px);
-    }
-    
-    .btn-outline-secondary {
-        color: var(--secondary-color);
-        border-color: var(--secondary-color);
-    }
-    
-    .btn-outline-secondary:hover {
-        background-color: rgba(108, 117, 125, 0.1);
-    }
-    
-    .object-cover {
+    .card-img-top {
+        height: 400px;
         object-fit: cover;
-        object-position: center;
     }
     
-    .cursor-pointer {
-        cursor: pointer;
+    .card-body {
+        padding: 2rem;
     }
     
-    .text-muted {
-        color: #6c757d !important;
-    }
-    
-    .sticky-top {
-        position: -webkit-sticky;
-        position: sticky;
-    }
-    
-    @media (max-width: 992px) {
-        .sticky-top {
-            position: static;
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 250px;
         }
     }
 </style>
-{% endblock %}
-
-{% block javascripts %}
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}

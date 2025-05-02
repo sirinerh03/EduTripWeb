@@ -18,6 +18,54 @@
             </div>
         {% endif %}
 
+        <!-- Formulaire de recherche -->
+        <div class="mb-4">
+            <form method="get" action="{{ path('app_agence_index') }}">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="nom_ag" class="form-control custom-input" placeholder="Nom de l'agence" value="{{ app.request.query.get('nom_ag') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="adresse_ag" class="form-control custom-input" placeholder="Adresse de l'agence" value="{{ app.request.query.get('adresse_ag') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block w-100 custom-btn">Rechercher</button>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ path('app_agence_index') }}" class="btn btn-secondary btn-block w-100 custom-btn">Réinitialiser</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulaire pour le tri -->
+        <div class="mb-4">
+            <form method="get" action="{{ path('app_agence_index') }}">
+                <div class="row">
+                    <!-- Partie pour le tri -->
+                    <div class="col-md-3">
+                        <select name="sort" class="form-control custom-input">
+                            <option value="date_creation" {% if app.request.query.get('sort') == 'date_creation' %}selected{% endif %}>Date Création</option>
+                            <option value="nomAg" {% if app.request.query.get('sort') == 'nomAg' %}selected{% endif %}>Nom Agence</option>
+                            <option value="adresseAg" {% if app.request.query.get('sort') == 'adresseAg' %}selected{% endif %}>Adresse</option>
+                        </select>
+                    </div>
+
+                    <!-- Partie pour la direction du tri -->
+                    <div class="col-md-3">
+                        <select name="direction" class="form-control custom-input">
+                            <option value="asc" {% if app.request.query.get('direction') == 'asc' %}selected{% endif %}>Croissant</option>
+                            <option value="desc" {% if app.request.query.get('direction') == 'desc' %}selected{% endif %}>Décroissant</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block w-100 custom-btn">Trier</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="mb-4 text-right">
             <a href="{{ path('app_agence_new') }}" class="btn btn-primary">Créer une nouvelle Agence</a>
         </div>
@@ -64,25 +112,59 @@
             </table>
         </div>
     </div>
-     {# Espace réservé pour le footer #}
+
+    {# Espace réservé pour le footer #}
     <div style="height: 60px;"></div>
 
+    <style>
+        /* Correction du positionnement */
+        body {
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
 
-<style>
-    /* Correction du positionnement */
-    body {
-        position: relative;
-        min-height: 100vh;
-        padding-bottom: 60px;
-    }
-    
-    footer.footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 60px;
-        z-index: 10;
-        background: white; 
-    }
-</style>
+        footer.footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 10;
+            background: white; 
+        }
+
+        /* Uniformiser la taille des champs et des boutons */
+        .custom-input {
+            height: 45px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .custom-btn {
+            height: 45px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        /* Uniformiser les couleurs des boutons */
+        .btn-primary, .btn-info {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover, .btn-info:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
 {% endblock %}

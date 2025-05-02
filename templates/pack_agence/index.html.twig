@@ -18,8 +18,67 @@
             </div>
         {% endif %}
 
+        <!-- Formulaire de recherche -->
+        <div class="mb-4">
+            <form method="get" action="{{ path('app_pack_agence') }}">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="nom" class="form-control custom-input" placeholder="Nom du pack" value="{{ app.request.query.get('nom') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="0.01" name="prix" class="form-control custom-input" placeholder="Prix" value="{{ app.request.query.get('prix') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="duree" class="form-control custom-input" placeholder="Durée (jours)" value="{{ app.request.query.get('duree') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block w-100 custom-btn">Rechercher</button>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ path('app_pack_agence') }}" class="btn btn-secondary btn-block w-100 custom-btn">Réinitialiser</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulaire pour le tri -->
+        <div class="mb-4">
+            <form method="get" action="{{ path('app_pack_agence') }}">
+                <div class="row">
+                    <!-- Partie pour le tri -->
+                    <div class="col-md-3">
+                        <select name="sort" class="form-control custom-input">
+                            <option value="dateAjout" {% if app.request.query.get('sort') == 'dateAjout' %}selected{% endif %}>Date Ajout</option>
+                            <option value="nomPk" {% if app.request.query.get('sort') == 'nomPk' %}selected{% endif %}>Nom Pack</option>
+                            <option value="prix" {% if app.request.query.get('sort') == 'prix' %}selected{% endif %}>Prix</option>
+                            <option value="duree" {% if app.request.query.get('sort') == 'duree' %}selected{% endif %}>Durée</option>
+                        </select>
+                    </div>
+
+                    <!-- Partie pour la direction du tri -->
+                    <div class="col-md-3">
+                        <select name="direction" class="form-control custom-input">
+                            <option value="asc" {% if app.request.query.get('direction') == 'asc' %}selected{% endif %}>Croissant</option>
+                            <option value="desc" {% if app.request.query.get('direction') == 'desc' %}selected{% endif %}>Décroissant</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block w-100 custom-btn">Trier</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="mb-4 text-right">
-            <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
+           <div class="mb-4 text-right">
+    <a href="{{ path('app_pack_agence_stats') }}" class="btn btn-primary custom-btn mr-2">
+    <i class="fas fa-chart-line mr-1"></i> Statistiques
+</a>
+
+    <a href="{{ path('app_pack_agence_new') }}" class="btn btn-primary">Créer un nouveau Pack</a>
+</div>
+
         </div>
 
         <div class="table-responsive">
@@ -30,6 +89,8 @@
                         <th>Prix</th>
                         <th>Durée (jours)</th>
                         <th>Date d'ajout</th>
+                        <th>Services inclus</th>
+                        <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -37,11 +98,13 @@
                     {% for pack in packAgences %}
                         <tr>
                             <td>{{ pack.nomPk }}</td>
-                            <td>{{ pack.prix }}</td>
+                            <td>{{ pack.prix }} €</td>
                             <td>{{ pack.duree }}</td>
-                            <td>{{ pack.DateAjout|date('d/m/Y') }}</td>
+                            <td>{{ pack.dateAjout|date('d/m/Y') }}</td>
+                            <td>{{ pack.servicesInclus }}</td>
+                            <td>{{ pack.status }}</td>
                             <td>
-                                <a href="{{ path('app_pack_agence_show', {'id': pack.idPack}) }}" class="btn btn-info btn-sm">Voir</a>
+                                <a href="{{ path('app_pack_agence_show', {'id_pack': pack.idPack}) }}" class="btn btn-info btn-sm">Voir</a>
                                 <a href="{{ path('app_pack_agence_edit', {'id': pack.idPack}) }}" class="btn btn-warning btn-sm">Modifier</a>
                                 <form action="{{ path('app_pack_agence_delete', {'id': pack.idPack}) }}" method="post" style="display:inline;">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pack.idPack) }}">
@@ -51,32 +114,87 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5" class="text-center">Aucun pack trouvé.</td>
+                            <td colspan="7" class="text-center">Aucun pack trouvé</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
     {# Espace réservé pour le footer #}
     <div style="height: 60px;"></div>
 
+    <style>
+        /* Correction du positionnement */
+        body {
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        footer.footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 10;
+            background: white; 
+        }
+
+        /* Uniformiser la taille des champs et des boutons */
+        .custom-input {
+            height: 45px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .custom-btn {
+            height: 45px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        /* Uniformiser les couleurs des boutons */
+        .btn-primary, .btn-info {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover, .btn-info:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
+        {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+</div>
 
 <style>
-    /* Correction du positionnement */
     body {
         position: relative;
         min-height: 100vh;
         padding-bottom: 60px;
     }
-    
+
     footer.footer {
         position: absolute;
         bottom: 0;
         width: 100%;
         height: 60px;
         z-index: 10;
-        background: white; 
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
 </style>
 {% endblock %}

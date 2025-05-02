@@ -2,40 +2,146 @@
 
 {% block title %}Liste des Packs d'Agence{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .packs-container {
+            transition: opacity 0.3s ease;
+            min-height: 300px;
+        }
+
+        .packs-container.loading {
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+
+        #filter-form input,
+        #filter-form select {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #filter-form input:focus,
+        #filter-form select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
+<div class="container">
+    <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
 
-   <h1 class="my-4 text-primary">📦 Liste des Packs d'Agence</h1>
+    <div class="mb-4 d-flex gap-2">
+        <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-warning w-auto">
+            <i class="fas fa-trophy me-2"></i> Voir les 3 Meilleurs Packs
+        </a>
+        <a href="{{ path('calendar') }}" class="btn btn-primary w-auto">
+            📅 Voir le Calendrier
+        </a>
+    </div>
 
-    {% if app.session.flashbag.has('success') %}
-        <div class="alert alert-success">
-            {{ app.session.flashbag.get('success')[0] }}
-        </div>
-    {% endif %}
-
-    {% if packAgences is not empty %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for pack in packAgences %}
-                <div class="col">
-                    <div class="card h-100 border-0 shadow" style="background: #f0f8ff;">
-                        <div class="card-header bg-info text-white">
-                            <h5 class="mb-0">{{ pack.nomPk }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><span class="fw-bold text-secondary">💰 Prix :</span><br>{{ pack.prix }} TND</p>
-                            <p><span class="fw-bold text-secondary">⏳ Durée :</span><br>{{ pack.duree }} jours</p>
-                            <p><span class="fw-bold text-secondary">📋 Services inclus :</span><br>{{ pack.servicesInclus }}</p>
-                            <p><span class="fw-bold text-secondary">🗓️ Date d'ajout :</span><br>{{ pack.dateAjout ? pack.dateAjout|date('Y-m-d') : 'Non renseignée' }}</p>
-                            <p><span class="fw-bold text-secondary">📌 Statut :</span><br>{{ pack.status }}</p>
-                            <p><span class="fw-bold text-secondary">📝 Description :</span><br>{{ pack.descriptionPk }}</p>
-                            <p><span class="fw-bold text-secondary">🏢 Agence :</span><br>{{ pack.idAgence.nomAg }}</p>
-                        </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="nom" class="form-label">🔍 Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom"
+                           value="{{ app.request.query.get('nom') }}"
+                           placeholder="Rechercher...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">💰 Prix (TND)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" class="form-control" id="prix_min" name="prix_min" value="{{ prix_min ?? 100 }}"
+                               min="100" max="10000" step="100">
+                        <span class="text-muted">à</span>
+                        <input type="number" class="form-control" id="prix_max" name="prix_max" value="{{ prix_max ?? 10000 }}"
+                               min="100" max="10000" step="100">
                     </div>
                 </div>
-            {% endfor %}
+                <div class="col-md-3">
+                    <label class="form-label">⏳ Durée (jours)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" class="form-control" id="duree_min" name="duree_min" value="{{ duree_min ?? 1 }}"
+                               min="1" max="30" step="1">
+                        <span class="text-muted">à</span>
+                        <input type="number" class="form-control" id="duree_max" name="duree_max" value="{{ duree_max ?? 30 }}"
+                               min="1" max="30" step="1">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">🔃 Trier par</label>
+                    <select name="order_by" id="order_by" class="form-select">
+                        <option value="p.nom_pk" {{ order_by == 'p.nom_pk' ? 'selected' : '' }}>Nom</option>
+                        <option value="p.prix" {{ order_by == 'p.prix' ? 'selected' : '' }}>Prix</option>
+                        <option value="p.duree" {{ order_by == 'p.duree' ? 'selected' : '' }}>Durée</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <select name="order_dir" id="order_dir" class="form-select">
+                        <option value="asc" {{ order_dir == 'asc' ? 'selected' : '' }}>⬆️ Croissant</option>
+                        <option value="desc" {{ order_dir == 'desc' ? 'selected' : '' }}>⬇️ Décroissant</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Filtrer
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" id="reset-btn" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo me-2"></i>Réinitialiser
+                    </button>
+                </div>
+            </form>
         </div>
-    {% else %}
-        <div class="alert alert-info text-center mt-4">
-            Aucun pack trouvé.
-        </div>
-    {% endif %}
+    </div>
+
+    <div class="packs-container" id="packs-results">
+        {% if packAgences is empty %}
+            <p>Aucun pack ne correspond à vos critères.</p>
+        {% else %}
+            {% include 'pack_agence/_pack_cards.html.twig' %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resetBtn = document.getElementById('reset-btn');
+
+            resetBtn.addEventListener('click', function () {
+                // Redirige vers l'URL de base sans paramètres pour réinitialiser les filtres
+                window.location.href = '{{ path("app_pack_agence_liste") }}';
+            });
+        });
+    </script>
+    
 {% endblock %}

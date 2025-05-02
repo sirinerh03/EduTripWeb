@@ -1,0 +1,183 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Liste des avis{% endblock %}
+
+{% block Content %}
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+          <i class="mdi mdi-comment-text"></i>
+        </span> Liste des avis
+      </h3>
+      <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Avis</li>
+        </ul>
+      </nav>
+    </div>
+
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    <!-- Formulaire de recherche et filtrage -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Recherche Et Filtrage</h4>
+
+            <!-- Recherche par nom -->
+            <div class="mb-4">
+              <h5>Recherche par nom</h5>
+              <form method="get" action="{{ path('admin_avis_index') }}" class="row g-3">
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="search" name="search" value="{{ search|default('') }}" placeholder="Nom ou prénom d'utilisateur">
+                  <input type="hidden" name="rating" value="{{ rating|default('') }}">
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-gradient-primary w-100">
+                    <i class="mdi mdi-magnify me-1"></i> Rechercher
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Filtrage par note -->
+            <div class="mb-4">
+              <h5>Filtrer par note</h5>
+              <form method="get" action="{{ path('admin_avis_index') }}" class="row g-3">
+                <div class="col-md-8">
+                  <select class="form-select" id="rating" name="rating">
+                    <option value="">Toutes les notes</option>
+                    {% for i in 1..5 %}
+                      <option value="{{ i }}" {% if rating is defined and rating == i %}selected{% endif %}>{{ i }} étoile{% if i > 1 %}s{% endif %}</option>
+                    {% endfor %}
+                  </select>
+                  <input type="hidden" name="search" value="{{ search|default('') }}">
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-gradient-success w-100">
+                    <i class="mdi mdi-filter me-1"></i> Filtrer
+                  </button>
+                </div>
+              </form>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste des avis -->
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h4 class="card-title">Tous les avis ({{ all_avis|length }})</h4>
+      </div>
+
+      {% if all_avis is empty %}
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body text-center py-5">
+              <h4 class="text-muted">Aucun avis trouvé</h4>
+              <p>Aucun avis correspondant à vos critères de recherche n'a été trouvé.</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        {% for avi in all_avis %}
+        <div class="col-lg-4 col-md-6 col-sm-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <div class="rating mb-1">
+                    {% for i in 1..5 %}
+                      {% if i <= avi.rating %}
+                        <i class="mdi mdi-star text-warning"></i>
+                      {% else %}
+                        <i class="mdi mdi-star-outline"></i>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <small class="text-muted">{{ avi.createdAt ? avi.createdAt|date('d/m/Y H:i') : '' }}</small>
+                </div>
+                <!-- ID de l'avis caché -->
+              </div>
+
+              <div class="d-flex align-items-center mb-3">
+                <div class="me-3">
+                  <div class="profile-pic bg-gradient-info text-white d-flex align-items-center justify-content-center">
+                    <i class="mdi mdi-account"></i>
+                  </div>
+                </div>
+                <h5 class="card-title mb-0">{{ avi.user ? avi.user.nom ~ ' ' ~ avi.user.prenom : 'Anonyme' }}</h5>
+              </div>
+
+              <p class="card-text review-content">{{ avi.comment|length > 150 ? avi.comment|slice(0, 150) ~ '...' : avi.comment }}</p>
+
+              <div class="d-flex justify-content-end">
+                <form method="post" action="{{ path('admin_avis_delete_new', {'id': avi.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">
+                  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avi.id) }}">
+                  <button type="submit" class="btn btn-sm btn-gradient-danger">
+                    <i class="mdi mdi-delete"></i> Supprimer
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+
+  .review-content {
+    min-height: 80px;
+  }
+</style>
+ {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+</div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
