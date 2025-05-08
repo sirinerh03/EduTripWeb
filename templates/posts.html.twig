@@ -493,14 +493,13 @@
                                    title="{{ 'post.modify'|trans }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-<form method="post" action="{{ path('app_post_delete', {'id_post': post.idPost}) }}" 
-      onsubmit="return confirm('{{ 'post.confirm_delete'|trans }}');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.idPost) }}">
-    <button class="btn btn-sm btn-outline-danger" title="{{ 'post.delete'|trans }}">
-        <i class="fas fa-trash"></i>
-    </button>
-</form>
-
+                                <form method="post" action="{{ path('app_post_delete', {'id_post': post.getIdPost()}) }}" 
+                                      onsubmit="return confirm('{{ 'post.confirm_delete'|trans }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.getIdPost()) }}">
+                                    <button class="btn btn-sm btn-outline-danger" title="{{ 'post.delete'|trans }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

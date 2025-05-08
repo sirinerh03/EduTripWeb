@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ReservationVolController extends AbstractController
 {  private WeatherService $weatherService;
@@ -33,6 +33,7 @@ class ReservationVolController extends AbstractController
        $this->logger = $logger;
    }
     #[Route('/reservationvol', name: 'app_reservation_vol')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(Request $request, VolRepository $volRepository): Response
     {
         // Récupération des paramètres de recherche

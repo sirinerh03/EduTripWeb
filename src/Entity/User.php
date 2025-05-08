@@ -277,4 +277,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function setRoles(array $roles): self
+{
+    // Priorité à ROLE_ADMIN si présent
+    if (in_array('ROLE_ADMIN', $roles, true)) {
+        $this->role = 'ROLE_ADMIN';
+    } elseif (in_array('ROLE_AGENCY', $roles, true)) {
+        $this->role = 'ROLE_AGENCY';
+    } else {
+        $this->role = 'ROLE_USER';
+    }
+
+    return $this;
+}
+
 }

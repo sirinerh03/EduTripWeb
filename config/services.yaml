@@ -2,7 +2,7 @@ parameters:
     env(HUGGINGFACE_API_KEY): '%env(HUGGINGFACE_API_KEY)%'
     env(WKHTMLTOPDF_PATH): ''
     env(WKHTMLTOIMAGE_PATH): ''
-
+    env(RAPIDAPI_KEY): 'RU13EOhy7khpS9RRJOMg7cF10FSE8JZO0PGNf2M1'
     upload_directory: '%kernel.project_dir%/public/images'
     cv_directory: '%kernel.project_dir%/public/uploads/cv'
     lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'

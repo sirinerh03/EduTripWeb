@@ -27,3 +27,11 @@ app_register:
     controller: App\Controller\SecurityController::register
 
 
+app:
+    resource: '../src/Controller/PostController.php'
+    type: annotation
+    prefix: '/{_locale}'
+    requirements:
+        _locale: 'en|fr'
+    defaults:
+        _locale: 'fr'

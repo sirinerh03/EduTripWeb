@@ -21,7 +21,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Builder\Builder;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/reservation/hebergement')]
 final class ReservationHebergementController extends AbstractController
@@ -34,6 +34,7 @@ final class ReservationHebergementController extends AbstractController
     }
 
     #[Route(name: 'app_reservation_hebergement_index', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(Request $request, PaginatorInterface $paginator, ReservationHebergementRepository $reservationHebergementRepository): Response
     {
         $query = $reservationHebergementRepository->createQueryBuilder('r')->getQuery();

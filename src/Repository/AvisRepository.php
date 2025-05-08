@@ -113,7 +113,7 @@ class AvisRepository extends ServiceEntityRepository
             $sortField = 'createdAt';
         }
 
-        $qb->orderBy('a.' . $sortField, $sortOrder);
+         $qb->andWhere('a.user IS NULL OR u.id IS NOT NULL');
 
         return $qb->getQuery()->getResult();
     }

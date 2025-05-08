@@ -21,19 +21,22 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->security = $security;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
-    {
-        $user = $token->getUser();
-        $roles = $user->getRoles();
+   public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
+{
+    $user = $token->getUser();
 
-        // Redirect based on user role
-        if (in_array('ROLE_ADMIN', $roles)) {
-            return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
-        } elseif (in_array('ROLE_AGENCY', $roles)) {
-            return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
-        } else {
-            // For regular users, redirect to dashboard which now uses base.html.twig
-            return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
-        }
+    if (!method_exists($user, 'getRoles')) {
+        throw new \LogicException('User object must implement getRoles() method.');
     }
+
+    $roles = $user->getRoles();
+
+    if (in_array('ROLE_ADMIN', $roles, true)) {
+        return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
+    }
+
+    // ROLE_AGENCY or others go to the same route
+    return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+}
+
 } 

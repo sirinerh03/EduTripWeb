@@ -19,6 +19,7 @@ use App\Repository\AgenceRepository;
 final class AgenceController extends AbstractController
 {
     #[Route('/', name: 'app_agence_index', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
 public function index(Request $request, AgenceRepository $agenceRepository): Response
 {
     // Get filters from request

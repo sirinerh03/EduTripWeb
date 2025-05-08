@@ -13,12 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\HebergementExcelExporter;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/hebergement')]
 final class HebergementController extends AbstractController
 {
     #[Route('', name: 'app_hebergement_index')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(Request $request, PaginatorInterface $paginator, HebergementRepository $repo): Response
     {
         $criteria = [

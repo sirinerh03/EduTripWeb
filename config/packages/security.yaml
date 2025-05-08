@@ -72,9 +72,9 @@ security:
           - { path: ^/avis, roles: IS_AUTHENTICATED_FULLY }
           - { path: ^/dashboard, roles: IS_AUTHENTICATED_FULLY }
           - { path: ^/universities, roles: IS_AUTHENTICATED_FULLY }
-          - { path: ^/housing, roles: IS_AUTHENTICATED_FULLY }
-          - { path: ^/flights, roles: IS_AUTHENTICATED_FULLY }
-          - { path: ^/, roles: PUBLIC_ACCESS }
+          - { path: ^//reservationvol, roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/posts, roles: IS_AUTHENTICATED_FULLY }
+
 
 
 when@test:

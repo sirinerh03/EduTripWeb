@@ -22,6 +22,7 @@ use App\Service\BadWordsService;
 use App\Service\FacebookShareService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PostController extends AbstractController
 {
     private $security;
@@ -34,6 +35,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/newpost', name: 'app_new_post', methods: ['GET', 'POST'])]
+    
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
     
@@ -135,6 +137,7 @@ $post->setUtilisateur($utilisateur);
     }
 
     #[Route('/posts', name: 'app_posts', requirements: ['_locale' => 'en|fr'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
 public function posts(Request $request, EntityManagerInterface $entityManager): Response
 {
     $postRepository = $entityManager->getRepository(Post::class);
@@ -177,7 +180,7 @@ public function posts(Request $request, EntityManagerInterface $entityManager): 
 }
 
 
-#[Route('/{_locale}/commentaire/add', name: 'ajouter_commentaire', methods: ['POST'], requirements: ['_locale' => 'en|fr'])]
+#[Route('/commentaire/add', name: 'ajouter_commentaire', methods: ['POST'], requirements: ['_locale' => 'en|fr'])]
 
 public function ajouterCommentaire(
     Request $request,
@@ -279,7 +282,7 @@ public function ajouterCommentaire(
             'count' => $post->getDislikes()
         ]);
     }
-    #[Route('/{_locale}/post/{id}/favorite', name: 'post_favorite', methods: ['POST'])]
+    #[Route('/post/{id}/favorite', name: 'post_favorite', methods: ['POST'])]
     public function toggleFavorite(Request $request, Post $post = null, EntityManagerInterface $em): JsonResponse
     {
         if (!$post) {
