@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'Hébergement - {{ hebergement.nomh }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #06BBCC;
+            --secondary-color: #ffffff;
+            --text-color: #212529;
+            --muted-text: #6c757d;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            padding: 30px;
+        }
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: var(--secondary-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .hebergement-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+        .detail-section {
+            margin-bottom: 30px;
+        }
+        .detail-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 500;
+            color: var(--muted-text);
+            font-size: 1rem;
+        }
+        .detail-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        .price-highlight {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .hebergement-image {
+                max-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ hebergement.nomh }}</h1>
+        {% if hebergement.imageh %}
+            <img src="{{ absolute_url(asset('img/' ~ hebergement.imageh)) }}" alt="{{ hebergement.nomh }}" class="hebergement-image">
+        {% endif %}
+        <div class="detail-section">
+            <h2>Détails de l'Hébergement</h2>
+            <div class="detail-item">
+                <span class="detail-label">Type :</span>
+                <span class="detail-value">{{ hebergement.typeh }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Adresse :</span>
+                <span class="detail-value">{{ hebergement.adressh }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Capacité :</span>
+                <span class="detail-value">{{ hebergement.capaciteh }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Prix par nuit :</span>
+                <span class="detail-value price-highlight">{{ hebergement.prixh }} €</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Disponibilité :</span>
+                <span class="detail-value">{{ hebergement.disponibleh }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Description :</span>
+                <span class="detail-value">{{ hebergement.descriptionh }}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

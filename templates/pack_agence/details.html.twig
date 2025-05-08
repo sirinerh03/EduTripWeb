@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Pack: {{ pack.nomPk }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-5">Détails du Pack: {{ pack.nomPk }}</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-lg border-0 overflow-hidden">
+                <!-- Changement de la couleur de fond en bleu -->
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="card-title mb-0">{{ pack.nomPk }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Description:</strong> {{ pack.descriptionPk }}<br>
+                        <strong>Prix:</strong> {{ pack.prix }} TND <br>
+                        <strong>Durée:</strong> {{ pack.duree }} jours<br>
+                        <strong>Date d'ajout:</strong> {{ pack.dateAjout|date('d/m/Y') }}<br>
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <!-- Changement du bouton pour qu'il corresponde à la couleur bleue -->
+                    <a href="{{ path('app_meilleurs_packs') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill">Retour à la Liste des meilleurs packs </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

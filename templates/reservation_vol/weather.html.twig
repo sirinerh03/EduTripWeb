@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Météo pour {{ city }}{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to right, #83a4d4, #b6fbff);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .weather-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .weather-card:hover {
+        transform: scale(1.02);
+    }
+
+    .form-control {
+        border-radius: 30px;
+        padding: 10px 20px;
+    }
+
+    .btn-success {
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+
+    .weather-icon {
+        width: 100px;
+        height: 100px;
+        margin: 10px 0;
+    }
+
+    .temperature {
+        font-size: 48px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #666;
+    }
+
+    .details p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #444;
+    }
+
+    .btn-primary {
+        margin-top: 20px;
+        border-radius: 20px;
+    }
+
+    .loader {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+
+
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to top, #6dd5fa, #2980b9);
+        min-height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://svgshare.com/i/11kP.svg') repeat-x;
+        animation: moveClouds 60s linear infinite;
+        opacity: 0.2;
+        z-index: 0;
+    }
+
+    @keyframes moveClouds {
+        0% { background-position: 0 0; }
+        100% { background-position: 10000px 0; }
+    }
+
+    .weather-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    } 
+    .weather-icon {
+    width: 100px;
+    height: 100px;
+    margin: 10px 0;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+
+</style>
+
+<div class="weather-card">
+   <form id="search-form" class="d-flex gap-2 mb-4">
+    <input type="text" id="city-input" name="city" placeholder="Entrez votre ville"
+           class="form-control" style="border-radius: 30px;">
+    <button type="submit" class="btn btn-success" style="border-radius: 30px; padding: 8px 16px;">🔍</button>
+</form>
+
+
+    <div id="weather-info">
+        {% if weather %}
+            <h1>Météo à {{ city|capitalize }}</h1>
+<img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png"
+     alt="{{ weather.weather[0].description }}"
+     class="weather-icon"
+     onerror="this.onerror=null; this.src='/images/default-weather.png';">            <div class="temperature">{{ weather.main.temp }}°C</div>
+            <h5 class="card-title">{{ weather.weather[0].description|capitalize }}</h5>
+            <div class="details">
+               <p><i class="fas fa-thermometer-half" style="color: #e74c3c;"></i> <strong>Ressentie :</strong> {{ weather.main.feels_like }}°C</p>
+               <p><i class="fas fa-tint" style="color: #3498db;"></i> <strong>Humidité :</strong>  {{ weather.main.humidity }}%</p>
+               <p><i class="fas fa-wind" style="color: #2ecc71;"></i>  <strong>Vent :</strong> {{ weather.wind.speed }} m/s</p>
+            </div>
+        {% else %}
+            <p class="alert alert-warning mt-4 text-center">Désolé, informations météo non disponibles.</p>
+        {% endif %}
+    </div>
+
+    <a href="{{ path('app_reservation_vol') }}" class="btn btn-primary w-100">↩ Retour</a>
+</div>
+
+<script>
+    const form = document.getElementById('search-form');
+    const weatherInfo = document.getElementById('weather-info');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const city = document.getElementById('city-input').value.trim();
+
+        if (!city) {
+            alert('Veuillez entrer une ville.');
+            return;
+        }
+
+        // Affiche un loader pendant le chargement
+        weatherInfo.innerHTML = '<div class="loader"></div>';
+
+        fetch('/weather?city=' + encodeURIComponent(city), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                weatherInfo.innerHTML = '<p class="alert alert-danger">Erreur : ' + data.error + '</p>';
+            } else {
+                weatherInfo.innerHTML = `
+    <h1>Météo à ${city.charAt(0).toUpperCase() + city.slice(1)}</h1>
+    <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png" 
+         alt="${data.weather[0].description}" 
+         class="weather-icon">
+
+    <div class="temperature">🌡️ ${data.main.temp}°C</div>
+    <h5 class="card-title">☁️ ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</h5>
+    <div class="details">
+        <p>🌡️ <strong>Ressentie :</strong> ${data.main.feels_like}°C</p>
+        <p>💧 <strong>Humidité :</strong> ${data.main.humidity}%</p>
+        <p>💨 <strong>Vent :</strong> ${data.wind.speed} m/s</p>
+    </div>
+`;
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            weatherInfo.innerHTML = '<p class="alert alert-danger">Erreur lors de la récupération de la météo.</p>';
+        });
+    });
+</script>
+{% endblock %}
+ 

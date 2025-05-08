@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier utilisateur{% endblock %}
+{% block body %}
+    <h1>Modifier l'utilisateur</h1>
+    {{ include('user/_form.html.twig', {'button_label':'Mettre à jour'}) }}
+    <div class="d-flex gap-2 mt-3">
+        <a href="{{ path('app_user_index') }}" class="btn btn-secondary">← Retour à la liste</a>
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>Retour au dashboard
+        </a>
+        {{ include('user/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

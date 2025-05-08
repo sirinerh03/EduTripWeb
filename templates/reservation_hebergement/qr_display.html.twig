@@ -1,0 +1,85 @@
+60<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la réservation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        .card-header {
+            background-color: #06BBCC;
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+        }
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.5em 0.75em;
+        }
+        .hebergement-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4 mb-0">Détails de la réservation</h2>
+                    </div>
+                    <div class="card-body">
+                        {% if reservation.hebergement.imageh %}
+                            <img src="{{ absolute_url(asset('img/' ~ reservation.hebergement.imageh)) }}" 
+                                 alt="{{ reservation.hebergement.nomh }}" 
+                                 class="hebergement-img">
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="h5">Hébergement</h3>
+                                <ul class="list-unstyled">
+                                    <li><strong>Nom:</strong> {{ reservation.hebergement.nomh }}</li>
+                                    <li><strong>Type:</strong> {{ reservation.hebergement.typeh }}</li>
+                                    <li><strong>Adresse:</strong> {{ reservation.hebergement.adressh }}</li>
+                                    <li><strong>Prix/nuit:</strong> {{ reservation.hebergement.prixh }} €</li>
+                                    <li><strong>Capacité:</strong> {{ reservation.hebergement.capaciteh }}</li>
+                                    <li><strong>Disponibilité:</strong> {{ reservation.hebergement.disponibleh }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="h5">Réservation</h3>
+                                <ul class="list-unstyled">
+                                    <li><strong>Date de début:</strong> {{ reservation.dateD|date('d/m/Y') }}</li>
+                                    <li><strong>Date de fin:</strong> {{ reservation.dateF|date('d/m/Y') }}</li>
+                                    <li><strong>Statut:</strong> <span class="badge bg-primary">{{ reservation.status }}</span></li>
+                                    <li><strong>Nuits:</strong> {{ reservation.dateD.diff(reservation.dateF).days }}</li>
+                                    <li><strong>Prix total:</strong> {{ (reservation.dateD.diff(reservation.dateF).days * reservation.hebergement.prixh)|number_format(2) }} €</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="{{ path('app_hebergement_show', {'id_hebergement': reservation.hebergement.id}) }}" 
+                               class="btn btn-primary">
+                                Voir les détails complets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,421 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil - EduTrip{% endblock %}
+
+{% block content %}
+    
+    <style>
+        .profile-section {
+            background: linear-gradient(135deg, #4158D0 0%, #C850C0 50%, #FFCC70 100%);
+            padding: 100px 0 120px;
+            margin-bottom: 0;
+            color: white;
+            border-radius: 0 0 30% 30% / 60px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-subtitle {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+        
+        .profile-form-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+            background: white;
+        }
+        
+        .profile-form {
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #444;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+        
+        .form-label i {
+            margin-right: 8px;
+            color: #6c5ce7;
+            opacity: 0.8;
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+        
+        .form-control:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 35px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.4);
+            background: linear-gradient(45deg, #5d4ce6, #8f7dfd);
+            color: white;
+        }
+        
+        .btn-cancel {
+            border-radius: 50px;
+            padding: 14px 35px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            color: #444;
+            background: white;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-section {
+            background-color: #f8f9fa;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+        }
+        
+        .form-section h3 {
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            color: #333;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .form-section h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #4158D0, #C850C0);
+            border-radius: 3px;
+        }
+        
+        .invalid-feedback {
+            font-size: 0.85rem;
+            color: #e74c3c;
+            margin-top: 8px;
+            padding-left: 5px;
+        }
+        
+        .form-control.is-invalid {
+            border-color: #e74c3c;
+            box-shadow: none;
+            background-image: none;
+        }
+        
+        .form-text {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        .alert {
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .profile-header-overlay {
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .profile-header-circles {
+            position: absolute;
+            bottom: -50px;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .profile-header-circles:before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -100px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-section {
+                padding: 80px 0 100px;
+                border-radius: 0 0 25% 25% / 40px;
+            }
+            
+            .profile-form-card {
+                margin-top: -60px;
+            }
+            
+            .profile-form {
+                padding: 25px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .btn-submit, .btn-cancel {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+
+<section class="profile-section">
+    <div class="profile-header-overlay"></div>
+    <div class="profile-header-circles"></div>
+    <div class="container text-center">
+        <h1 class="profile-title">Modifier mon profil</h1>
+        <p class="profile-subtitle">Vous pouvez modifier vos informations personnelles ci-dessous</p>
+    </div>
+</section>
+
+<div class="container">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="profile-form-card card">
+                <div class="profile-form">
+                    <a href="javascript:history.back()" class="btn btn-sm btn-outline-primary mb-3">
+                        <i class="fas fa-arrow-left me-1"></i> Retour
+                    </a>
+                    {{ form_start(profileForm, {'attr': {'novalidate': 'novalidate'}}) }}
+                    
+                    <div class="form-section">
+                        <h3>Informations personnelles</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(profileForm.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        {{ form_widget(profileForm.prenom, {'attr': {'class': profileForm.prenom.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'Votre prénom'}}) }}
+                                    </div>
+                                    {{ form_errors(profileForm.prenom) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(profileForm.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                        {{ form_widget(profileForm.nom, {'attr': {'class': profileForm.nom.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'Votre nom'}}) }}
+                                    </div>
+                                    {{ form_errors(profileForm.nom) }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form_label(profileForm.mail, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                {{ form_widget(profileForm.mail, {'attr': {'class': profileForm.mail.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'votre@email.com'}}) }}
+                            </div>
+                            {{ form_errors(profileForm.mail) }}
+                            <small class="form-text text-muted">Votre adresse email est également votre identifiant de connexion.</small>
+                        </div>
+                        
+                        <div class="form-group mb-0">
+                            {{ form_label(profileForm.tel, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                {{ form_widget(profileForm.tel, {'attr': {'class': profileForm.tel.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'Votre numéro (8 chiffres)'}}) }}
+                            </div>
+                            {{ form_errors(profileForm.tel) }}
+                            <small class="form-text text-muted">Format: 8 chiffres sans espaces ni tirets.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Modifier le mot de passe</h3>
+                        <p class="text-muted mb-4">Laissez ces champs vides si vous ne souhaitez pas changer votre mot de passe.</p>
+                        
+                        <div class="form-group">
+                            {{ form_label(profileForm.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                {{ form_widget(profileForm.plainPassword.first, {'attr': {'class': profileForm.plainPassword.first.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'Laissez vide pour ne pas changer'}}) }}
+                            </div>
+                            {{ form_errors(profileForm.plainPassword.first) }}
+                            <small class="form-text text-muted">Votre mot de passe doit contenir au moins 6 caractères.</small>
+                        </div>
+                        
+                        <div class="form-group mb-0">
+                            {{ form_label(profileForm.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                {{ form_widget(profileForm.plainPassword.second, {'attr': {'class': profileForm.plainPassword.second.vars.valid ? 'form-control' : 'form-control is-invalid', 'placeholder': 'Répétez le nouveau mot de passe'}}) }}
+                            </div>
+                            {{ form_errors(profileForm.plainPassword.second) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('app_profile') }}" class="btn btn-cancel">
+                            <i class="fas fa-arrow-left me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-submit">
+                            <i class="fas fa-save me-2"></i>Enregistrer les modifications
+                        </button>
+                    </div>
+                    
+                    {{ form_end(profileForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Real-time validation feedback
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateInput(this);
+            });
+            
+            input.addEventListener('input', function() {
+                // Remove error visuals when user starts typing again
+                this.classList.remove('is-invalid');
+                const feedback = this.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.style.display = 'none';
+                }
+            });
+        });
+        
+        function validateInput(input) {
+            // Simple validation example - can be expanded with more specific rules
+            if (input.required && !input.value.trim()) {
+                input.classList.add('is-invalid');
+                return false;
+            }
+            
+            if (input.type === 'email' && input.value.trim()) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(input.value.trim())) {
+                    input.classList.add('is-invalid');
+                    return false;
+                }
+            }
+            
+            if (input.id.includes('tel') && input.value.trim()) {
+                const telRegex = /^[0-9]{8}$/;
+                if (!telRegex.test(input.value.trim())) {
+                    input.classList.add('is-invalid');
+                    return false;
+                }
+            }
+            
+            if (input.id.includes('password') && input.value.trim()) {
+                if (input.value.length < 6) {
+                    input.classList.add('is-invalid');
+                    return false;
+                }
+            }
+            
+            input.classList.remove('is-invalid');
+            return true;
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,101 @@
+parameters:
+    env(HUGGINGFACE_API_KEY): '%env(HUGGINGFACE_API_KEY)%'
+    env(WKHTMLTOPDF_PATH): ''
+    env(WKHTMLTOIMAGE_PATH): ''
+
+    upload_directory: '%kernel.project_dir%/public/images'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
+    lettre_directory: '%kernel.project_dir%/public/uploads/lettre_motivation'
+    diplome_directory: '%kernel.project_dir%/public/uploads/diplome'
+    candidature_cv_directory: '%kernel.project_dir%/public/uploads/candidatures'
+    twilio.sid: '%env(TWILIO_SID)%'
+    twilio.token: '%env(TWILIO_TOKEN)%'
+    twilio.from: '%env(TWILIO_PHONE)%'
+    
+    avis_photos_directory: '%kernel.project_dir%/public/uploads/avis'
+    # Clés Google reCAPTCHA (clés de production)
+    recaptcha.site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha.secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+    # Clé API AbstractAPI pour la validation d'email (à remplacer par votre clé réelle)
+    abstract_api.email_validation_key: 'YOUR_API_KEY'
+    aviationstack.api_key: '%env(AVIATIONSTACK_API_KEY)%'
+    mailer_dsn: '%env(MAILER_DSN)%'
+    weather_api_key: '%env(WEATHER_API_KEY)%'
+
+services:
+   
+    App\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        
+
+    finder:
+        class: Symfony\Component\Finder\Finder
+        factory: ['Symfony\Component\Finder\Finder', 'create']
+
+    Symfony\Component\Filesystem\Filesystem: ~
+
+    App\Command\GenerateRepositoriesCommand:
+        arguments:
+            $filesystem: '@Symfony\Component\Filesystem\Filesystem'
+            $finder: '@finder'
+        tags: ['console.command']
+
+    App\Command\GenerateEntitiesCommand:
+        arguments:
+            $connection: '@doctrine.dbal.default_connection'
+            $filesystem: '@Symfony\Component\Filesystem\Filesystem'
+        tags: ['console.command']
+    App\Service\WeatherService:
+        arguments:
+            $apikey: '%env(WEATHER_API_KEY)%'
+
+    App\Service\AviationStackService:
+        arguments:
+            $aviationstackApiKey: '%env(AVIATIONSTACK_API_KEY)%'   
+
+    App\Service\TwilioService:
+        arguments:
+            $sid: '%twilio.sid%'
+            $token: '%twilio.token%'
+            $from: '%twilio.from%'     
+
+    
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false 
+    Symfony\Component\Finder\Finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+        shared: false
+
+    Symfony\Component\Filesystem\Filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+        public: false
+
+    
+ 
+
+    App\Service\HuggingFaceService:
+        arguments:
+            $apiKey: '%env(HUGGINGFACE_API_KEY)%'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+        public: true 
+    App\Repository\HebergementRepository: ~
+
+    App\Service\HebergementExcelExporter:
+        arguments:
+            $logger: '@logger'
+            $reservationRepository: '@App\Repository\ReservationHebergementRepository'
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+    App\Repository\:
+        resource: '../src/Repository'
+        tags: ['doctrine.repository_service']
+
+

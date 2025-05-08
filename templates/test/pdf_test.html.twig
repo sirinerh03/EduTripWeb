@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #6a11cb;
+            background-color: #6a11cb;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+            <p>Test de génération de PDF avec le bundle Nucleos DomPDF</p>
+        </div>
+
+        <div class="content">
+            <p>{{ content }}</p>
+            <p>Ce PDF a été généré avec succès en utilisant le bundle Nucleos DomPDF.</p>
+            <p>Date de génération : {{ date|date('d/m/Y à H:i') }}</p>
+        </div>
+
+        <div class="footer">
+            <p>Document généré le {{ date|date('d/m/Y à H:i') }}</p>
+            <p>EduTrip - Voyages éducatifs - www.edutrip.fr</p>
+        </div>
+    </div>
+</body>
+</html>

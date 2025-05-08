@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Agences{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .agences-container {
+            transition: opacity 0.3s ease;
+            min-height: 300px;
+        }
+
+        .agences-container.loading {
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+
+        #filter-form input,
+        #filter-form select {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #filter-form input:focus,
+        #filter-form select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4 text-primary">🌍 Liste des Agences</h1>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {# Filtres + Tri #}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom"
+                           value="{{ app.request.query.get('nom') }}"
+                           placeholder="Filtrer par nom">
+                </div>
+                <div class="col-md-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description"
+                           value="{{ app.request.query.get('description') }}"
+                           placeholder="Filtrer par description">
+                </div>
+                <div class="col-md-3">
+                    <label for="date_creation" class="form-label">Date de création</label>
+                    <input type="date" class="form-control" id="date_creation" name="date_creation"
+                           value="{{ app.request.query.get('date_creation') }}">
+                </div>
+
+                <div class="w-100"></div>
+
+                <div class="col-md-3">
+                    <label for="sort" class="form-label"><i class="bi bi-arrow-down-up"></i> Trier par</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="">-- Champ --</option>
+                        <option value="a.nom_ag" {{ app.request.query.get('sort') == 'a.nom_ag' ? 'selected' : '' }}>Nom</option>
+                        <option value="a.date_creation" {{ app.request.query.get('sort') == 'a.date_creation' ? 'selected' : '' }}>Date de création</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="direction" class="form-label">&nbsp;</label>
+                    <select class="form-select" id="direction" name="direction">
+                        <option value="asc" {{ app.request.query.get('direction') == 'asc' ? 'selected' : '' }}>🔼 Croissant</option>
+                        <option value="desc" {{ app.request.query.get('direction') == 'desc' ? 'selected' : '' }}>🔽 Décroissant</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Appliquer</button>
+                </div>
+                <div class="col-md-3">
+                    <a href="{{ path('app_agence_liste') }}" class="btn btn-secondary w-100">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Contenu dynamique #}
+    <div class="agences-container" id="agences-container">
+        {% include 'agence/_agences_cards.html.twig' %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterForm = document.getElementById('filter-form');
+    const agencesContainer = document.getElementById('agences-container');
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'loading-overlay';
+    loadingOverlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div>';
+
+    filterForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        filterAgences();
+    });
+
+    const inputs = document.querySelectorAll('#filter-form input, #filter-form select');
+    let timeout;
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(filterAgences, 500);
+        });
+    });
+
+    function filterAgences() {
+        agencesContainer.classList.add('loading');
+        agencesContainer.appendChild(loadingOverlay);
+
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams(formData).toString();
+
+        fetch('{{ path("app_agence_liste") }}?' + params, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Erreur réseau');
+                return response.text();
+            })
+            .then(html => {
+                agencesContainer.innerHTML = html;
+                const newUrl = window.location.pathname + '?' + params;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            })
+            .catch(error => {
+                agencesContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement</div>';
+            })
+            .finally(() => {
+                agencesContainer.classList.remove('loading');
+            });
+    }
+
+    window.addEventListener('popstate', function () {
+        filterAgences();
+    });
+});
+</script>
+{% endblock %}

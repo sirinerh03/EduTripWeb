@@ -1,0 +1,130 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block Content %}
+<div class="content-wrapper" style="display: flex; flex-direction: column; min-height: 100vh;">
+    <div style="flex: 1;">
+        <div class="page-header">
+            <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                    <i class="mdi mdi-post"></i>
+                </span> Liste des Posts
+            </h3>
+   <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          <a href="{{ path('admin_posts', {}) }}">
+    Tous les posts <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+</a>
+
+        </li>
+    </ul>
+</nav>
+        </div>
+
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+
+            {% if pagination is defined %}
+                <div class="row">
+                <!-- Formulaire de recherche -->
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Rechercher un mot-clé..." value="{{ searchTerm }}">
+        <button class="btn btn-primary" type="submit">Rechercher</button>
+    </div>
+</form>
+
+<!-- Formulaire de filtrage par catégorie -->
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <select name="categorie" class="form-select">
+            <option value="all">Toutes les catégories</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}" {% if selectedCategorie == cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-secondary" type="submit">Filtrer</button>
+    </div>
+</form>
+
+                    {% for post in pagination %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                {% if post.image %}
+                                    <img src="{{ asset('images/' ~ post.image) }}" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    {% if post.utilisateur %}
+                                        <h5 class="card-title text-primary text-center">
+                                            {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                                        </h5>
+                                    {% else %}
+                                        <h5 class="card-title text-danger text-center">Utilisateur inconnu</h5>
+                                    {% endif %}
+
+                                    <p class="card-text">
+                                        {{ post.contenu|length > 100 ? post.contenu|slice(0, 100) ~ '...' : post.contenu }}
+                                    </p>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <strong>Catégorie:</strong> {{ post.categorie }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">
+                                        Posté le: {{ post.dateCreation|date('d/m/Y H:i') }}
+                                    </small>
+                                    <div class="float-end">
+                                        <a href="{{ path('app_post_detail', {'id': post.getIdPost()}) }}" class="btn btn-sm btn-outline-primary">
+                                            Voir détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    Aucun post trouvé dans la base de données.
+                </div>
+            {% endif %}
+
+            {# Affichage de la pagination #}
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+    {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+</div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,52 @@
+{# templates/reservation_vol/showTicket.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Réservation{% endblock %}
+
+{% block content %}
+    <div class="container reservation-details mt-4">
+        <h2 class="text-center mb-4">🛫 Détails de la Réservation #{{ reservation.id }}</h2>
+
+        <div class="card ticket-info shadow">
+            <div class="card-body">
+                <div class="ticket-row mb-3">
+                    <h5 class="text-primary">Informations étudiant</h5>
+                    <p><strong>Nom :</strong> {{ reservation.nom }}</p>
+                    <p><strong>Prénom :</strong> {{ reservation.prenom }}</p>
+                    <p><strong>Email :</strong> {{ reservation.email }}</p>
+                </div>
+
+                <div class="ticket-row mb-3">
+                    <h5 class="text-primary">Détails du vol</h5>
+                    <p><strong>Itinéraire :</strong> {{ reservation.vol.aeroportDepart }} → {{ reservation.vol.aeroportArrivee }}</p>
+                    <p><strong>Départ :</strong> {{ reservation.vol.dateDepart|date('d/m/Y à H:i') }}</p>
+                    <p><strong>Places réservées :</strong> {{ reservation.getNbPlace() }}</p>
+                </div>
+
+                <div class="ticket-row">
+                    <h5 class="text-primary">Informations de paiement</h5>
+                    <p><strong>Prix total :</strong> {{ reservation.prix|number_format(2, ',', ' ') }} TND</p>
+                    <p><strong>Date réservation :</strong> {{ reservation.dateReservation|date('d/m/Y à H:i') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_reservation_vol') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Retour aux vols
+            </a>
+        </div>
+
+        <div class="text-center mt-3">
+    <a href="{{ path('edit_ticket', { id: reservation.id }) }}" class="btn btn-warning">
+        ✏️ Modifier / Annuler la réservation
+    </a>
+       </div>
+       <div class="text-center mt-3">
+    <a href="{{ path('payment_checkout', { id: reservation.id }) }}" class="btn btn-success">
+        💳 Payer maintenant
+    </a>
+     </div>
+    </div>
+{% endblock %}

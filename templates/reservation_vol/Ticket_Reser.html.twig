@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation de Vol{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #e0f7fa, #ffffff);
+        font-family: 'Segoe UI', sans-serif;
+        color: #004d40;
+        overflow-x: hidden;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #00bfa5;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .ticket {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border-left: 6px solid #00bfa5;
+        padding: 30px;
+    }
+
+    .ticket-header {
+        background: #00bfa5;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .ticket-body {
+        padding: 20px;
+    }
+
+    .ticket-body p {
+        margin: 10px 0;
+        font-size: 1.1rem;
+    }
+
+    .ticket-body p strong {
+        color: #00796b;
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #00796b;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #00bfa5;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: 0.3s;
+    }
+
+    input:focus {
+        border-color: #00796b;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 191, 165, 0.4);
+    }
+
+    .btn-reserver {
+        background-color: #00bfa5;
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 20px;
+        transition: 0.3s;
+        font-size: 1.2rem;
+        text-decoration: none;
+        margin-top: 20px;
+    }
+
+    .btn-reserver:hover {
+        background-color: #008e76;
+    }
+
+    .animated-plane {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        background-image: url('https://cdn-icons-png.flaticon.com/512/7888/7888729.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fly 20s linear infinite;
+        opacity: 0.2;
+        z-index: 0;
+    }
+
+    @keyframes fly {
+        0% {
+            top: 100%;
+            left: -10%;
+            transform: rotate(45deg);
+        }
+        50% {
+            top: 50%;
+            left: 50%;
+            transform: rotate(10deg);
+        }
+        100% {
+            top: -10%;
+            left: 110%;
+            transform: rotate(-10deg);
+        }
+    }
+</style>
+
+<!-- Avions animés -->
+<div class="animated-plane" style="animation-delay: 0s;"></div>
+<div class="animated-plane" style="animation-delay: 5s; animation-duration: 25s;"></div>
+<div class="animated-plane" style="animation-delay: 10s; animation-duration: 22s;"></div>
+
+<div class="container mt-5">
+    <h2>🎫 Réserver votre billet pour le vol {{ vol.getNumVol() }}</h2>
+
+    <div class="ticket">
+        <div class="ticket-header">
+            ✈️ {{ vol.getAeroportDepart() }} → {{ vol.getAeroportArrivee() }}
+        </div>
+
+        <div class="ticket-body">
+            <p><strong>Départ :</strong> {{ vol.getAeroportDepart() }} à {{ vol.getDateDepart|date('H:i') }} ({{ vol.getDateDepart|date('d/m/Y') }})</p>
+            <p><strong>Arrivée :</strong> {{ vol.getAeroportArrivee() }} à {{ vol.getDateArrivee|date('H:i') }} ({{ vol.getDateArrivee|date('d/m/Y') }})</p>
+            <p><strong>Prix :</strong> {{ vol.getPrixVol }} TND</p>
+
+            {{ form_start(form, {
+                'action': path('ticket_new', {'idVol': vol.getIdVol()}),
+                'attr': {'novalidate': 'novalidate'}
+            }) }}
+            
+            <div class="form-row">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom) }}
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <div class="form-row">
+                {{ form_label(form.prenom) }}
+                {{ form_widget(form.prenom) }}
+                {{ form_errors(form.prenom) }}
+            </div>
+
+            <div class="form-row">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email) }}
+                {{ form_errors(form.email) }}
+            </div>
+
+            <div class="form-row">
+                {{ form_label(form.nb_place) }}
+                {{ form_widget(form.nb_place) }}
+                {{ form_errors(form.nb_place) }}
+            </div>
+
+            <div class="text-center">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn-reserver'}}) }}
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

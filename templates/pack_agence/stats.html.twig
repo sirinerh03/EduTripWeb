@@ -1,0 +1,94 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Statistiques des Packs{% endblock %}
+
+{% block Content %}
+<div class="container mt-5">
+    <div class="mb-4">
+        <a href="{{ path('base_admin') }}" 
+           class="btn btn-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" 
+           style="width: 40px; height: 40px;">
+            <i class="fas fa-arrow-left" style="font-size: 20px;"></i>
+        </a>
+    </div>
+
+    <h1 class="text-center mb-4">Statistiques d'Ajout des Packs d'Agence</h1>
+
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable({{ chartData|raw }});
+
+            var options = {
+                title: 'Évolution du Nombre de Packs Ajoutés',
+                hAxis: { title: 'Date d\'Ajout' },
+                vAxis: { 
+                    title: 'Nombre de Packs',
+                    format: '0', // très important pour ne pas avoir de virgules
+                    gridlines: { count: -1 },
+                    minValue: 0
+                },
+                curveType: 'function',
+                colors: ['#00C897'],
+                legend: { position: 'bottom' },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
+            window.addEventListener('resize', () => chart.draw(data, options));
+        }
+    </script>
+</div>
+
+{# Espace réservé pour le footer #}
+<div style="height: 60px;"></div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white; 
+    }
+</style>
+    {# Espace réservé pour le footer #}
+    <div style="height: 60px;"></div>
+</div>
+
+<style>
+    body {
+        position: relative;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    footer.footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

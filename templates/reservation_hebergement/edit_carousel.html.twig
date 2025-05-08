@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Réservation{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <h1 class="text-center mb-5 fw-bold display-4 text-primary">
+        Modifier la réservation de {{ reservation_hebergement.hebergement.nomh }}
+    </h1>
+
+     <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 rounded">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <!-- Date de début -->
+                    <div class="mb-3">
+                        {{ form_label(form.date_d) }}
+                        {{ form_widget(form.date_d, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.date_d) }}
+                    </div>
+
+                    <!-- Date de fin -->
+                    <div class="mb-3">
+                        {{ form_label(form.date_f) }}
+                        {{ form_widget(form.date_f, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.date_f) }}
+                    </div>
+
+                    <!-- Commentaire -->
+                    <div class="mb-3">
+                        {{ form_label(form.status) }}
+                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.status) }}
+                    </div>
+
+                    <!-- Hébergement (read-only display) -->
+                    <div class="mb-3">
+    <label class="form-label">Hébergement</label>
+    <input type="text" 
+           class="form-control" 
+           value="{{ reservation_hebergement.hebergement.nomh }}" 
+           disabled>
+</div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn custom-btn">Mettre à jour</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_hebergement_carousel') }}" class="btn btn-secondary">
+            Retour au carousel
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.custom-btn {
+            background-color: #06BBCC;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn.custom-btn:hover {
+            background-color: #00aabb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus {
+            border-color: #06BBCC;
+            box-shadow: 0 0 0 0.2rem rgba(6, 187, 204, 0.25);
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+    </style>
+{% endblock %}

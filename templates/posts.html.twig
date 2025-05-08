@@ -1,0 +1,834 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'post.title'|trans }}{% endblock %}
+
+
+
+{% block content %}
+
+
+    <style>
+    /* Animation pour les boutons */
+.btn-animated {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    z-index: 1;
+}
+
+.btn-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.btn-animated:hover::before {
+    left: 0;
+}
+
+/* Effet de surbrillance au survol */
+.highlight-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.highlight-hover:hover {
+    box-shadow: 0 0 15px rgba(24, 144, 255, 0.3);
+}
+
+/* Style pour les avatars */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.1);
+    border-color: #1890ff;
+}
+
+/* Style pour les timestamps */
+.timestamp {
+    font-size: 0.8rem;
+    color: #718096;
+    transition: color 0.3s ease;
+}
+
+.timestamp:hover {
+    color: #2d3748;
+}
+
+/* Style pour les dropdowns améliorés */
+.enhanced-dropdown .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    min-width: 180px;
+}
+
+.enhanced-dropdown .dropdown-item {
+    padding: 0.5rem 1.5rem;
+    transition: all 0.2s;
+}
+
+.enhanced-dropdown .dropdown-item:hover {
+    background-color: #f8fafc;
+    padding-left: 1.75rem;
+}
+
+/* Effet de zoom sur les images */
+.zoom-effect {
+    transition: transform 0.5s ease;
+}
+
+.zoom-effect:hover {
+    transform: scale(1.03);
+}
+
+/* Style pour les indicateurs de statut */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-online {
+    background-color: #48bb78;
+}
+
+.status-offline {
+    background-color: #e53e3e;
+}
+
+/* Style pour les séparateurs élégants */
+.elegant-divider {
+    position: relative;
+    height: 1px;
+    margin: 2rem 0;
+    background-color: #e2e8f0;
+}
+
+.elegant-divider::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #1890ff;
+    border-radius: 3px;
+}
+
+/* Style pour les cartes de statistiques */
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1890ff;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Style pour les badges animés */
+.animated-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Style pour les inputs avec icônes */
+.icon-input {
+    position: relative;
+}
+
+.icon-input i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+.icon-input input {
+    padding-left: 40px;
+}
+
+/* Style pour les tooltips personnalisés */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #2d3748;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Style pour les transitions de page */
+.page-transition {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Style pour les cartes avec bordure animée */
+.animated-border-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-border-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #1890ff, transparent);
+    transition: all 0.6s;
+}
+
+.animated-border-card:hover::before {
+    left: 100%;
+}
+        /* Nouveaux styles spécifiques à cette page */
+        .custom-main-container {
+            background-color: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .post-header-container {
+            background-color: #e6f7ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .image-frame {
+           
+            padding: 8px;
+           
+            
+            
+            margin: 1rem 0;
+            
+        }
+        
+        .action-bar {
+            background-color: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-top: 1px solid #edf2f7;
+        }
+        
+        .comment-input-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+        
+  .posts-container {
+    display: flex;
+   
+    flex-direction: column;
+    align-items: center; /* Centre les posts horizontalement */
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Carte de post */
+.post-card {
+   border -coul: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+   max-width: 800px; /* Largeur maximale pour une bonne lisibilité */
+    margin: 0 auto 2rem;  /* Largeur maximale pour une meilleure lisibilité */
+}
+        
+        .vote-container {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border-top: 1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .comment-section {
+            background: #f8fafc;
+            padding: 1rem;
+        }
+/* Conteneur de recherche */
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    width: 100%;
+}
+
+/* Champ de recherche */
+.custom-search {
+    padding: 0.85rem 1.5rem;
+    padding-left: 3rem;
+    border-radius: 50px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color: #fff;
+    font-size: 1rem;
+    color: #2d3748;
+    width: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg fill='%239ca3af' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-position: 1rem center;
+    font-family: inherit;
+}
+
+.custom-search:focus {
+    outline: none;
+    border-color: #1890ff;
+    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg fill='%231890ff' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.custom-search::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* Bouton de recherche */
+.search-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+    color: #1890ff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.search-btn:focus {
+    outline: none;
+    color: #1890ff;
+}
+/* Style pour les favoris */
+.favorite-btn {
+    background: transparent;
+    border: none;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+
+.favorite-btn:hover {
+    color: #f59e0b;
+}
+
+.favorite-btn.active {
+    color: #f59e0b;
+}
+
+.favorite-btn i {
+    pointer-events: none;
+}
+
+    </style>
+    <div class="container-xl py-5">
+        <div class="language-switcher">
+            <a href="{{ path('app_switch_language', {_locale: 'en'}) }}">English</a> | 
+            <a href="{{ path('app_switch_language', {_locale: 'fr'}) }}">Français</a>
+        </div>
+        
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">{{ 'post.list_title'|trans }}</h1>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_favorites') }}">
+                    <i class="fas fa-star me-1"></i> {{ 'post.favorites'|trans }}
+                </a>
+            </li>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div></div>
+                <a href="{{ path('app_new_post') }}" class="btn btn-primary btn-animated">
+                    <i class="fas fa-plus me-2"></i> {{ 'post.new_post'|trans }}
+                </a>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'post.close'|trans }}"></button>
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'post.close'|trans }}"></button>
+            </div>
+        {% endfor %}
+
+        {% if posts is defined and posts|length > 0 %}
+            <form id="searchForm" method="get" class="mb-4">
+                <div class="search-wrapper">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="form-control custom-search" 
+                           placeholder="{{ 'post.search_placeholder'|trans }}"
+                           aria-label="{{ 'post.search_placeholder'|trans }}">
+                    <button type="button" 
+                            class="search-btn" 
+                            id="searchButton"
+                            aria-label="{{ 'post.search'|trans }}">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            {% for post in posts %}
+                <div class="post-card"> 
+                    <div class="post-header-container">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                {% if post.utilisateur %}
+                                    <div class="me-3">
+                                        <i class="fas fa-user-circle fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 text-primary">
+                                            {{ post.utilisateur.prenom }} {{ post.utilisateur.nom }}
+                                        </h5>
+                                        <small class="text-muted">{{ 'post.posted_on'|trans({'%date%': post.dateCreation|date('d/m/Y H:i')}) }}</small>
+                                        {% if post.categorie %}
+                                            <span class="badge bg-secondary ms-2">{{ post.categorie }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <h5 class="mb-0 text-danger">{{ 'post.unknown_user'|trans }}</h5>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_post_edit', {'id_post': post.getIdPost()}) }}" 
+                                   class="btn btn-sm btn-outline-warning"
+                                   title="{{ 'post.modify'|trans }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+<form method="post" action="{{ path('app_post_delete', {'id_post': post.idPost}) }}" 
+      onsubmit="return confirm('{{ 'post.confirm_delete'|trans }}');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.idPost) }}">
+    <button class="btn btn-sm btn-outline-danger" title="{{ 'post.delete'|trans }}">
+        <i class="fas fa-trash"></i>
+    </button>
+</form>
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="favorite-btn" 
+                            onclick="toggleFavorite({{ post.idPost }}, this)"
+                            title="{{ 'post.manage_favorites'|trans }}">
+                        <i class="far fa-star"></i>
+                    </button>
+
+                    <div class="p-4">
+                        <p class="card-text mb-4">{{ post.contenu }}</p>
+                        
+                        {% if post.image %}
+                            <div class="text-center">
+                                <div class="image-frame">
+                                    <img src="{{ asset('images/' ~ post.image) }}" 
+                                         class="post-image img-fluid"
+                                         style="max-height: 400px; object-fit: contain;"
+                                         alt="{{ 'post.image_alt'|trans }}">
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="vote-container d-flex align-items-center gap-2">
+                        <form class="d-inline vote-form" action="{{ path('post_like', {'id': post.idPost}) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.idPost) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center">
+                                <img src="{{ asset('images/like.png') }}" alt="{{ 'post.like'|trans }}" class="me-1" style="width: 18px; height: 18px;">
+                                <span class="vote-count">{{ post.likes ?? 0 }}</span>
+                            </button>
+                        </form>
+                        
+                        <form class="d-inline vote-form" action="{{ path('post_dislike', {'id': post.idPost}) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('dislike' ~ post.idPost) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center">
+                                <img src="{{ asset('images/dislike.png') }}" alt="{{ 'post.dislike'|trans }}" class="me-1" style="width: 18px; height: 18px;">
+                                <span class="vote-count">{{ post.dislikes ?? 0 }}</span>
+                            </button>
+                          
+                        </form>
+
+                        
+                        <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="toggleCommentaires({{ post.idPost }})">
+                            <i class="far fa-comment me-1"></i> {{ 'post.comments'|trans }}
+                        </button>
+                    </div>
+                    
+                    <div id="commentaires-{{ post.idPost }}" class="comment-section" style="display: none;">
+                        <div class="comment-input-container">
+                            <form onsubmit="ajouterCommentaire(event, {{ post.idPost }})">
+                                <div class="input-group">
+                                    <textarea class="form-control" 
+                                              id="contenu-commentaire-{{ post.idPost }}" 
+                                              rows="2" 
+                                              placeholder="{{ 'post.write_comment'|trans }}" 
+                                              required></textarea>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> {{ 'post.post_comment'|trans }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        {% if post.commentaires|length > 0 %}
+                            <div class="mt-3">
+                                {% for commentaire in post.commentaires %}
+                                    <div class="card mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
+                                                    <strong>{{ commentaire.utilisateur.prenom }}</strong>
+                                                    <p class="mb-0">{{ commentaire.contenu }}</p>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-h"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="{{ path('commentaire_edit', {'id': commentaire.idCommentaire}) }}">{{ 'post.modify'|trans }}</a></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire({{ commentaire.idCommentaire }})">{{ 'post.delete'|trans }}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="far fa-newspaper fa-3x text-muted mb-3"></i>
+                        <h3 class="text-muted">{{ 'post.no_posts'|trans }}</h3>
+                        <p class="text-muted">{{ 'post.be_first'|trans }}</p>
+                        <a href="{{ path('app_new_post') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i> {{ 'post.create_post'|trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+    // Fonction pour ajouter un commentaire
+async function ajouterCommentaire(event, postId) {
+    event.preventDefault();
+    const locale = '{{ app.request.locale }}';
+    const textarea = document.getElementById(`contenu-commentaire-${postId}`);
+    const contenu = textarea.value.trim();
+    
+    if (!contenu) {
+        alert('{{ "post.comment_empty"|trans }}');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/${locale}/commentaire/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                postId: postId,
+                contenu: contenu,
+                _token: '{{ csrf_token('comment') }}'
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (data.filtered_text) {
+                if (confirm(`${data.error}\n{{ "post.use_corrected_version"|trans }}\n\n${data.filtered_text}`)) {
+                    textarea.value = data.filtered_text;
+                }
+            } else {
+                alert(data.error);
+            }
+            return;
+        }
+
+        // Ajout dynamique du commentaire
+        ajouterCommentaireDOM(data.commentaire);
+        textarea.value = '';
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('{{ "post.error_occurred"|trans }}');
+    }
+}
+
+// Fonction pour basculer les favoris
+async function toggleFavorite(postId, button) {
+    const locale = '{{ app.request.locale }}';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    try {
+        const response = await fetch(`/${locale}/post/${postId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || '{{ "post.unknown_error"|trans }}');
+        }
+
+        if (data.success) {
+            const icon = button.querySelector('i');
+            if (data.isFavorite) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                button.title = '{{ "post.remove_favorite"|trans }}';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                button.title = '{{ "post.add_favorite"|trans }}';
+            }
+            
+            // Animation
+            button.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 300);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message);
+    }
+}
+
+// Fonction pour la recherche
+document.getElementById('searchForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const locale = '{{ app.request.locale }}';
+    const searchTerm = document.getElementById('searchInput').value;
+    window.location.href = `/${locale}/posts?search=${encodeURIComponent(searchTerm)}`;
+});
+
+// Fonction pour les votes (like/dislike)
+document.querySelectorAll('.vote-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const locale = '{{ app.request.locale }}';
+        const formData = new FormData(this);
+        const button = this.querySelector('button');
+        const countElement = this.querySelector('.vote-count');
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                countElement.textContent = data.count;
+                button.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 200);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+// Fonction pour supprimer un commentaire
+async function supprimerCommentaire(id) {
+    if (confirm('{{ "post.confirm_delete_comment"|trans }}')) {
+        const locale = '{{ app.request.locale }}';
+        
+        try {
+            const response = await fetch(`/${locale}/commentaire/${id}/delete`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById(`comment-${id}`)?.remove();
+            } else {
+                alert('{{ "post.delete_error"|trans }}');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('{{ "post.error_occurred"|trans }}');
+        }
+    }
+}
+function ajouterCommentaireDOM(commentData) {
+    const commentsContainer = document.querySelector(`#commentaires-${commentData.postId} .mt-3`);
+
+    if (!commentsContainer) {
+        location.reload();
+        return;
+    }
+
+    const editUrl = `/${commentData.locale}/commentaire/${commentData.id}/edit`;
+    
+    const commentHtml = `
+        <div class="card mb-2" id="comment-${commentData.id}">
+            <div class="card-body p-3">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <strong>${commentData.username}</strong>
+                        <p class="mb-0">${commentData.contenu}</p>
+                        <small class="text-muted">${new Date(commentData.date).toLocaleString()}</small>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="${editUrl}">Modifier</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="supprimerCommentaire(${commentData.id})">Supprimer</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    commentsContainer.insertAdjacentHTML('beforeend', commentHtml);
+}
+
+ 
+
+// Fonction pour basculer l'affichage des commentaires
+function toggleCommentaires(postId) {
+    const commentairesDiv = document.getElementById(`commentaires-${postId}`);
+    if (commentairesDiv.style.display === 'none' || commentairesDiv.style.display === '') {
+        commentairesDiv.style.display = 'block';
+    } else {
+        commentairesDiv.style.display = 'none';
+    }
+}
+
+// Initialisation de la recherche en temps réel
+document.getElementById('searchInput')?.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const postCards = document.querySelectorAll('.post-card');
+
+    postCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+
+</script>
+{% endblock %}

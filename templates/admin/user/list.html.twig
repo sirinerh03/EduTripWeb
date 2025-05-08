@@ -1,0 +1,232 @@
+{% extends 'admin/homeadmin.html.twig' %}
+
+{% block title %}Liste des utilisateurs - Administration EduTrip{% endblock %}
+
+{% block Content %}
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Gestion des utilisateurs</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item active">Liste des utilisateurs</li>
+        </ol>
+
+        <div class="pie-roles">
+    <canvas id="rolesPieChart" style="width: 300px; height: 300px;"></canvas>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chart.js Script to Render Pie Chart -->
+    <script>
+        // Get the role counts from Symfony controller
+        var countUser = {{ countUser }};
+        var countAgency = {{ countAgency }};
+        var countAdmin = {{ countAdmin }};
+        
+        // Calculate total for percentages
+        var total = countUser + countAgency + countAdmin;
+
+        // Get the canvas element
+        var ctx = document.getElementById('rolesPieChart').getContext('2d');
+
+        // Create the pie chart
+        var rolesPieChart = new Chart(ctx, {
+            type: 'doughnut',  // Changed to doughnut for modern look
+            data: {
+                labels: ['Utilisateurs', 'Agences', 'Administrateurs'],  // French labels
+                datasets: [{
+                    label: 'Rôles Utilisateurs',
+                    data: [countUser, countAgency, countAdmin],  // Role counts
+                    backgroundColor: ['#28a745', '#007bff', '#dc3545'], // Bootstrap colors
+                    borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF'], // White borders
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '50%',
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                var value = context.raw || 0;
+                                var percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 800
+                }
+            }
+        });
+    </script>
+</div>
+
+        <!-- Formulaire de recherche et filtrage -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-search me-1"></i>
+                Recherche et filtrage
+            </div>
+            <div class="card-body">
+                <form method="get" action="{{ path('admin_users_list') }}" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Recherche</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Nom, prénom ou email">
+                            <button type="submit" class="btn btn-primary" name="action" value="search">
+                                <i class="fas fa-search me-1"></i> Rechercher
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="role" class="form-label">Rôle</label>
+                        <select class="form-select" id="role" name="role">
+                            <option value="">Tous les rôles</option>
+                            <option value="ROLE_USER" {% if role == 'ROLE_USER' %}selected{% endif %}>Utilisateur</option>
+                            <option value="ROLE_AGENCY" {% if role == 'ROLE_AGENCY' %}selected{% endif %}>Agence</option>
+                            <option value="ROLE_ADMIN" {% if role == 'ROLE_ADMIN' %}selected{% endif %}>Administrateur</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">Statut</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">Tous les statuts</option>
+                            <option value="active" {% if status == 'active' %}selected{% endif %}>Actif</option>
+                            <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Inactif</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100" name="action" value="filter">
+                            <i class="fas fa-filter me-1"></i> Filtrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-users me-1"></i>
+                Liste des utilisateurs
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <!-- Colonne ID masquée pour des raisons de sécurité -->
+                                <th>
+                                    Nom
+                                    <a href="{{ path('admin_users_list', app.request.query.all|merge({'sort_field': 'nom', 'sort_order': sort_order == 'ASC' and sort_field == 'nom' ? 'DESC' : 'ASC'})) }}" class="text-decoration-none">
+                                        <i class="fas fa-sort{% if sort_field == 'nom' %}-{{ sort_order == 'ASC' ? 'up' : 'down' }}{% endif %} ms-1"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    Prénom
+                                    <a href="{{ path('admin_users_list', app.request.query.all|merge({'sort_field': 'prenom', 'sort_order': sort_order == 'ASC' and sort_field == 'prenom' ? 'DESC' : 'ASC'})) }}" class="text-decoration-none">
+                                        <i class="fas fa-sort{% if sort_field == 'prenom' %}-{{ sort_order == 'ASC' ? 'up' : 'down' }}{% endif %} ms-1"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    Email
+                                    <a href="{{ path('admin_users_list', app.request.query.all|merge({'sort_field': 'mail', 'sort_order': sort_order == 'ASC' and sort_field == 'mail' ? 'DESC' : 'ASC'})) }}" class="text-decoration-none">
+                                        <i class="fas fa-sort{% if sort_field == 'mail' %}-{{ sort_order == 'ASC' ? 'up' : 'down' }}{% endif %} ms-1"></i>
+                                    </a>
+                                </th>
+                                <th>Téléphone</th>
+                                <th>Rôle</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <!-- ID masqué -->
+                                    <td>{{ user.nom }}</td>
+                                    <td>{{ user.prenom }}</td>
+                                    <td>{{ user.mail }}</td>
+                                    <td>{{ user.tel }}</td>
+                                    <td>
+                                        {% if 'ROLE_ADMIN' in user.roles %}
+                                            <span class="badge bg-danger">Admin</span>
+                                        {% elseif 'ROLE_AGENCY' in user.roles %}
+                                            <span class="badge bg-primary">Agence</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Utilisateur</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('admin_user_edit', {'id': user.id}) }}"
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <a href="{{ path('admin_user_delete', {'id': user.id}) }}"
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                            <i class="fas fa-trash"></i> Supprimer
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun utilisateur trouvé</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+
+
+
+
+
+
+
+
+</script>
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            // Désactiver DataTables car nous utilisons notre propre système de tri et filtrage
+            // $('#usersTable').DataTable({
+            //     language: {
+            //         url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json'
+            //     }
+            // });
+        });
+    </script>
+
+
+    
+
+{% endblock %}
